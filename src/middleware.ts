@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { decrypt } from "./app/lib/session";
 
-const protectedRoutes = ["/", "/collage", "/picker", "/playlist"];
-const publicRoutes = ["/login"];
+const protectedRoutes = ["/", "/collage", "/picker", "/playlist", "/dashboard"];
+const publicRoutes = ["/login", "/callback"];
 
 export default async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;

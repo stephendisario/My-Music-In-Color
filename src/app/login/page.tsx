@@ -1,9 +1,16 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { login } from "../actions/auth";
+import { generateRandomString } from "../lib/helper";
 
 const Login = () => {
-  return <button onClick={() => login()}>Log In</button>;
+  const codeVerifier = generateRandomString(64);
+
+  useEffect(() => {
+    localStorage.setItem("codeVerifier", codeVerifier);
+  }, [codeVerifier]);
+
+  return <button onClick={() => login(codeVerifier)}>Log In</button>;
 };
 
 export default Login;
