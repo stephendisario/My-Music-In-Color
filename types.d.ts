@@ -17,9 +17,26 @@ interface SpotifyResponse<T> {
 }
 
 interface Track {
-    id: string;
-    name: string;
-    artist: string;
-    duration_ms: number;
-    // Define other properties of a track as needed
-  }
+  id: string;
+  name: string;
+  artists: Artist[];
+  duration_ms: number;
+  album: Album;
+}
+
+type RGBColor = [number, number, number];
+type HSLColor = [number, number, number];
+
+interface ColorTrack extends Track {
+  rgb?: RGBColor;
+  hsl: HSLColor;
+}
+
+interface Album {
+  images: ImageObject[];
+}
+
+interface Artist {
+  id: string;
+  name: string;
+}

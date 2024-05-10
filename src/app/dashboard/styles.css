@@ -1,0 +1,13 @@
+@keyframes floatUp {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-120vh);
+    }
+}
+
+.floating-image {
+    animation: floatUp 15s linear infinite;
+    position: absolute;
+}

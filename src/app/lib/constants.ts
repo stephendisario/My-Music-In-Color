@@ -5,3 +5,4 @@ export const authorizationEndpoint = "https://accounts.spotify.com/authorize";
 export const tokenEndpoint = "https://accounts.spotify.com/api/token";
 export const scope =
   "user-read-private user-read-email playlist-read-private user-library-read user-top-read";
+export const SPOTIFY_API_BASE_URL = "https://api.spotify.com";

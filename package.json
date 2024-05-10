@@ -8,17 +8,19 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\""
-
   },
   "dependencies": {
+    "colorthief": "^2.4.0",
     "jose": "^5.2.4",
     "next": "14.2.3",
     "react": "^18",
+    "react-color": "^2.19.3",
     "react-dom": "^18"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
+    "@types/react-color": "^3.0.12",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",

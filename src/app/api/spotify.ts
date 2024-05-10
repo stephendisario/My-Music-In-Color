@@ -1,8 +1,7 @@
+import { SPOTIFY_API_BASE_URL } from "../lib/constants";
 import { verifySession } from "../lib/dal";
 
-const SPOTIFY_API_BASE_URL = "https://api.spotify.com";
-
-const customFetch = async (url: string, options = {}) => {
+export const customFetch = async (url: string, options = {}) => {
   const fetchOptions: RequestInit = {
     ...options,
     cache: "force-cache", // Set cache option to force cache
@@ -31,49 +30,121 @@ export const getUserProfile = async () => {
   }
 };
 
-export const getTopTracks = async (time_range: "short_term" | "medium_term" | "long_term") => {
+export const getTopTracks = async (
+  time_range: "short_term" | "medium_term" | "long_term",
+  iterations = 0
+) => {
   try {
+    console.log(time_range, iterations, "1");
     const session = await verifySession();
     const accessToken = session.payload;
     return await fetchWithOffset<Track>(
       `${SPOTIFY_API_BASE_URL}/v1/me/top/tracks`,
       accessToken.toString(),
       50,
-      time_range
+      time_range,
+      iterations
     );
   } catch (error: any) {
-    console.error("Error fetching top tracks:", error.message);
+    console.error("Error fetching top tracks:", error);
   }
 };
 
-const fetchWithOffset = async <T>(
+export const fetchWithOffset = async <T>(
   url: string,
   accessToken: string,
   limit: number,
-  timeRange: string
+  timeRange = "short_term",
+  iterations = 0
 ): Promise<T[]> => {
   let offset = 0;
   let allItems: T[] = [];
   let data: SpotifyResponse<T>;
+  let count = 0;
 
-  do {
-    const response = await customFetch(
-      `${url}?limit=${limit}&offset=${offset}&time_range=${timeRange}`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
+  const fields: any = {
+    id: true,
+    name: true,
+    album: {
+      images: true,
+    },
+    artists: {
+      id: true,
+      name: true,
+    },
+  };
+
+  const fieldsString = Object.keys(fields)
+    .map((key) => {
+      if (typeof fields[key] === "object") {
+        return `${key}(${Object.keys(fields[key]).join(",")})`;
+      } else {
+        return key;
       }
+    })
+    .join(",");
+
+  let promiseArray = [];
+  while (!iterations ? offset < 10000 : offset < 50) {
+    promiseArray.push(
+      customFetch(
+        `${url}?limit=${limit}&offset=${offset}&time_range=${timeRange}&fields=next,items(${fieldsString})`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      ).then((resp) => resp.json())
     );
-    data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(JSON.stringify(response));
-    }
-
-    allItems = allItems.concat(data.items);
     offset = offset + limit;
-  } while (data.next);
+    count = count + 1;
+    console.log(count);
+  }
 
-  return allItems;
+  const responses = await Promise.all(promiseArray);
+
+  const allTopTracks = responses.reduce((accumulator, currentResponse) => {
+    return [...accumulator, ...currentResponse.items];
+  }, []);
+
+  return allTopTracks;
+
+  // do {
+  //   const response = await customFetch(
+  //     `${url}?limit=${limit}&offset=${offset}&time_range=${timeRange}&fields=next,items(${fieldsString})`,
+  //     {
+  //       headers: {
+  //         Authorization: `Bearer ${accessToken}`,
+  //       },
+  //     }
+  //   );
+  //   data = await response.json();
+
+  //   if (!response.ok) {
+  //     throw new Error(JSON.stringify(response));
+  //   }
+
+  //   // const strippedData = data.items.map((track) => extractRequiredFields(track));
+
+  //   allItems = allItems.concat(data.items);
+  //   offset = offset + limit;
+  //   count = count + 1;
+  //   console.log(count)
+  // } while (!iterations ? data.next : count < iterations);
+
+  // return allItems;
 };
+
+// const extractRequiredFields = (track: any): any => {
+//   return {
+//     id: track.id,
+//     name: track.name,
+//     album: {
+//       images: track.album.images,
+//     },
+//     artists: track.artists.map((artist: any) => ({
+//       id: artist.id,
+//       name: artist.name,
+//     })),
+//   };
+// };
