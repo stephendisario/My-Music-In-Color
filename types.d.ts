@@ -29,14 +29,21 @@ type HSLColor = [number, number, number];
 
 interface ColorTrack extends Track {
   rgb?: RGBColor;
-  hsl: HSLColor;
+  hsl?: HSLColor;
+}
+
+interface ColorTracks {
+  [key: string]: ColorTrack[]; 
 }
 
 interface Album {
   images: ImageObject[];
+  id: string
 }
 
 interface Artist {
   id: string;
   name: string;
 }
+
+type UniqueImagesMap = { [key: string]: number[] }

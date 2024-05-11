@@ -1,6 +1,7 @@
 "use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { addColor } from "../lib/colorthief";
+import { getUniqueImages } from "../lib/helper";
 
 interface MyContextType {
   colorTracks: ColorTrack[];
@@ -27,13 +28,21 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ initialVal
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const color = await addColor(initialValue);
-      setColorTracks(color);
+    const injectColor = async () => {
+      const uniqueImagesMapEmpty = getUniqueImages(initialValue);
+      const uniqueImagesMapFilled = await addColor(uniqueImagesMapEmpty);
+
+      const fillTracksWithColor = initialValue.map((track) => {
+        const url = track.album.images?.[2].url;
+        if (!url) return track;
+        else return { ...track, hsl: uniqueImagesMapFilled[url] } as ColorTrack;
+      });
+
+      setColorTracks(fillTracksWithColor);
       setLoading(false);
     };
 
-    fetchData();
+    injectColor();
   }, [initialValue]);
 
   return <MyContext.Provider value={{ colorTracks, loading }}>{children}</MyContext.Provider>;

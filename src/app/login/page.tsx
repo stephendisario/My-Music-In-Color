@@ -8,6 +8,9 @@ const Login = () => {
 
   useEffect(() => {
     localStorage.setItem("codeVerifier", codeVerifier);
+    const test = localStorage.getItem("colorMap");
+    const obj = test ? JSON.parse(test) : undefined;
+    if (obj) console.log("localstore size", Object.keys(obj).length);
   }, [codeVerifier]);
 
   return <button onClick={() => login(codeVerifier)}>Log In</button>;

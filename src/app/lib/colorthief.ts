@@ -5,47 +5,44 @@ import { rgbToHsl } from "./helper";
 
 const colorThief = new ColorThief();
 
-export const addColor = async (tracks: Track[]): Promise<ColorTrack[]> => {
-  const newColorMap: Record<string, HSLColor> = {};
-
+export const addColor = async (unqieImagesMap: UniqueImagesMap): Promise<UniqueImagesMap> => {
   const colorMap = localStorage.getItem("colorMap");
+  const localUniqueImageMap: UniqueImagesMap | undefined = colorMap
+    ? JSON.parse(colorMap)
+    : undefined;
 
-  let colorTracks: ColorTrack[];
+  const addToLocalImageMap: UniqueImagesMap = {};
 
-  if (!colorMap) {
-    colorTracks = await Promise.all(
-      tracks.map(async (track) => {
-        const url = track.album.images[2].url;
-
-        return new Promise((resolve, reject) => {
-          if (!url) {
-            //TODO: CLEAN THIS UP
-            resolve({ ...track, hsl: [0, 0, 0] });
-          }
-
+  await Promise.all(
+    Object.keys(unqieImagesMap).map(async (url) => {
+      return new Promise<void>((resolve) => {
+        //if users local storage has the image color, use that
+        if (localUniqueImageMap && localUniqueImageMap[url]) {
+          unqieImagesMap[url] = localUniqueImageMap[url];
+          resolve();
+        } else {
           let image = new Image();
-
-          image.src = url;
-          image.crossOrigin = "Anonymous";
 
           image.onload = async () => {
             const rgb = colorThief.getColor(image);
             const hsl = rgbToHsl(rgb);
-            newColorMap[url] = hsl;
-            resolve({ ...track, hsl });
+            unqieImagesMap[url] = hsl;
+            //add unseen images to local
+            addToLocalImageMap[url] = hsl;
+            resolve();
           };
-        });
-      })
-    );
 
-    localStorage.setItem("colorMap", JSON.stringify(newColorMap));
-  } else {
-    const map = JSON.parse(colorMap);
-    colorTracks = tracks.map((track) => ({
-      ...track,
-      hsl: map[track.album.images[2].url],
-    }));
-  }
+          image.src = url;
+          image.crossOrigin = "Anonymous";
+        }
+      });
+    })
+  );
 
-  return colorTracks;
+  localStorage.setItem(
+    "colorMap",
+    JSON.stringify({ ...localUniqueImageMap, ...addToLocalImageMap })
+  );
+
+  return unqieImagesMap;
 };

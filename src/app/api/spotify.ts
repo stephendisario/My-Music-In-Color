@@ -30,20 +30,34 @@ export const getUserProfile = async () => {
   }
 };
 
+//TODO: Clean this up
+
 export const getTopTracks = async (
   time_range: "short_term" | "medium_term" | "long_term",
   iterations = 0
 ) => {
   try {
-    console.log(time_range, iterations, "1");
     const session = await verifySession();
     const accessToken = session.payload;
+
+    const res = await customFetch(
+      `${SPOTIFY_API_BASE_URL}/v1/me/top/tracks?limit=1&offset=0&time_range=${time_range}&fields=total`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    const total = await res.json();
+
     return await fetchWithOffset<Track>(
       `${SPOTIFY_API_BASE_URL}/v1/me/top/tracks`,
       accessToken.toString(),
       50,
       time_range,
-      iterations
+      iterations,
+      total.total
     );
   } catch (error: any) {
     console.error("Error fetching top tracks:", error);
@@ -55,7 +69,8 @@ export const fetchWithOffset = async <T>(
   accessToken: string,
   limit: number,
   timeRange = "short_term",
-  iterations = 0
+  iterations = 0,
+  total: number
 ): Promise<T[]> => {
   let offset = 0;
   let allItems: T[] = [];
@@ -67,6 +82,7 @@ export const fetchWithOffset = async <T>(
     name: true,
     album: {
       images: true,
+      id: true,
     },
     artists: {
       id: true,
@@ -85,7 +101,7 @@ export const fetchWithOffset = async <T>(
     .join(",");
 
   let promiseArray = [];
-  while (!iterations ? offset < 10000 : offset < 50) {
+  while (!iterations ? offset < total : count < iterations) {
     promiseArray.push(
       customFetch(
         `${url}?limit=${limit}&offset=${offset}&time_range=${timeRange}&fields=next,items(${fieldsString})`,
@@ -98,7 +114,6 @@ export const fetchWithOffset = async <T>(
     );
     offset = offset + limit;
     count = count + 1;
-    console.log(count);
   }
 
   const responses = await Promise.all(promiseArray);
@@ -108,43 +123,4 @@ export const fetchWithOffset = async <T>(
   }, []);
 
   return allTopTracks;
-
-  // do {
-  //   const response = await customFetch(
-  //     `${url}?limit=${limit}&offset=${offset}&time_range=${timeRange}&fields=next,items(${fieldsString})`,
-  //     {
-  //       headers: {
-  //         Authorization: `Bearer ${accessToken}`,
-  //       },
-  //     }
-  //   );
-  //   data = await response.json();
-
-  //   if (!response.ok) {
-  //     throw new Error(JSON.stringify(response));
-  //   }
-
-  //   // const strippedData = data.items.map((track) => extractRequiredFields(track));
-
-  //   allItems = allItems.concat(data.items);
-  //   offset = offset + limit;
-  //   count = count + 1;
-  //   console.log(count)
-  // } while (!iterations ? data.next : count < iterations);
-
-  // return allItems;
 };
-
-// const extractRequiredFields = (track: any): any => {
-//   return {
-//     id: track.id,
-//     name: track.name,
-//     album: {
-//       images: track.album.images,
-//     },
-//     artists: track.artists.map((artist: any) => ({
-//       id: artist.id,
-//       name: artist.name,
-//     })),
-//   };
-// };

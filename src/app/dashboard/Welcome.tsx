@@ -1,8 +1,6 @@
 "use client";
-import React, { Suspense, useEffect, useState } from "react";
-import { getTopTracks, getUserProfile } from "../api/spotify";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import TopTracks from "./ContentWrapper";
 import "./styles.css";
 import { generateRandomNumber } from "../lib/helper";
 
@@ -25,8 +23,6 @@ const Welcome: React.FC<WelcomeProps> = ({ user, loadingTracks }) => {
     // Cleanup function to clear the interval if the component unmounts or the effect is re-executed
     return () => clearInterval(intervalId);
   }, []); // Empty dependency ar
-
-  console.log("render");
 
   return (
     <div className="snap-center relative h-screen">

@@ -41,3 +41,14 @@ export function rgbToHsl(rgb: RGBColor): HSLColor {
 
   return [h, s, l];
 }
+
+export const getUniqueImages = (tracks: Track[]) => {
+  const uniqueImagesMap: UniqueImagesMap = {};
+  tracks.forEach((track) => {
+    const url = track.album.images?.[2].url;
+    if (!url) return;
+    if (!uniqueImagesMap[url]) uniqueImagesMap[url] = [];
+    return;
+  });
+  return uniqueImagesMap;
+};

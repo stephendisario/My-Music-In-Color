@@ -4,7 +4,7 @@ import { MyContextProvider } from "../components/ColorContext";
 import Collages from "./Collages";
 
 const ContentWrapper = async () => {
-  const topTracks = await getTopTracks("medium_term");
+  const topTracks = await getTopTracks("long_term");
 
   return (
     topTracks && (

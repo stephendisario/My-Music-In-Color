@@ -5,6 +5,7 @@ const nextConfig = {
       fullUrl: true,
     },
   },
+  reactStrictMode: false,
     images: {
       remotePatterns: [
         {
