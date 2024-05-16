@@ -3,6 +3,12 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import "./styles.css";
 import { generateRandomNumber } from "../lib/helper";
+import { logout } from "../actions/auth";
+import AnimatedImage from "../components/AnimatedImage";
+import BackgroundPizzaGrid from "../components/BackgroundPizzaGrid";
+import BackgroundInColour from "../components/BackgroundPizzaGrid";
+import TriangleSlice from "../components/BackgroundPizzaGrid";
+import InColourBackground from "../components/BackgroundPizzaGrid";
 
 interface WelcomeProps {
   user: User;
@@ -10,49 +16,24 @@ interface WelcomeProps {
 }
 
 const Welcome: React.FC<WelcomeProps> = ({ user, loadingTracks }) => {
-  const [userClient, setUserClient] = useState(user);
-  const [loadingTracksClient, setLoadingTracksClient] = useState(loadingTracks);
-  const [counter, setCounter] = useState(0);
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      // Increment the counter to force a rerender
-      setCounter((prevCounter) => prevCounter + 1);
-    }, 15000); // Rerender every 10 seconds (10000 milliseconds)
-
-    // Cleanup function to clear the interval if the component unmounts or the effect is re-executed
-    return () => clearInterval(intervalId);
-  }, []); // Empty dependency ar
-
   return (
     <div className="snap-center relative h-screen">
+      <InColourBackground />
       {/* Content */}
       <div className="absolute top-0 left-0 w-full h-full z-10">
+        <button onClick={() => logout()}>Log Out</button>
         {/* Other content */}
-        <div className="container mx-auto py-16">
+        <div className="flex w-full h-full flex-col justify-center items-center pb-16">
           {/* Your main content goes here */}
-          <h1 className="text-4xl font-bold mb-4">Welcome, {userClient.display_name}</h1>
-          <p className="text-lg">Loading your Color Profile... {counter}</p>
+          <h1 className="text-5xl font-bold mb-4">Hi {user.display_name.split(" ")[0]}</h1>
+          <p className="text-lg">Loading your Color Profile...</p>
         </div>
       </div>
 
       {/* Floating Images */}
       <div className="absolute top-0 left-0 w-full h-full z-0 overflow-x-hidden">
-        {loadingTracksClient.map((track, index) => {
-          return (
-            <Image
-              alt="index"
-              width={150}
-              height={150}
-              src={track.album.images[0].url}
-              className="floating-image duration-[2500ms]"
-              style={{
-                left: `${generateRandomNumber()}%`,
-                top: `${index % 2 === 0 ? generateRandomNumber() : generateRandomNumber() + 100}%`,
-              }}
-              key={index}
-            />
-          );
+        {loadingTracks.slice(0, 22).map((track, index) => {
+          return <AnimatedImage url={track.album.images[0].url} key={index} />;
         })}
       </div>
     </div>

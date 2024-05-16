@@ -6,7 +6,7 @@ import {
   scope,
   tokenEndpoint,
 } from "../lib/constants";
-import { createSession } from "../lib/session";
+import { createSession, deleteSession } from "../lib/session";
 import { RedirectType, redirect } from "next/navigation";
 
 export async function login(codeVerifier: string) {
@@ -32,6 +32,11 @@ export async function login(codeVerifier: string) {
   redirect(authUrl.toString(), RedirectType.replace);
 }
 
+export async function logout() {
+  deleteSession();
+  redirect("/login");
+}
+
 export const getToken = async (code: string, codeVerifier: string) => {
   const response = await fetch(tokenEndpoint, {
     method: "POST",
@@ -49,5 +54,5 @@ export const getToken = async (code: string, codeVerifier: string) => {
 
   const res = await response.json();
   await createSession(res.access_token);
-  redirect("/", RedirectType.replace);
+  redirect("/dashboard", RedirectType.replace);
 };

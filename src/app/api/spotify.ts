@@ -90,6 +90,8 @@ export const fetchWithOffset = async <T>(
     },
   };
 
+  console.log("TOTAL", total);
+
   const fieldsString = Object.keys(fields)
     .map((key) => {
       if (typeof fields[key] === "object") {

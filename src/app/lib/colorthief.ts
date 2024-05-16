@@ -39,6 +39,8 @@ export const addColor = async (unqieImagesMap: UniqueImagesMap): Promise<UniqueI
     })
   );
 
+  console.log(Object.keys(addToLocalImageMap).length);
+
   localStorage.setItem(
     "colorMap",
     JSON.stringify({ ...localUniqueImageMap, ...addToLocalImageMap })

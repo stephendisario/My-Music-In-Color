@@ -1,13 +1,18 @@
 @keyframes floatUp {
     0% {
         transform: translateY(0);
+        visibility: hidden;
+
+    }
+    50% {
+        transform: translateY(-100vh);
     }
     100% {
-        transform: translateY(-120vh);
+        transform: translateY(120vh);
     }
 }
 
 .floating-image {
-    animation: floatUp 15s linear infinite;
+    animation: floatUp 10s linear 0s infinite;
     position: absolute;
 }

@@ -32,9 +32,6 @@ interface ColorTrack extends Track {
   hsl?: HSLColor;
 }
 
-interface ColorTracks {
-  [key: string]: ColorTrack[]; 
-}
 
 interface Album {
   images: ImageObject[];
