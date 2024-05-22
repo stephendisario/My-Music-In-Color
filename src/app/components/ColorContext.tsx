@@ -5,6 +5,7 @@ import { getUniqueImages } from "../lib/helper";
 
 interface MyContextType {
   colorTracks: ColorTrack[];
+  sortedColorTracks: ColorTrack[];
   loading: boolean;
 }
 
@@ -26,24 +27,34 @@ interface MyContextProviderProps {
 export const MyContextProvider: React.FC<MyContextProviderProps> = ({ initialValue, children }) => {
   const [colorTracks, setColorTracks] = useState<ColorTrack[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [sortedColorTracks, setSortedColorTracks] = useState<ColorTrack[]>([])
 
   useEffect(() => {
     const injectColor = async () => {
       const uniqueImagesMapEmpty = getUniqueImages(initialValue);
       const uniqueImagesMapFilled = await addColor(uniqueImagesMapEmpty);
 
-      const fillTracksWithColor = initialValue.map((track) => {
+      const fillTracksWithColor: ColorTrack[] = initialValue.map((track) => {
         const url = track.album.images?.[2].url;
         if (!url) return track;
         else return { ...track, hsl: uniqueImagesMapFilled[url] } as ColorTrack;
       });
 
+      const deepCopy: ColorTrack[] = JSON.parse(JSON.stringify(fillTracksWithColor));
+
+      const sorted = deepCopy.sort((a, b) => {
+        if (a.hsl === undefined) return 1;
+        if (b.hsl === undefined) return -1;
+        return a.hsl[0] - b.hsl[0];
+      });
+
       setColorTracks(fillTracksWithColor);
+      setSortedColorTracks(sorted)
       setLoading(false);
     };
 
     injectColor();
   }, [initialValue]);
 
-  return <MyContext.Provider value={{ colorTracks, loading }}>{children}</MyContext.Provider>;
+  return <MyContext.Provider value={{ colorTracks, sortedColorTracks, loading }}>{children}</MyContext.Provider>;
 };

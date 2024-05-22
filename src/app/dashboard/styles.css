@@ -16,3 +16,19 @@
     animation: floatUp 10s linear 0s infinite;
     position: absolute;
 }
+
+@keyframes slideDown {
+    0% {
+        transform: translateY(100%);
+        visibility: hidden;
+
+    }
+    100% {
+        transform: translateY(80%);
+    }
+}
+
+.hue-picker {
+    animation: slideDown 5s linear;
+    position: absolute;
+}

@@ -26,7 +26,7 @@ const Welcome: React.FC<WelcomeProps> = ({ user, loadingTracks }) => {
         <div className="flex w-full h-full flex-col justify-center items-center pb-16">
           {/* Your main content goes here */}
           <h1 className="text-5xl font-bold mb-4">Hi {user.display_name.split(" ")[0]}</h1>
-          <p className="text-lg">Loading your Color Profile...</p>
+          {/* <p className="text-lg">Loading your Color Profile...</p> */}
         </div>
       </div>
 

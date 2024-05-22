@@ -134,7 +134,7 @@ const Collages = () => {
       {Object.keys(collages).length !== 0 &&
         Object.keys(collageConfig).map((color, index) => (
           <div
-            className={`snap-center relative h-screen flex flex-row bg-gradient-to-b ${collageConfig[color as keyof typeof collageConfig].gradient.join(" ")}`}
+            className={`snap-center relative h-screen z-30 flex flex-row bg-gradient-to-b ${collageConfig[color as keyof typeof collageConfig].gradient.join(" ")}`}
             key={color}
           >
             {index % 2 === 0 && collageInfo(color)}
@@ -145,6 +145,7 @@ const Collages = () => {
                 const artist = track.artists[0].name;
                 return (
                   <Tooltip
+                    key={track.id}
                     arrow
                     title={
                       <div>
@@ -163,14 +164,7 @@ const Collages = () => {
                       },
                     }}
                   >
-                    <Image
-                      alt={name}
-                      width={64}
-                      height={64}
-                      src={image.url}
-                      key={track.id}
-                      className="z-10"
-                    />
+                    <Image alt={name} width={64} height={64} src={image.url} />
                   </Tooltip>
                 );
               })}
