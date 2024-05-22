@@ -7,7 +7,7 @@ const NavBar = () => {
       <h1 className="text-xl">Navigation Bar</h1>
       <ul className="flex gap-4">
         <li>
-          <Link href="/">Home</Link>
+          <Link href="/dashboard">Dashboard</Link>
         </li>
         <li>
           <Link href="/collage">Collage</Link>

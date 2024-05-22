@@ -6,13 +6,10 @@ import {
   scope,
   tokenEndpoint,
 } from "../lib/constants";
-import { generateRandomString } from "../lib/helper";
-import { createSession } from "../lib/session";
+import { createSession, deleteSession } from "../lib/session";
 import { RedirectType, redirect } from "next/navigation";
 
-const codeVerifier = generateRandomString(64);
-
-export async function login() {
+export async function login(codeVerifier: string) {
   const data = new TextEncoder().encode(codeVerifier);
   const hashed = await crypto.subtle.digest("SHA-256", data);
 
@@ -35,7 +32,12 @@ export async function login() {
   redirect(authUrl.toString(), RedirectType.replace);
 }
 
-export const getToken = async (code: string) => {
+export async function logout() {
+  deleteSession();
+  redirect("/login");
+}
+
+export const getToken = async (code: string, codeVerifier: string) => {
   const response = await fetch(tokenEndpoint, {
     method: "POST",
     headers: {
@@ -52,5 +54,5 @@ export const getToken = async (code: string) => {
 
   const res = await response.json();
   await createSession(res.access_token);
-  redirect("/", RedirectType.replace);
+  redirect("/dashboard", RedirectType.replace);
 };
