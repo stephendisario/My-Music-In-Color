@@ -81,7 +81,7 @@ function findHueRange( target: number, range: number): ColorTrack[] {
                   },
                 }}
               >
-                <Image alt={name} width={64} height={64} src={image.url} className="z-10" />
+                <Image unoptimized alt={name} width={64} height={64} src={image.url} className="z-10" />
               </Tooltip>
             );
           })}
