@@ -3,11 +3,14 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useMyContext } from "../components/ColorContext";
 import Image from "next/image";
 import Tooltip from "@mui/material/Tooltip";
-import { Divider } from "@mui/material";
+import { Button, Divider } from "@mui/material";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import { shuffle } from "../lib/helper";
 
 const collageConfig = {
   red: {
-    hueRange: [0, 10],
+    hueRange: [0, 10, 350],
     saturationRange: [50, 100],
     lightnessRange: [20, 80],
     gradient: ["from-red-800", "from-70%", "to-orange-900"],
@@ -69,6 +72,9 @@ interface Collages {
 const Collages = () => {
   const { colorTracks, loading } = useMyContext();
   const [collages, setCollages] = useState<Collages>({} as Collages);
+  const [tabValue, setTabValue] = useState<number[]>(
+    Array(Object.keys(collageConfig).length).fill(0)
+  );
 
   console.log(collages);
 
@@ -76,6 +82,7 @@ const Collages = () => {
     let groups = Object.keys(collageConfig).reduce((acc: Collages, color) => {
       acc[color] = [];
       acc[`${color}Filtered`] = [];
+      acc[`${color}Displayed`] = [];
       return acc;
     }, {});
 
@@ -86,7 +93,10 @@ const Collages = () => {
       const lightness = track.hsl[2];
 
       (Object.keys(collageConfig) as Array<keyof typeof collageConfig>).forEach((color) => {
-        if (hue >= collageConfig[color].hueRange[0] && hue <= collageConfig[color].hueRange[1]) {
+        if (
+          (hue >= collageConfig[color].hueRange[0] && hue <= collageConfig[color].hueRange[1]) ||
+          (color === "red" && hue >= collageConfig[color].hueRange[2])
+        ) {
           groups[color].push(track);
           if (
             saturation >= collageConfig[color].saturationRange[0] &&
@@ -95,20 +105,26 @@ const Collages = () => {
             lightness <= collageConfig[color].lightnessRange[1]
           ) {
             groups[`${color}Filtered`].push(track);
+            groups[`${color}Displayed`].push(track);
           }
         }
       });
     });
 
-    // (Object.keys(collageConfig) as Array<keyof typeof collageConfig>).forEach((color,index) => {
-    //   for(let i=0;i<11;i++){
-
-    //   if(index !== Object.keys(collageConfig).length -1) groups['rainbowFiltered'].push(groups[`${color}Filtered`][i])
-    //   }
-    // })
-
     return groups;
   }, [colorTracks]);
+
+  const randomizeCollage = (color: string, index: number) => {
+    const array = shuffle(JSON.parse(JSON.stringify(collages[`${color}Displayed`])));
+    setCollages((prevState) => ({ ...prevState, [`${color}Displayed`]: array }));
+  };
+
+  const resetCollage = (color: string, index: number) => {
+    setCollages((prevState) => ({
+      ...prevState,
+      [`${color}Displayed`]: prevState[`${color}Filtered`],
+    }));
+  };
 
   useEffect(() => {
     if (!loading) {
@@ -129,6 +145,8 @@ const Collages = () => {
     </div>
   );
 
+  console.log(tabValue);
+
   return (
     <>
       {Object.keys(collages).length !== 0 &&
@@ -138,36 +156,67 @@ const Collages = () => {
             key={color}
           >
             {index % 2 === 0 && collageInfo(color)}
-            <div className="flex flex-row flex-wrap justify-center w-1/2 items-center ml-auto mr-auto content-center max-w-lg	">
-              {collages[`${color}Filtered`].slice(0, 64).map((track) => {
-                const image = track.album.images?.[2];
-                const name = track.name;
-                const artist = track.artists[0].name;
-                return (
-                  <Tooltip
-                    key={track.id}
-                    arrow
-                    title={
-                      <div>
-                        <h1>{name}</h1>
-                        <Divider />
-                        <h3>{artist}</h3>
-                      </div>
-                    }
-                    slotProps={{
-                      tooltip: {
-                        sx: {
-                          bgcolor: `hsl(${track?.hsl?.[0]}, ${track?.hsl?.[1]}%, ${track?.hsl?.[2]}%)`,
-                          color: track?.hsl?.[2] && track?.hsl?.[2] > 50 ? "black" : "white",
-                          fontSize: "16px",
-                        },
-                      },
-                    }}
-                  >
-                    <Image unoptimized alt={name} width={64} height={64} src={image.url} />
-                  </Tooltip>
-                );
-              })}
+            <div
+              className={`relative w-1/2 flex flex-col justify-center items-center ml-auto mr-auto content-center items-stretch ${tabValue[index] === 1 ? "max-w-xs" : "max-w-lg"}`}
+            >
+              <div className="flex flex-row justify-center absolute top-0 left-0 right-0 mt-16">
+                <Tabs
+                  value={tabValue[index]}
+                  onChange={(e, v) =>
+                    setTabValue((prevState) => {
+                      const newState = [...prevState];
+                      newState[index] = v;
+                      return newState;
+                    })
+                  }
+                  aria-label="basic tabs example"
+                >
+                  <Tab label="8 x 8" />
+                  <Tab label="5 x 5" />
+                </Tabs>
+              </div>
+              <div className="flex flex-row justify-between">
+                <Button onClick={() => randomizeCollage(color, index)}>Generate</Button>
+                <Button onClick={() => resetCollage(color, index)}>Reset</Button>
+              </div>
+
+              <div className="flex flex-row flex-wrap	">
+                {collages[`${color}Displayed`]
+                  .slice(0, tabValue[index] === 0 ? 64 : 25)
+                  .map((track) => {
+                    const image = track.album.images?.[2];
+                    const name = track.name;
+                    const artist = track.artists[0].name;
+                    return (
+                      <Tooltip
+                        PopperProps={{ disablePortal: true }}
+                        key={track.id}
+                        arrow
+                        title={
+                          <div>
+                            <h1>{name}</h1>
+                            <Divider />
+                            <h3>{artist}</h3>
+                          </div>
+                        }
+                        slotProps={{
+                          tooltip: {
+                            sx: {
+                              bgcolor: `hsl(${track?.hsl?.[0]}, ${track?.hsl?.[1]}%, ${track?.hsl?.[2]}%)`,
+                              color: track?.hsl?.[2] && track?.hsl?.[2] > 50 ? "black" : "white",
+                              fontSize: "16px",
+                              "& .MuiTooltip-arrow": {
+                                color: `hsl(${track?.hsl?.[0]}, ${track?.hsl?.[1]}%, ${track?.hsl?.[2]}%)`,
+                              },
+                            },
+                          },
+                        }}
+                      >
+                        <Image unoptimized alt={name} width={64} height={64} src={image.url} />
+                      </Tooltip>
+                    );
+                  })}
+              </div>
             </div>
             {index % 2 !== 0 && collageInfo(color)}
           </div>

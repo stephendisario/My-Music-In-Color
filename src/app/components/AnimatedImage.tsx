@@ -11,8 +11,8 @@ const AnimatedImage: React.FC<AnimatedImageProps> = ({ url }) => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [position, setPosition] = useState<{ x: number; y: number }>({
-    x: 0,
-    y: 0,
+    x: -1000,
+    y: -1000,
   });
 
   useEffect(() => {
