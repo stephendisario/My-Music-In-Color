@@ -5,15 +5,11 @@ import Collages from "./Collages";
 import AllImages from "./AllImages";
 
 const ContentWrapper = async () => {
-  const topTracks = await getTopTracks("long_term");
-
   return (
-    topTracks && (
-      <MyContextProvider initialValue={topTracks}>
-        <Collages />
-        <AllImages />
-      </MyContextProvider>
-    )
+    <>
+      <Collages />
+      <AllImages />
+    </>
   );
 };
 export default ContentWrapper;

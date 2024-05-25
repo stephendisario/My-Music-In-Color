@@ -8,11 +8,11 @@ import { HuePicker } from "react-color";
 import { binarySearch } from "../lib/helper";
 
 const AllImages = () => {
-const { colorTracks, sortedColorTracks, loading } = useMyContext();
-const [huePickerColor, setHuePickerColor] = useState({ h: 0, s: 0, l: 0 });
-const [colorTrackSlice, setColorTrackSlice] = useState<ColorTrack[]>([])
+  const { sortedColorTracks, loading } = useMyContext();
+  const [huePickerColor, setHuePickerColor] = useState({ h: 0, s: 100, l: 50 });
+  const [colorTrackSlice, setColorTrackSlice] = useState<ColorTrack[]>([]);
 
-function findHueRange( target: number, range: number): ColorTrack[] {
+  function findHueRange(target: number, range: number): ColorTrack[] {
     const lowBound = target - range;
     const highBound = target + range;
 
@@ -20,71 +20,79 @@ function findHueRange( target: number, range: number): ColorTrack[] {
     const endIdx = binarySearch(sortedColorTracks, highBound + 1);
 
     return sortedColorTracks.slice(startIdx, endIdx);
+  }
+
+  useEffect(() => {
+    if (!loading) {
+      const tracksInHueRange = findHueRange(huePickerColor.h, 10);
+      const vibrantTracks = tracksInHueRange.filter(
+        (track) => track.hsl?.[1]! > 50 && track.hsl?.[2]! > 20 && track.hsl?.[2]! < 80
+      );
+      setColorTrackSlice(vibrantTracks);
     }
+  }, [huePickerColor, loading]);
 
-    useEffect(() => {
-    if(!loading) setColorTrackSlice(findHueRange(huePickerColor.h, 10))
-    }, [huePickerColor, loading])
-
-    
-
+  console.log(huePickerColor);
   return (
-    <div className={`snap-start relative h-screen overflow-auto`}>
-      <div className="sticky inset-x-0 top-0 z-20 flex justify-center mt-8">
-        <div className="bg-gray-800 text-white rounded-md p-4 shadow-md">
+    <div
+      className={`snap-start relative h-screen overflow-auto`}
+      style={{
+        background: `linear-gradient(to bottom, hsl(${huePickerColor.h}, ${huePickerColor.s}%, ${huePickerColor.l}%), #000000)`,
+      }}
+    >
+      <div className="sticky inset-x-0 top-0 z-20 flex justify-center">
+        <div className="p-4">
           {" "}
           <HuePicker
             color={huePickerColor}
             onChange={(color) => {
-              setHuePickerColor(color.hsl);
+              setHuePickerColor({ h: color.hsl.h, s: color.hsl.s * 100, l: color.hsl.l * 100 });
             }}
           />
         </div>
       </div>
 
       <div className="flex flex-row flex-wrap justify-center w-full ml-auto mr-auto">
-        {colorTracks
-          .filter((track) => Math.abs(track.hsl?.[0]! - huePickerColor.h) <= 10)
-          .map((track) => {
-            const image = track.album.images?.[2];
-            const name = track.name;
-            const artist = track.artists[0].name;
-            return (
-              <Tooltip
-                arrow
-                key={track.id}
-                sx={{
-                  "& .MuiTooltip-arrow": {
-                    color: "red", // Change this to your desired color
-                  },
-                }}
-                title={
-                  <div>
-                    <h1>{name}</h1>
-                    <Divider />
-                    <h3>{artist}</h3>
-                  </div>
-                }
-                slotProps={{
-                  tooltip: {
-                    sx: {
-                      bgcolor: `hsl(${track?.hsl?.[0]}, ${track?.hsl?.[1]}%, ${track?.hsl?.[2]}%)`,
-                      color: track?.hsl?.[2] && track?.hsl?.[2] > 50 ? "black" : "white",
-                      fontSize: "16px",
+        {colorTrackSlice.map((track) => {
+          const image = track.album.images?.[2];
+          const name = track.name;
+          const artist = track.artists[0].name;
+          return (
+            <Tooltip
+              PopperProps={{ disablePortal: true }}
+              arrow
+              key={track.id}
+              title={
+                <div>
+                  <h1>{name}</h1>
+                  <Divider />
+                  <h3>{artist}</h3>
+                </div>
+              }
+              slotProps={{
+                tooltip: {
+                  sx: {
+                    bgcolor: `hsl(${track?.hsl?.[0]}, ${track?.hsl?.[1]}%, ${track?.hsl?.[2]}%)`,
+                    color: track?.hsl?.[2] && track?.hsl?.[2] > 50 ? "black" : "white",
+                    fontSize: "16px",
+                    "& .MuiTooltip-arrow": {
+                      color: `hsl(${track?.hsl?.[0]}, ${track?.hsl?.[1]}%, ${track?.hsl?.[2]}%)`,
                     },
                   },
-                  arrow: {
-                    color: `hsl(${track?.hsl?.[0]}, ${track?.hsl?.[1]}%, ${track?.hsl?.[2]}%)`,
-                    sx: {
-                      // bgcolor: `hsl(${track?.hsl?.[0]}, ${track?.hsl?.[1]}%, ${track?.hsl?.[2]}%)`,
-                    },
-                  },
-                }}
-              >
-                <Image unoptimized alt={name} width={64} height={64} src={image.url} className="z-10" />
-              </Tooltip>
-            );
-          })}
+                },
+              }}
+            >
+              <Image
+                unoptimized
+                alt={name}
+                width={64}
+                height={64}
+                src={image.url}
+                className="z-10"
+              />
+            </Tooltip>
+          );
+        })}
       </div>
     </div>
   );

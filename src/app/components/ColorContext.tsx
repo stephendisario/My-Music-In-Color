@@ -27,7 +27,7 @@ interface MyContextProviderProps {
 export const MyContextProvider: React.FC<MyContextProviderProps> = ({ initialValue, children }) => {
   const [colorTracks, setColorTracks] = useState<ColorTrack[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [sortedColorTracks, setSortedColorTracks] = useState<ColorTrack[]>([])
+  const [sortedColorTracks, setSortedColorTracks] = useState<ColorTrack[]>([]);
 
   useEffect(() => {
     const injectColor = async () => {
@@ -49,12 +49,16 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ initialVal
       });
 
       setColorTracks(fillTracksWithColor);
-      setSortedColorTracks(sorted)
+      setSortedColorTracks(sorted);
       setLoading(false);
     };
 
     injectColor();
   }, [initialValue]);
 
-  return <MyContext.Provider value={{ colorTracks, sortedColorTracks, loading }}>{children}</MyContext.Provider>;
+  return (
+    <MyContext.Provider value={{ colorTracks, sortedColorTracks, loading }}>
+      {children}
+    </MyContext.Provider>
+  );
 };
