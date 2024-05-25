@@ -10,14 +10,16 @@ const Dashboard = async () => {
   const topTracks = await getTopTracks("long_term");
 
   return (
-    <MyContextProvider initialValue={topTracks!}>
-      <div className="snap-y snap-mandatory snap-always	h-screen overflow-scroll">
-        <Suspense fallback={<p>Loading User...</p>}>
-          {user && loadingTracks && <Welcome user={user} loadingTracks={loadingTracks} />}
-        </Suspense>
-        <Suspense fallback={<p>Loading Data...</p>}>{topTracks && <ContentWrapper />}</Suspense>
-      </div>
-    </MyContextProvider>
+    topTracks && (
+      <MyContextProvider initialValue={topTracks}>
+        <div className="snap-y snap-mandatory snap-always	h-screen overflow-scroll">
+          <Suspense fallback={<p>Loading User...</p>}>
+            {user && loadingTracks && <Welcome user={user} loadingTracks={loadingTracks} />}
+          </Suspense>
+          <Suspense fallback={<p>Loading Data...</p>}>{topTracks && <ContentWrapper />}</Suspense>
+        </div>
+      </MyContextProvider>
+    )
   );
 };
 export default Dashboard;

@@ -10,7 +10,7 @@ import { shuffle } from "../lib/helper";
 
 const collageConfig = {
   red: {
-    hueRange: [0, 10],
+    hueRange: [0, 10, 350],
     saturationRange: [50, 100],
     lightnessRange: [20, 80],
     gradient: ["from-red-800", "from-70%", "to-orange-900"],
@@ -93,7 +93,10 @@ const Collages = () => {
       const lightness = track.hsl[2];
 
       (Object.keys(collageConfig) as Array<keyof typeof collageConfig>).forEach((color) => {
-        if (hue >= collageConfig[color].hueRange[0] && hue <= collageConfig[color].hueRange[1]) {
+        if (
+          (hue >= collageConfig[color].hueRange[0] && hue <= collageConfig[color].hueRange[1]) ||
+          (color === "red" && hue >= collageConfig[color].hueRange[2])
+        ) {
           groups[color].push(track);
           if (
             saturation >= collageConfig[color].saturationRange[0] &&
