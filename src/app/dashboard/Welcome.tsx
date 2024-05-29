@@ -3,7 +3,7 @@ import React from "react";
 import "./styles.css";
 import { logout } from "../actions/auth";
 import AnimatedImage from "../components/AnimatedImage";
-import InColourBackground from "../components/BackgroundPizzaGrid";
+import InColourBackground from "../components/InColourBackground";
 import { useMyContext } from "../components/ColorContext";
 
 interface WelcomeProps {
@@ -32,7 +32,7 @@ const Welcome: React.FC<WelcomeProps> = ({ user, loadingTracks }) => {
       </div>
 
       {/* Floating Images */}
-      <div className="absolute top-0 left-0 w-full h-full z-0 overflow-x-hidden">
+      <div className="absolute top-0 left-0 w-full h-full overflow-x-hidden">
         {loadingTracks.slice(0, 22).map((track, index) => {
           return <AnimatedImage url={track.album.images[0].url} key={index} />;
         })}

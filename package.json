@@ -13,10 +13,12 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@mui/material": "^5.15.17",
+    "chart.js": "^4.4.3",
     "colorthief": "^2.4.0",
     "jose": "^5.2.4",
     "next": "14.2.3",
     "react": "^18",
+    "react-chartjs-2": "^5.2.0",
     "react-color": "^2.19.3",
     "react-dom": "^18"
   },

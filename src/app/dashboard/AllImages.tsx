@@ -40,7 +40,7 @@ const AllImages = () => {
           background: `linear-gradient(to bottom, hsl(${huePickerColor.h}, ${huePickerColor.s}%, ${huePickerColor.l}%), #000000)`,
         }}
       >
-        <div className="sticky inset-x-0 top-0 z-20 flex justify-center">
+        <div className="sticky inset-x-0 top-0 flex justify-center">
           <div className="p-4">
             {" "}
             <HuePicker
@@ -82,14 +82,7 @@ const AllImages = () => {
                   },
                 }}
               >
-                <Image
-                  unoptimized
-                  alt={name}
-                  width={64}
-                  height={64}
-                  src={image.url}
-                  className="z-10"
-                />
+                <Image unoptimized alt={name} width={64} height={64} src={image.url} />
               </Tooltip>
             );
           })}
