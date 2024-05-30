@@ -4,6 +4,7 @@ import ContentWrapper from "./ContentWrapper";
 import Welcome from "./Welcome";
 import { MyContextProvider } from "../components/ColorContext";
 import { unstable_noStore as noStore } from "next/cache";
+export const dynamic = 'force-dynamic';
 
 const Dashboard = async () => {
   const user = await getUserProfile();

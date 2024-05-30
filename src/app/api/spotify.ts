@@ -2,6 +2,7 @@ import { isDynamicServerError } from "next/dist/client/components/hooks-server-c
 import { SPOTIFY_API_BASE_URL } from "../lib/constants";
 import { verifySession } from "../lib/dal";
 import { unstable_noStore as noStore } from "next/cache";
+export const dynamic = 'force-dynamic';
 
 export const customFetch = async (url: string, options = {}) => {
   noStore()
