@@ -4,6 +4,7 @@ import ContentWrapper from "./ContentWrapper";
 import Welcome from "./Welcome";
 import { MyContextProvider } from "../components/ColorContext";
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 const Dashboard = async () => {
   const user = await getUserProfile();
