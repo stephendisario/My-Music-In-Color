@@ -7,7 +7,7 @@ export const customFetch = async (url: string, options = {}) => {
     cache: "force-cache",
   };
 
-  return fetch(url, fetchOptions);
+  return await fetch(url, fetchOptions);
 };
 
 export const getUserProfile = async () => {
