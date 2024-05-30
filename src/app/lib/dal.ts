@@ -2,8 +2,9 @@ import "server-only";
 import { cookies } from "next/headers";
 import { decrypt } from "@/app/lib/session";
 import { redirect } from "next/navigation";
+import { cache } from "react";
 
-export const verifySession = async () => {
+export const verifySession = cache(async () => {
   const cookie = cookies().get("session")?.value;
   const session = await decrypt(cookie);
 
@@ -12,4 +13,4 @@ export const verifySession = async () => {
   }
 
   return { payload: session?.payload };
-};
+});
