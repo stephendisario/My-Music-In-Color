@@ -3,13 +3,23 @@ import { getTopTracks, getUserProfile } from "../api/spotify";
 import ContentWrapper from "./ContentWrapper";
 import Welcome from "./Welcome";
 import { MyContextProvider } from "../components/ColorContext";
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+import { cookies } from "next/headers";
+import { decrypt } from "../lib/session";
+import { redirect } from "next/navigation";
+// export const dynamic = "force-dynamic";
 
 const Dashboard = async () => {
-  const user = await getUserProfile();
-  const loadingTracks = await getTopTracks("short_term", 1);
-  const topTracks = await getTopTracks("long_term");
+
+  const cookie = cookies().get("session")?.value;
+  const session = await decrypt(cookie);
+
+  if (!session?.payload) {
+    redirect("/login");
+  }
+
+  const user = await getUserProfile(session.payload);
+  const loadingTracks = await getTopTracks("short_term", 1, session.payload);
+  const topTracks = await getTopTracks("long_term", 0, session.payload);
 
   return (
     <MyContextProvider initialValue={topTracks!}>
