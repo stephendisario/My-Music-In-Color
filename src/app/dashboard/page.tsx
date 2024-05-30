@@ -8,11 +8,11 @@ import { unstable_noStore as noStore } from "next/cache";
 const Dashboard = async () => {
   const user = await getUserProfile();
   const loadingTracks = await getTopTracks("short_term", 1);
-  const topTracks = await getTopTracks("long_term");
+  // const topTracks = await getTopTracks("long_term");
   noStore()
 
   return (
-    <MyContextProvider initialValue={topTracks!}>
+    <MyContextProvider initialValue={[]}>
       <div className="snap-y snap-mandatory snap-always	h-screen overflow-scroll">
         <Welcome user={user!} loadingTracks={loadingTracks!} />
         <ContentWrapper />
