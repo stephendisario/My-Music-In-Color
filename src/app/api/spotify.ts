@@ -4,6 +4,7 @@ import { verifySession } from "../lib/dal";
 export const customFetch = async (url: string, options = {}) => {
   const fetchOptions: RequestInit = {
     ...options,
+    cache: "force-cache"
   };
 
   return await fetch(url, fetchOptions);
