@@ -58,7 +58,9 @@ const PieChart = () => {
   return (
     <div
       className={`snap-center relative h-screen flex flex-row justify-center items-center`}
-      style={{ background: `linear-gradient(to bottom, ${yourColor}, rgba(0, 0, 0, 1))` }}
+      style={{
+        background: `linear-gradient(to bottom, ${yourColor === "black" ? "" : yourColor}, rgba(0, 0, 0, 1))`,
+      }}
     >
       <div style={{ width: "50%", height: "75%" }}>{data && <Pie data={data} />}</div>
       <div className="mx-auto">Your Color: {yourColor}</div>
