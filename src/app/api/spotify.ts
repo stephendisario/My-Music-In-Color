@@ -1,3 +1,4 @@
+import { isDynamicServerError } from "next/dist/client/components/hooks-server-context";
 import { SPOTIFY_API_BASE_URL } from "../lib/constants";
 import { verifySession } from "../lib/dal";
 
@@ -26,6 +27,7 @@ export const getUserProfile = async () => {
 
     return body;
   } catch (error: any) {
+    if(isDynamicServerError(error)) throw error
     console.error("Error fetching user profile:", error.message);
   }
 };
@@ -60,6 +62,7 @@ export const getTopTracks = async (
       total.total
     );
   } catch (error: any) {
+    if(isDynamicServerError(error)) throw error
     console.error("Error fetching top tracks:", error);
   }
 };
