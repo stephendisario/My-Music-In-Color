@@ -29,7 +29,7 @@ export const getUserProfile = async () => {
 
     return body;
   } catch (error: any) {
-    if(isDynamicServerError(error)) throw error
+    if(isDynamicServerError(error)) console.log('hey')
     console.error("Error fetching user profile:", error.message);
   }
 };
@@ -65,8 +65,8 @@ export const getTopTracks = async (
       total.total
     );
   } catch (error: any) {
-    if(isDynamicServerError(error)) throw error
-    console.error("Error fetching top tracks:", error);
+    if(isDynamicServerError(error)) console.log('hey')
+      console.error("Error fetching top tracks:", error);
   }
 };
 
