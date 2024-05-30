@@ -1,16 +1,18 @@
 import { SPOTIFY_API_BASE_URL } from "../lib/constants";
 import { verifySession } from "../lib/dal";
+import { unstable_noStore as noStore } from "next/cache";
 
 export const customFetch = async (url: string, options = {}) => {
+  noStore()
   const fetchOptions: RequestInit = {
     ...options,
-    cache: "force-cache"
   };
 
   return fetch(url, fetchOptions);
 };
 
 export const getUserProfile = async () => {
+  noStore()
     const session = await verifySession();
     const accessToken = session.payload;
   try {
@@ -36,6 +38,7 @@ export const getTopTracks = async (
   time_range: "short_term" | "medium_term" | "long_term",
   iterations = 0,
 ) => {
+  noStore()
     const session = await verifySession();
     const accessToken = session.payload;
 
@@ -72,6 +75,7 @@ export const fetchWithOffset = async <T>(
   iterations = 0,
   total: number
 ): Promise<T[]> => {
+  noStore()
   let offset = 0;
   let allItems: T[] = [];
   let data: SpotifyResponse<T>;
