@@ -3,6 +3,7 @@ import { getTopTracks, getUserProfile } from "../api/spotify";
 import ContentWrapper from "./ContentWrapper";
 import Welcome from "./Welcome";
 import { MyContextProvider } from "../components/ColorContext";
+export const dynamic = "force-dynamic";
 
 const Dashboard = async () => {
   const user = await getUserProfile();
