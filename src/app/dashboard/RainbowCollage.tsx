@@ -70,8 +70,7 @@ const RainbowCollage = () => {
             >
               {name} - {artist}
             </p>
-            <Image
-              unoptimized
+            <img
               alt={name || "empty"}
               width={64}
               height={64}
@@ -148,7 +147,7 @@ const RainbowCollage = () => {
                   },
                 }}
               >
-                <Image unoptimized alt={name} width={64} height={64} src={image.url} />
+                <img alt={name} width={64} height={64} src={image.url} />
               </Tooltip>
             );
           })}
