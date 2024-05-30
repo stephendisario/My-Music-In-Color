@@ -10,7 +10,6 @@ const Dashboard = async () => {
   const topTracks = await getTopTracks("long_term");
 
   return (
-    topTracks && 
     <MyContextProvider initialValue={topTracks!}>
       <div className="snap-y snap-mandatory snap-always	h-screen overflow-scroll">
         <Welcome user={user!} loadingTracks={loadingTracks!} />
