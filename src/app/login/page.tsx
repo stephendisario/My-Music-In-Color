@@ -2,6 +2,7 @@
 import React, { useEffect } from "react";
 import { login } from "../actions/auth";
 import { generateRandomString } from "../lib/helper";
+import { Button } from "@mui/material";
 
 const Login = () => {
   const codeVerifier = generateRandomString(64);
@@ -13,7 +14,13 @@ const Login = () => {
     if (obj) console.log("localstore size", Object.keys(obj).length);
   }, [codeVerifier]);
 
-  return <button onClick={() => login(codeVerifier)}>Log In</button>;
+  return (
+    <div className="flex relative h-screen justify-center items-center">
+      <Button variant="outlined" onClick={() => login(codeVerifier)}>
+        Log In
+      </Button>
+    </div>
+  );
 };
 
 export default Login;

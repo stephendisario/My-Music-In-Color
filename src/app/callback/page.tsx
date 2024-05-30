@@ -24,7 +24,7 @@ const Callback = () => {
     };
   }, [code, codeVerifier]);
 
-  return <div>Loading...</div>;
+  return <div className="flex relative h-screen justify-center items-center">Loading...</div>;
 };
 
 export default Callback;
