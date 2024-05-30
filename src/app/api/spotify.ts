@@ -8,7 +8,7 @@ export const customFetch = async (url: string, options = {}) => {
     ...options,
   };
 
-  return fetch(url, fetchOptions);
+  return await fetch(url, fetchOptions);
 };
 
 export const getUserProfile = async () => {
