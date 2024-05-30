@@ -1,11 +1,7 @@
-import { isDynamicServerError } from "next/dist/client/components/hooks-server-context";
 import { SPOTIFY_API_BASE_URL } from "../lib/constants";
 import { verifySession } from "../lib/dal";
-import { unstable_noStore as noStore } from "next/cache";
-export const dynamic = 'force-dynamic';
 
 export const customFetch = async (url: string, options = {}) => {
-  noStore()
   const fetchOptions: RequestInit = {
     ...options,
   };
@@ -14,7 +10,6 @@ export const customFetch = async (url: string, options = {}) => {
 };
 
 export const getUserProfile = async () => {
-  noStore()
     const session = await verifySession();
     const accessToken = session.payload;
   try {
@@ -30,7 +25,6 @@ export const getUserProfile = async () => {
 
     return body;
   } catch (error: any) {
-    if(isDynamicServerError(error)) console.log('hey')
     console.error("Error fetching user profile:", error.message);
   }
 };
@@ -41,7 +35,6 @@ export const getTopTracks = async (
   time_range: "short_term" | "medium_term" | "long_term",
   iterations = 0,
 ) => {
-  noStore()
     const session = await verifySession();
     const accessToken = session.payload;
 
@@ -66,7 +59,6 @@ export const getTopTracks = async (
       total.total
     );
   } catch (error: any) {
-    if(isDynamicServerError(error)) console.log('hey')
       console.error("Error fetching top tracks:", error);
   }
 };
@@ -79,7 +71,6 @@ export const fetchWithOffset = async <T>(
   iterations = 0,
   total: number
 ): Promise<T[]> => {
-  noStore()
   let offset = 0;
   let allItems: T[] = [];
   let data: SpotifyResponse<T>;
