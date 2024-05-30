@@ -1,21 +1,19 @@
 import { SPOTIFY_API_BASE_URL } from "../lib/constants";
 import { verifySession } from "../lib/dal";
 
-export const revalidate = 0;
-
 export const customFetch = async (url: string, options = {}) => {
   const fetchOptions: RequestInit = {
     ...options,
-    // cache: "force-cache"
+    cache: "force-cache"
   };
 
   return fetch(url, fetchOptions);
 };
 
-export const getUserProfile = async (accessToken: {}) => {
+export const getUserProfile = async () => {
+    const session = await verifySession();
+    const accessToken = session.payload;
   try {
-    // const session = await verifySession();
-    // const accessToken = session.payload;
     const response = await customFetch(`${SPOTIFY_API_BASE_URL}/v1/me`, {
       headers: { Authorization: "Bearer " + accessToken },
     });
@@ -36,13 +34,12 @@ export const getUserProfile = async (accessToken: {}) => {
 
 export const getTopTracks = async (
   time_range: "short_term" | "medium_term" | "long_term",
-  iterations = 0,
-  accessToken: {}
+  iterations = 0
 ) => {
-  try {
-    // const session = await verifySession();
-    // const accessToken = session.payload;
+    const session = await verifySession();
+    const accessToken = session.payload;
 
+  try {
     const res = await customFetch(
       `${SPOTIFY_API_BASE_URL}/v1/me/top/tracks?limit=1&offset=0&time_range=${time_range}&fields=total`,
       {
