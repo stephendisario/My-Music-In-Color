@@ -7,7 +7,7 @@ export function middleware(request: NextRequest) {
     return Response.redirect(new URL('/dashboard', request.url))
   }
  
-  if (!currentUser && !request.nextUrl.pathname.startsWith('/login')) {
+  if (!currentUser && !request.nextUrl.pathname.startsWith('/login') || !request.nextUrl.pathname.startsWith('/callback')) {
     return Response.redirect(new URL('/login', request.url))
   }
 }
