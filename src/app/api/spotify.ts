@@ -4,15 +4,15 @@ import { verifySession } from "../lib/dal";
 export const customFetch = async (url: string, options = {}) => {
   const fetchOptions: RequestInit = {
     ...options,
-    cache: "force-cache"
+    cache: "force-cache",
   };
 
-  return await fetch(url, fetchOptions);
+  return fetch(url, fetchOptions);
 };
 
 export const getUserProfile = async () => {
-    const session = await verifySession();
-    const accessToken = session.payload;
+  const session = await verifySession();
+  const accessToken = session.payload;
   try {
     const response = await customFetch(`${SPOTIFY_API_BASE_URL}/v1/me`, {
       headers: { Authorization: "Bearer " + accessToken },
@@ -34,10 +34,10 @@ export const getUserProfile = async () => {
 
 export const getTopTracks = async (
   time_range: "short_term" | "medium_term" | "long_term",
-  iterations = 0,
+  iterations = 0
 ) => {
-    const session = await verifySession();
-    const accessToken = session.payload;
+  const session = await verifySession();
+  const accessToken = session.payload;
 
   try {
     const res = await customFetch(
@@ -60,7 +60,7 @@ export const getTopTracks = async (
       total.total
     );
   } catch (error: any) {
-      console.error("Error fetching top tracks:", error);
+    console.error("Error fetching top tracks:", error);
   }
 };
 

@@ -96,7 +96,7 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ initialVal
       setLoading(false);
     };
 
-    if(initialValue) injectColor();
+    if (initialValue) injectColor();
   }, [initialValue]);
 
   return (
