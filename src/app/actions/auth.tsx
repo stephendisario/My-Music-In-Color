@@ -54,5 +54,5 @@ export const getToken = async (code: string, codeVerifier: string) => {
 
   const res = await response.json();
   await createSession(res.access_token);
-  redirect("/dashboard", RedirectType.replace);
+  redirect("/", RedirectType.replace);
 };
