@@ -26,5 +26,5 @@ export default async function middleware(req: NextRequest) {
 
 // Routes Middleware should not run on
 export const config = {
-  matcher: publicRoutes.concat(protectedRoutes),
+  matcher: '/((?!_next/static|_next/image).*)',
 };
