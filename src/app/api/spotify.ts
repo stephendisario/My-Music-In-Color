@@ -1,10 +1,11 @@
 import { SPOTIFY_API_BASE_URL } from "../lib/constants";
 import { verifySession } from "../lib/dal";
 
+export const revalidate = 0;
+
 export const customFetch = async (url: string, options = {}) => {
   const fetchOptions: RequestInit = {
     ...options,
-    cache: "force-cache"
   };
 
   return fetch(url, fetchOptions);
