@@ -34,7 +34,7 @@ export const getUserProfile = async () => {
 
 export const getTopTracks = async (
   time_range: "short_term" | "medium_term" | "long_term",
-  iterations = 0
+  iterations = 0,
 ) => {
     const session = await verifySession();
     const accessToken = session.payload;
