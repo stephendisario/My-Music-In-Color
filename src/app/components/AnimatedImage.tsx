@@ -71,8 +71,7 @@ const AnimatedImage: React.FC<AnimatedImageProps> = ({ url }) => {
         transform: `translate(${position.x}px, ${position.y}px)`,
       }}
     >
-      <Image
-        unoptimized
+      <img
         src={url} // Replace with your image path
         alt="Your Image"
         width={150} // Adjust as needed

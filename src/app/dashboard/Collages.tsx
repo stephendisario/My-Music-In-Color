@@ -176,7 +176,7 @@ const Collages = () => {
                           },
                         }}
                       >
-                        <Image unoptimized alt={name} width={64} height={64} src={image.url} />
+                        <img alt={name} width={64} height={64} src={image.url} />
                       </Tooltip>
                     );
                   })}
