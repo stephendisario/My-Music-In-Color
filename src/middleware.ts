@@ -25,5 +25,5 @@ export default async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: publicRoutes.concat(protectedRoutes),
+  matcher: '/((?!_next/static|_next/image).*)',
 };
