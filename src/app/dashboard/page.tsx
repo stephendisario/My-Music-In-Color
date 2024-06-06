@@ -2,20 +2,20 @@ import React, { Suspense } from "react";
 import { getTopTracks, getUserProfile } from "../api/spotify";
 import ContentWrapper from "./ContentWrapper";
 import Welcome from "./Welcome";
-import { MyContextProvider } from "../components/ColorContext";
+
+export const fetchCache = "force-cache";
 
 const Dashboard = async () => {
   const user = await getUserProfile();
   const loadingTracks = await getTopTracks("short_term", 1);
-  const topTracks = await getTopTracks("long_term");
 
   return (
-    <MyContextProvider initialValue={topTracks!}>
-      <div className="snap-y snap-mandatory snap-always	h-screen overflow-scroll">
-        <Welcome user={user!} loadingTracks={loadingTracks!} />
+    <div className="snap-y snap-mandatory snap-always	h-screen overflow-scroll">
+      <Welcome user={user!} loadingTracks={loadingTracks!} />
+      <Suspense fallback={<div>POOP!</div>}>
         <ContentWrapper />
-      </div>
-    </MyContextProvider>
+      </Suspense>
+    </div>
   );
 };
 export default Dashboard;

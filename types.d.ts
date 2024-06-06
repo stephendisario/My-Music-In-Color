@@ -1,6 +1,7 @@
 type User = {
     display_name: string;
     images: ImageObject[]
+    id: string;
   }
   
 type ImageObject = {
@@ -22,6 +23,7 @@ interface Track {
   artists: Artist[];
   duration_ms: number;
   album: Album;
+  uri: string;
 }
 
 type RGBColor = [number, number, number];

@@ -1,23 +1,22 @@
-"use client";
-import React, { useState } from "react";
-import Collages, { Collages as Cols } from "./Collages";
+import React from "react";
+import Collages from "./Collages";
 import AllImages from "./AllImages";
 import PieChart from "./PieChart";
-import { useMyContext } from "../components/ColorContext";
+import { MyContextProvider } from "../components/ColorContext";
 import RainbowCollage from "./RainbowCollage";
+import { getTopTracks, getUserProfile } from "../api/spotify";
 
-const ContentWrapper = () => {
-  const { loading } = useMyContext();
+const ContentWrapper = async () => {
+  const topLongTracks = await getTopTracks("long_term");
+  const user = await getUserProfile();
 
-  return !loading ? (
-    <>
+  return (
+    <MyContextProvider longTermTracks={topLongTracks!} id={user!.id}>
       <PieChart />
       <RainbowCollage />
       <Collages />
       <AllImages />
-    </>
-  ) : (
-    <div>poop</div>
+    </MyContextProvider>
   );
 };
 export default ContentWrapper;

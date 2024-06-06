@@ -79,3 +79,7 @@ export function shuffle(array: any) {
 
   return array;
 }
+
+export function getTerm(tabValue: number) {
+  return tabValue === 0 ? "One Year" : tabValue === 1 ? "Six Months" : "One Month";
+}
