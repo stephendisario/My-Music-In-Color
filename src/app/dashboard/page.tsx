@@ -2,8 +2,6 @@ import React, { Suspense } from "react";
 import { getTopTracks, getUserProfile } from "../api/spotify";
 import ContentWrapper from "./ContentWrapper";
 import Welcome from "./Welcome";
-import { MyContextProvider } from "../components/ColorContext";
-import { unstable_noStore as noStore } from "next/cache";
 
 export const fetchCache = "force-cache";
 

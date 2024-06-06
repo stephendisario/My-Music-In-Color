@@ -8,7 +8,7 @@ export const customFetch = async (url: string, options = {}) => {
     cache: "force-cache",
   };
 
-  return await fetch(url, fetchOptions);
+  return fetch(url, fetchOptions);
 };
 
 export const createPlaylist = async (color: string, term: string, user_id: string) => {
