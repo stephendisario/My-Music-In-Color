@@ -4,7 +4,6 @@ import "./styles.css";
 import { logout } from "../actions/auth";
 import AnimatedImage from "../components/AnimatedImage";
 import InColourBackground from "../components/InColourBackground";
-import { useMyContext } from "../components/ColorContext";
 
 interface WelcomeProps {
   user: User;
@@ -12,8 +11,6 @@ interface WelcomeProps {
 }
 
 const Welcome: React.FC<WelcomeProps> = ({ user, loadingTracks }) => {
-  const { loading } = useMyContext();
-
   return (
     <div className="snap-center relative h-screen">
       <InColourBackground />
@@ -24,9 +21,9 @@ const Welcome: React.FC<WelcomeProps> = ({ user, loadingTracks }) => {
         <div className="flex w-full h-full flex-col justify-center items-center pb-16">
           {/* Your main content goes here */}
           <h1 className="text-5xl font-bold mb-4">Hi {user.display_name.split(" ")[0]}</h1>
-          <h3 className="text-xl font-bold mb-4">
+          {/* <h3 className="text-xl font-bold mb-4">
             {loading ? "Loading Colors..." : "Colors ready, please scroll"}
-          </h3>
+          </h3> */}
           {/* <p className="text-lg">Loading your Color Profile...</p> */}
         </div>
       </div>

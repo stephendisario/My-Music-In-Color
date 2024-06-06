@@ -24,7 +24,7 @@ export const addColor = async (unqieImagesMap: UniqueImagesMap): Promise<UniqueI
           let image = new Image();
 
           image.onload = async () => {
-            const rgb = colorThief.getColor(image);
+            const rgb = colorThief.getColor(image, 1);
             const hsl = rgbToHsl(rgb);
             unqieImagesMap[url] = hsl;
             //add unseen images to local

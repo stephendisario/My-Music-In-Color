@@ -11,15 +11,14 @@ export default async function middleware(req: NextRequest) {
   const isPublicRoute = publicRoutes.includes(path);
 
   const cookie = cookies().get("session")?.value;
-  console.log(req.nextUrl.pathname)
   const session = await decrypt(cookie);
 
   if (isProtectedRoute && !session?.payload) {
     return NextResponse.redirect(new URL("/login", req.nextUrl));
   }
 
-  if (isPublicRoute && session?.payload) {
-    return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
+  if (isPublicRoute && session?.payload && !req.nextUrl.pathname.endsWith("/")) {
+    return NextResponse.redirect(new URL("/", req.nextUrl));
   }
 
   return NextResponse.next();
@@ -27,5 +26,5 @@ export default async function middleware(req: NextRequest) {
 
 // Routes Middleware should not run on
 export const config = {
-  matcher: '/((?!_next/static|_next/image).*)',
+  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
 };

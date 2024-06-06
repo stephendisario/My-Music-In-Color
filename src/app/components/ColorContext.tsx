@@ -3,13 +3,20 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { addColor } from "../lib/colorthief";
 import { getUniqueImages } from "../lib/helper";
 import { Collages, Colors, collageConfig } from "../dashboard/Collages";
+import TermTabs from "./TermTabs";
+import { getTopTracks } from "../api/spotify";
 
 interface MyContextType {
-  colorTracks: ColorTrack[];
+  tabValue: number;
+  setTabValue: React.Dispatch<React.SetStateAction<number>>;
   sortedColorTracks: ColorTrack[];
   collages: Collages;
   setCollages: React.Dispatch<React.SetStateAction<Collages>>;
   loading: boolean;
+  long: Collages;
+  medium: Collages;
+  short: Collages;
+  id: string;
 }
 
 const MyContext = createContext<MyContextType | undefined>(undefined);
@@ -23,15 +30,55 @@ export const useMyContext = () => {
 };
 
 interface MyContextProviderProps {
-  initialValue: Track[];
+  longTermTracks: Track[];
   children: React.ReactNode;
+  id: string;
 }
 
-export const MyContextProvider: React.FC<MyContextProviderProps> = ({ initialValue, children }) => {
-  const [colorTracks, setColorTracks] = useState<ColorTrack[]>([]);
+export const MyContextProvider: React.FC<MyContextProviderProps> = ({
+  longTermTracks,
+  id,
+  children,
+}) => {
+  const [tabValue, setTabValue] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [sortedColorTracks, setSortedColorTracks] = useState<ColorTrack[]>([]);
   const [collages, setCollages] = useState<Collages>({} as Collages);
+  const [long, setLong] = useState<Collages>({} as Collages);
+  const [medium, setMedium] = useState<Collages>({} as Collages);
+  const [short, setShort] = useState<Collages>({} as Collages);
+
+  const injectColor = async (tracks: Track[], term: "long_term" | "medium_term" | "short_term") => {
+    const uniqueImagesMapEmpty = getUniqueImages(tracks);
+    const uniqueImagesMapFilled = await addColor(uniqueImagesMapEmpty);
+
+    const fillTracksWithColor: ColorTrack[] = tracks.map((track) => {
+      const url = track.album.images?.[2].url;
+      if (!url) return track;
+      else return { ...track, hsl: uniqueImagesMapFilled[url] } as ColorTrack;
+    });
+
+    const deepCopy: ColorTrack[] = JSON.parse(JSON.stringify(fillTracksWithColor));
+
+    const sorted = deepCopy.sort((a, b) => {
+      if (a.hsl === undefined) return 1;
+      if (b.hsl === undefined) return -1;
+      return a.hsl[0] - b.hsl[0];
+    });
+
+    const groups = groupTracks(fillTracksWithColor);
+
+    if (term === "long_term") {
+      setCollages(groups);
+      setSortedColorTracks(sorted);
+      setLoading(false);
+      setLong(groups);
+    } else if (term === "medium_term") {
+      setMedium(groups);
+    } else if (term === "short_term") {
+      setShort(groups);
+    }
+  };
 
   const groupTracks = (colorTracks: ColorTrack[]) => {
     let groups = (Object.keys(collageConfig) as Colors[]).reduce((acc: Collages, color) => {
@@ -70,37 +117,39 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ initialVal
   };
 
   useEffect(() => {
-    const injectColor = async () => {
-      const uniqueImagesMapEmpty = getUniqueImages(initialValue);
-      const uniqueImagesMapFilled = await addColor(uniqueImagesMapEmpty);
+    injectColor(longTermTracks, "long_term");
+  }, []);
 
-      const fillTracksWithColor: ColorTrack[] = initialValue.map((track) => {
-        const url = track.album.images?.[2].url;
-        if (!url) return track;
-        else return { ...track, hsl: uniqueImagesMapFilled[url] } as ColorTrack;
-      });
+  const injections = async () => {
+    const topMediumTracks = await getTopTracks("medium_term");
+    const topShortTracks = await getTopTracks("short_term");
+    injectColor(topMediumTracks!, "medium_term");
+    injectColor(topShortTracks!, "short_term");
+  };
 
-      const deepCopy: ColorTrack[] = JSON.parse(JSON.stringify(fillTracksWithColor));
+  useEffect(() => {
+    if (!loading) injections();
+  }, [loading]);
 
-      const sorted = deepCopy.sort((a, b) => {
-        if (a.hsl === undefined) return 1;
-        if (b.hsl === undefined) return -1;
-        return a.hsl[0] - b.hsl[0];
-      });
-
-      const groups = groupTracks(fillTracksWithColor);
-
-      setCollages(groups);
-      setColorTracks(fillTracksWithColor);
-      setSortedColorTracks(sorted);
-      setLoading(false);
-    };
-
-    if (initialValue) injectColor();
-  }, [initialValue]);
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <MyContext.Provider value={{ colorTracks, sortedColorTracks, collages, setCollages, loading }}>
+    <MyContext.Provider
+      value={{
+        tabValue,
+        setTabValue,
+        sortedColorTracks,
+        collages,
+        setCollages,
+        loading,
+        long,
+        medium,
+        short,
+        id,
+      }}
+    >
       {children}
     </MyContext.Provider>
   );

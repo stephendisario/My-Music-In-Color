@@ -53,7 +53,6 @@ const AnimatedImage: React.FC<AnimatedImageProps> = ({ url }) => {
       ).onfinish = () => {
         // Reset position to bottom
         setPosition({ x: initialX, y: screenHeight });
-        console.log("finished");
         // Start animation again
         animate(true);
       };

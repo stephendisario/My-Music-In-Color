@@ -1,4 +1,4 @@
-import { isDynamicServerError } from "next/dist/client/components/hooks-server-context";
+"use server";
 import { SPOTIFY_API_BASE_URL } from "../lib/constants";
 import { verifySession } from "../lib/dal";
 
@@ -9,6 +9,62 @@ export const customFetch = async (url: string, options = {}) => {
   };
 
   return await fetch(url, fetchOptions);
+};
+
+export const createPlaylist = async (color: string, term: string, user_id: string) => {
+  const session = await verifySession();
+  const accessToken = session.payload;
+  try {
+    const response = await customFetch(`${SPOTIFY_API_BASE_URL}/v1/users/${user_id}/playlists`, {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + accessToken,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: `My Top ${color} Tracks - ${term}`,
+        description: "Playlist created via mymusicincolor.com",
+      }),
+    });
+
+    const body: any = await response.json();
+
+    if (!response.ok) {
+      throw new Error(JSON.stringify(body));
+    }
+
+    return body.id;
+  } catch (error: any) {
+    console.error("Error creating playlist:", error.message);
+  }
+};
+
+export const addTracksToPlaylist = async (playlistId: string, trackUris: string[]) => {
+  const session = await verifySession();
+  const accessToken = session.payload;
+
+  try {
+    const response = await fetch(`${SPOTIFY_API_BASE_URL}/v1/playlists/${playlistId}/tracks`, {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + accessToken,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        uris: trackUris,
+      }),
+    });
+
+    const body: any = await response.json();
+
+    if (!response.ok) {
+      throw new Error(JSON.stringify(body));
+    }
+
+    return body;
+  } catch (error: any) {
+    console.error("Error adding tracks to playlist:", error.message);
+  }
 };
 
 export const getUserProfile = async () => {
@@ -91,6 +147,7 @@ export const fetchWithOffset = async <T>(
       id: true,
       name: true,
     },
+    uri: true,
   };
 
   console.log("TOTAL", total);
