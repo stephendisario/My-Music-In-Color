@@ -61,7 +61,7 @@ const AllImages = () => {
             return (
               <CustomTooltip track={track} key={track.id}>
                 <a href={spotifyUrl} target="_blank" rel="noopener noreferrer">
-                  <Image alt={name} width={64} height={64} src={image} />
+                  <Image unoptimized alt={name} width={64} height={64} src={image} />
                 </a>
               </CustomTooltip>
             );
