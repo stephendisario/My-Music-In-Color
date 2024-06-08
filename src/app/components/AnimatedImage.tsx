@@ -3,11 +3,15 @@ import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
 interface AnimatedImageProps {
-  url: string;
+  track: Track;
 }
 //TODO: Changing screensize
-const AnimatedImage: React.FC<AnimatedImageProps> = ({ url }) => {
+const AnimatedImage: React.FC<AnimatedImageProps> = ({ track }) => {
   const imageRef = useRef<HTMLDivElement>(null);
+  const spotifyUrl = track?.external_urls?.spotify;
+  const url = track?.album?.images?.[0]?.url;
+
+  console.log(spotifyUrl);
 
   const [isLoading, setIsLoading] = useState(true);
   const [position, setPosition] = useState<{ x: number; y: number }>({
@@ -70,12 +74,15 @@ const AnimatedImage: React.FC<AnimatedImageProps> = ({ url }) => {
         transform: `translate(${position.x}px, ${position.y}px)`,
       }}
     >
-      <img
+      {/* <a href={spotifyUrl} target="_blank" rel="noopener noreferrer"> */}
+      <Image
         src={url} // Replace with your image path
         alt="Your Image"
         width={150} // Adjust as needed
         height={150} // Adjust as needed
+        onClick={(e) => e.stopPropagation()} // Stop event propagation to avoid interfering with the animation
       />
+      {/* </a> */}
     </div>
   );
 };

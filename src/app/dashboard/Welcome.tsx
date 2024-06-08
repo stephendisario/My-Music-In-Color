@@ -31,7 +31,7 @@ const Welcome: React.FC<WelcomeProps> = ({ user, loadingTracks }) => {
       {/* Floating Images */}
       <div className="absolute top-0 left-0 w-full h-full overflow-x-hidden">
         {loadingTracks.slice(0, 22).map((track, index) => {
-          return <AnimatedImage url={track.album.images[0].url} key={index} />;
+          return <AnimatedImage track={track} key={index} />;
         })}
       </div>
     </div>

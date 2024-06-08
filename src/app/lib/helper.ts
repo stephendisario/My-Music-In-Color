@@ -1,3 +1,5 @@
+import { Collages, Colors, collageConfig } from "../dashboard/Collages";
+
 export const generateRandomString = (length: number) => {
   const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   const values = crypto.getRandomValues(new Uint8Array(length));
@@ -83,3 +85,34 @@ export function shuffle(array: any) {
 export function getTerm(tabValue: number) {
   return tabValue === 0 ? "One Year" : tabValue === 1 ? "Six Months" : "One Month";
 }
+
+export const removeDuplicatesFromCollage = (tracks: ColorTrack[]) => {
+  const seenIds = new Set<string>();
+  return tracks.filter((track) => {
+    if (seenIds.has(track.album.id)) {
+      return false;
+    } else {
+      seenIds.add(track.album.id);
+      return true;
+    }
+  });
+};
+
+export const toHslString = (hsl: HSLColor | undefined) => {
+  return hsl ? `hsl(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)` : "";
+};
+
+export const getRainbowCollage = (isHide: boolean, collages: Collages) => {
+  let rainbowArray: ColorTrack[] = [];
+
+  (Object.keys(collageConfig) as Colors[]).forEach((color) => {
+    const tracks = isHide ? collages[`${color}WithoutDupes`] : collages[color];
+
+    if (color === "black" || color === "white") return;
+    for (let i = 0; i < collageConfig[color].rainbowCount; i++) {
+      if (tracks[i]) rainbowArray.push(tracks[i]);
+    }
+  });
+
+  return rainbowArray;
+};

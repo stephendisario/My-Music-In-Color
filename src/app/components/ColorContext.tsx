@@ -1,7 +1,7 @@
 "use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { addColor } from "../lib/colorthief";
-import { getUniqueImages } from "../lib/helper";
+import { getUniqueImages, removeDuplicatesFromCollage } from "../lib/helper";
 import { Collages, Colors, collageConfig } from "../dashboard/Collages";
 import TermTabs from "./TermTabs";
 import { getTopTracks } from "../api/spotify";
@@ -83,10 +83,9 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({
   const groupTracks = (colorTracks: ColorTrack[]) => {
     let groups = (Object.keys(collageConfig) as Colors[]).reduce((acc: Collages, color) => {
       acc[color] = [];
-      acc[`${color}Filtered`] = [];
-      acc[`${color}Displayed`] = [];
+      acc[`${color}WithoutDupes`] = [];
       return acc;
-    }, {});
+    }, {} as Collages);
 
     colorTracks.forEach((track) => {
       if (!track.hsl) return;
@@ -99,18 +98,20 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({
           (hue >= collageConfig[color].hueRange[0] && hue <= collageConfig[color].hueRange[1]) ||
           (color === "red" && hue >= collageConfig[color].hueRange[2])
         ) {
-          groups[color].push(track);
           if (
             saturation >= collageConfig[color].saturationRange[0] &&
             saturation <= collageConfig[color].saturationRange[1] &&
             lightness >= collageConfig[color].lightnessRange[0] &&
             lightness <= collageConfig[color].lightnessRange[1]
           ) {
-            groups[`${color}Filtered`].push(track);
-            groups[`${color}Displayed`].push(track);
+            groups[color].push(track);
           }
         }
       });
+    });
+
+    (Object.keys(collageConfig) as Colors[]).forEach((color) => {
+      groups[`${color}WithoutDupes`] = removeDuplicatesFromCollage(groups[color]);
     });
 
     return groups;
