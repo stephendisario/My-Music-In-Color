@@ -24,6 +24,9 @@ interface Track {
   duration_ms: number;
   album: Album;
   uri: string;
+  external_urls: {
+    spotify: string
+  }
 }
 
 type RGBColor = [number, number, number];

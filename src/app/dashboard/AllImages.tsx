@@ -6,6 +6,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { Divider } from "@mui/material";
 import { HuePicker } from "react-color";
 import { binarySearch } from "../lib/helper";
+import CustomTooltip from "../components/CustomTooltip";
 
 const AllImages = () => {
   const { sortedColorTracks, loading } = useMyContext();
@@ -54,36 +55,15 @@ const AllImages = () => {
 
         <div className="flex flex-row flex-wrap justify-center w-full ml-auto mr-auto">
           {colorTrackSlice.map((track) => {
-            const image = track.album.images?.[2];
-            const name = track.name;
-            const artist = track.artists[0].name;
+            const image = track?.album?.images?.[2]?.url;
+            const name = track?.name;
+            const spotifyUrl = track?.external_urls?.spotify;
             return (
-              <Tooltip
-                PopperProps={{ disablePortal: true }}
-                arrow
-                key={track.id}
-                title={
-                  <div>
-                    <h1>{name}</h1>
-                    <Divider />
-                    <h3>{artist}</h3>
-                  </div>
-                }
-                slotProps={{
-                  tooltip: {
-                    sx: {
-                      bgcolor: `hsl(${track?.hsl?.[0]}, ${track?.hsl?.[1]}%, ${track?.hsl?.[2]}%)`,
-                      color: track?.hsl?.[2] && track?.hsl?.[2] > 50 ? "black" : "white",
-                      fontSize: "16px",
-                      "& .MuiTooltip-arrow": {
-                        color: `hsl(${track?.hsl?.[0]}, ${track?.hsl?.[1]}%, ${track?.hsl?.[2]}%)`,
-                      },
-                    },
-                  },
-                }}
-              >
-                <img alt={name} width={64} height={64} src={image.url} />
-              </Tooltip>
+              <CustomTooltip track={track} key={track.id}>
+                <a href={spotifyUrl} target="_blank" rel="noopener noreferrer">
+                  <Image alt={name} width={64} height={64} src={image} />
+                </a>
+              </CustomTooltip>
             );
           })}
         </div>

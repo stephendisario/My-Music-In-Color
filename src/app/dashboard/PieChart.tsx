@@ -5,6 +5,7 @@ import { Chart, ArcElement, Tooltip, Legend } from "chart.js";
 import { useMyContext } from "../components/ColorContext";
 import { Colors, collageConfig } from "./Collages";
 import TermTabs from "../components/TermTabs";
+import { toHslString } from "../lib/helper";
 
 // Register necessary components from Chart.js to keep the bundle size small
 Chart.register(ArcElement, Tooltip, Legend);
@@ -22,35 +23,19 @@ const PieChart = () => {
       datasets: [
         {
           label: "Tracks",
-          data: [
-            collages["redFiltered"]?.length,
-            collages["orangeFiltered"]?.length,
-            collages["yellowFiltered"]?.length,
-            collages["greenFiltered"]?.length,
-            collages["blueFiltered"]?.length,
-            collages["violetFiltered"]?.length,
-            collages["blackFiltered"]?.length,
-            collages["whiteFiltered"]?.length,
-          ],
-          backgroundColor: [
-            "rgba(255, 0, 0, 0.6)",
-            "rgba(255, 165, 0, 0.6)",
-            "rgba(255, 255, 0, 0.6)",
-            "rgba(0, 128, 0, 0.6)",
-            "rgba(0, 0, 255, 0.6)",
-            "rgba(238, 130, 238, 0.6)",
-            "rgba(0, 0, 0, 0.6)",
-            "rgba(255, 255, 255, 0.6)",
-          ],
+          data: (Object.keys(collageConfig) as Colors[]).map((color) => collages[color]?.length),
+          backgroundColor: (Object.keys(collageConfig) as Colors[]).map(
+            (color) => toHslString(collages[color]?.[0]?.hsl) || color
+          ),
           borderColor: ["Red", "Orange", "Yellow", "Green", "Blue", "Violet", "Black", "White"],
-          borderWidth: 1,
+          borderWidth: 0,
         },
       ],
     });
 
     setYourColor(
       (Object.keys(collageConfig) as Colors[]).reduce((acc, color) => {
-        if (collages[`${color}Filtered`]?.length > collages[`${acc}Filtered`]?.length) return color;
+        if (collages[color]?.length > collages[acc]?.length) return color;
         return acc;
       }, "red")
     );
@@ -60,10 +45,10 @@ const PieChart = () => {
     <div
       className={`snap-center relative h-screen flex flex-col justify-center items-center`}
       style={{
-        background: `linear-gradient(to bottom, ${yourColor === "black" ? "" : yourColor}, rgba(0, 0, 0, 1))`,
+        background: `linear-gradient(to bottom, ${yourColor === "black" ? "" : toHslString(collages[yourColor || "red"]?.[0].hsl)}, rgba(0, 0, 0, 1))`,
       }}
     >
-      <TermTabs />
+      <TermTabs color="white" />
       <div className="flex flex-row grow w-full">
         <div className="w-1/2">{data && <Pie data={data} />}</div>
         <div className="mx-auto">Your Color: {yourColor}</div>

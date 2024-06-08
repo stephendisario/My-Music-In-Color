@@ -146,6 +146,9 @@ export const fetchWithOffset = async <T>(
       name: true,
     },
     uri: true,
+    external_urls: {
+      spotify: true,
+    },
   };
 
   console.log("TOTAL", total);
