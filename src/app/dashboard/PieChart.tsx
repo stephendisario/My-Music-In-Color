@@ -5,10 +5,7 @@ import { Chart, ArcElement, Tooltip, Legend } from "chart.js";
 import { useMyContext } from "../components/ColorContext";
 import { Colors, collageConfig } from "./Collages";
 import TermTabs from "../components/TermTabs";
-<<<<<<< HEAD
 import { toHslString } from "../lib/helper";
-=======
->>>>>>> 11debefaa035bbcd05aa1d6be0723d84c19a95aa
 
 // Register necessary components from Chart.js to keep the bundle size small
 Chart.register(ArcElement, Tooltip, Legend);
