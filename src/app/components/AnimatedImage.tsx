@@ -11,8 +11,6 @@ const AnimatedImage: React.FC<AnimatedImageProps> = ({ track }) => {
   const spotifyUrl = track?.external_urls?.spotify;
   const url = track?.album?.images?.[0]?.url;
 
-  console.log(spotifyUrl);
-
   const [isLoading, setIsLoading] = useState(true);
   const [position, setPosition] = useState<{ x: number; y: number }>({
     x: -1000,
@@ -76,6 +74,7 @@ const AnimatedImage: React.FC<AnimatedImageProps> = ({ track }) => {
     >
       {/* <a href={spotifyUrl} target="_blank" rel="noopener noreferrer"> */}
       <Image
+        unoptimized
         src={url} // Replace with your image path
         alt="Your Image"
         width={150} // Adjust as needed
