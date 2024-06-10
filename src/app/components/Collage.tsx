@@ -11,6 +11,7 @@ import { addImageToPlaylist, addTracksToPlaylist, createPlaylist } from "../api/
 import { Alert, Button, Snackbar } from "@mui/material";
 import { toJpeg, toPng } from "html-to-image";
 import SpotifyLogo from "./SpotifyLogo";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number }) => {
   const { collages, tabValue, id } = useMyContext();
@@ -19,9 +20,11 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
   const [rainbowCollage, setRainbowCollage] = useState<ColorTrack[]>([]);
   const [rainbowCollageWithoutDupes, setRainbowCollageWithoutDupes] = useState<ColorTrack[]>([]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [isCreatePlaylistLoading, setIsCreatePlaylistLoading] = useState<boolean>(false);
 
   const artRef = useRef<HTMLDivElement>(null);
   const infoRef = useRef<HTMLDivElement>(null);
+  const playlistRef = useRef<HTMLDivElement>(null);
 
   const collageToUse = hideDuplicates ? rainbowCollageWithoutDupes : rainbowCollage;
 
@@ -38,14 +41,18 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
   };
 
   const handleCreatePlaylist = async (tracks: ColorTrack[]) => {
+    setIsCreatePlaylistLoading(true);
     const playlistId = await createPlaylist(color, getTerm(tabValue), id);
     await addTracksToPlaylist(
       playlistId,
       tracks.map((track) => track.uri)
     );
-    // const dataUrl = await handleDownload(artRef, false)
-    // await addImageToPlaylist(playlistId, dataUrl!)
+    let dataUrl = await handleDownload(playlistRef, false);
+    dataUrl = dataUrl?.split(",")[1];
 
+    await addImageToPlaylist(playlistId, dataUrl!);
+
+    setIsCreatePlaylistLoading(false);
     setOpenSnackbar(true);
   };
 
@@ -64,22 +71,26 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
 
       const backgroundColor = color === "rainbow" || color === "white" ? "white" : "black";
 
+      const scaledObject: any = {
+        width,
+        height,
+        style: {
+          transform: `scale(${scale})`,
+          transformOrigin: "top left",
+          width: `${node.offsetWidth}px`,
+          height: `${node.offsetHeight}px`,
+        },
+      };
+
       try {
         const dataUrl = await toJpeg(node, {
+          quality: isDownload ? 1 : 0.3,
           cacheBust: true,
           backgroundColor,
-          width,
-          height,
-          style: {
-            transform: `scale(${scale})`,
-            transformOrigin: "top left",
-            width: `${node.offsetWidth}px`,
-            height: `${node.offsetHeight}px`,
-          },
+          ...(isDownload && scaledObject),
         });
 
         if (isDownload) {
-          console.log(dataUrl);
           const link = document.createElement("a");
           link.download = `${getTerm(tabValue)} - ${color}`;
           link.href = dataUrl;
@@ -102,7 +113,7 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
   const logos = () => {
     const logosColor = color === "rainbow" || color === "white" ? "black" : "white";
     return (
-      <div className={`my-2 px-2 flex flex-row items-center`}>
+      <div className={`my-2 px-2 flex flex-row items-center logos`}>
         <div className="mr-auto" style={{ color: logosColor }}>
           {getTerm(tabValue)}
           <p>mymusicincolor.com</p>
@@ -200,11 +211,16 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
             {hideDuplicates ? "Show Duplicates" : "Hide Duplicates"}
           </Button>
           <Button onClick={() => handleDownload(artRef, true)}>Download Image</Button>
-          <Button onClick={() => handleCreatePlaylist(tracks)}>Create Playlist</Button>
+          <LoadingButton
+            loading={isCreatePlaylistLoading}
+            onClick={() => handleCreatePlaylist(tracks)}
+          >
+            Create Playlist
+          </LoadingButton>
         </div>
 
         <div ref={artRef}>
-          <div className="flex flex-row flex-wrap	">
+          <div className="flex flex-row flex-wrap" ref={playlistRef}>
             {tracks.map((track) => {
               const image = track?.album?.images?.[1]?.url;
               const name = track?.name;
