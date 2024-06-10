@@ -49,11 +49,12 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({
   const [short, setShort] = useState<Collages>({} as Collages);
 
   const injectColor = async (tracks: Track[], term: "long_term" | "medium_term" | "short_term") => {
+    //TODO: Clean list of incomplete tracks
     const uniqueImagesMapEmpty = getUniqueImages(tracks);
     const uniqueImagesMapFilled = await addColor(uniqueImagesMapEmpty);
 
     const fillTracksWithColor: ColorTrack[] = tracks.map((track) => {
-      const url = track.album.images?.[2].url;
+      const url = track?.album?.images?.[2]?.url;
       if (!url) return track;
       else return { ...track, hsl: uniqueImagesMapFilled[url] } as ColorTrack;
     });

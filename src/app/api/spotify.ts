@@ -22,7 +22,7 @@ export const createPlaylist = async (color: string, term: string, user_id: strin
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        name: `My Top ${color} Tracks - ${term}`,
+        name: `${term} - ${color}`,
         description: "Playlist created via mymusicincolor.com",
       }),
     });
@@ -64,6 +64,35 @@ export const addTracksToPlaylist = async (playlistId: string, trackUris: string[
     return body;
   } catch (error: any) {
     console.error("Error adding tracks to playlist:", error.message);
+  }
+};
+
+export const addImageToPlaylist = async (playlistId: string, imgUrl: string) => {
+  const session = await verifySession();
+  const accessToken = session.payload;
+
+  const test = imgUrl.split(",");
+  console.log(test[1]);
+
+  try {
+    const response = await fetch(`${SPOTIFY_API_BASE_URL}/v1/playlists/${playlistId}/images`, {
+      method: "PUT",
+      headers: {
+        Authorization: "Bearer " + accessToken,
+        "Content-Type": "image/jpeg",
+      },
+      body: imgUrl,
+    });
+
+    const body: any = await response.json();
+
+    if (!response.ok) {
+      throw new Error(JSON.stringify(body));
+    }
+
+    return body;
+  } catch (error: any) {
+    console.error("Error adding image to playlist:", error.message);
   }
 };
 

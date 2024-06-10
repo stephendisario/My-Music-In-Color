@@ -47,8 +47,11 @@ export function rgbToHsl(rgb: RGBColor): HSLColor {
 export const getUniqueImages = (tracks: Track[]) => {
   const uniqueImagesMap: UniqueImagesMap = {};
   tracks.forEach((track) => {
-    const url = track.album.images?.[2].url;
-    if (!url) return;
+    const url = track?.album?.images?.[2]?.url;
+    if (!url) {
+      console.log(track);
+      return;
+    }
     if (!uniqueImagesMap[url]) uniqueImagesMap[url] = [];
     return;
   });
@@ -83,7 +86,7 @@ export function shuffle(array: any) {
 }
 
 export function getTerm(tabValue: number) {
-  return tabValue === 0 ? "One Year" : tabValue === 1 ? "Six Months" : "One Month";
+  return tabValue === 0 ? "my last year" : tabValue === 1 ? "my last six months" : "my last month";
 }
 
 export const removeDuplicatesFromCollage = (tracks: ColorTrack[]) => {

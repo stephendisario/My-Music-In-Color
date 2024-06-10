@@ -15,6 +15,8 @@
     "@mui/material": "^5.15.17",
     "chart.js": "^4.4.3",
     "colorthief": "^2.4.0",
+    "downloadjs": "^1.4.7",
+    "html-to-image": "^1.11.11",
     "jose": "^5.2.4",
     "next": "14.2.3",
     "react": "^18",
@@ -23,6 +25,7 @@
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@types/downloadjs": "^1.4.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-color": "^3.0.12",

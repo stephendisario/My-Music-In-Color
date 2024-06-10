@@ -7,6 +7,7 @@ import { Divider } from "@mui/material";
 import { HuePicker } from "react-color";
 import { binarySearch } from "../lib/helper";
 import CustomTooltip from "../components/CustomTooltip";
+import SpotifyLogo from "../components/SpotifyLogo";
 
 const AllImages = () => {
   const { sortedColorTracks, loading } = useMyContext();
@@ -36,7 +37,7 @@ const AllImages = () => {
   return (
     !loading && (
       <div
-        className={`snap-start relative h-screen overflow-auto`}
+        className={`snap-start relative h-screen flex flex-col items-center`}
         style={{
           background: `linear-gradient(to bottom, hsl(${huePickerColor.h}, ${huePickerColor.s}%, ${huePickerColor.l}%), #000000)`,
         }}
@@ -53,7 +54,7 @@ const AllImages = () => {
           </div>
         </div>
 
-        <div className="flex flex-row flex-wrap justify-center w-full ml-auto mr-auto">
+        <div className="flex flex-row flex-wrap justify-center items-start w-full ml-auto mr-auto overflow-auto">
           {colorTrackSlice.map((track) => {
             const image = track?.album?.images?.[2]?.url;
             const name = track?.name;
@@ -66,6 +67,10 @@ const AllImages = () => {
               </CustomTooltip>
             );
           })}
+        </div>
+        <div className="flex-grow"></div>
+        <div className="pb-3">
+          <SpotifyLogo color={"white"} />
         </div>
       </div>
     )

@@ -25,14 +25,14 @@ export const collageConfig = {
     hueRange: [11, 36],
     saturationRange: [50, 100],
     lightnessRange: [20, 80],
-    gradient: ["from-orange-900", "via-amber-600", "via-80%", "to-yellow-500"],
+    gradient: ["from-orange-900", "via-amber-600", "via-80%", "to-yellow-600"],
   },
   yellow: {
     rainbowCount: 8,
     hueRange: [47, 73],
     saturationRange: [50, 100],
     lightnessRange: [20, 80],
-    gradient: ["from-yellow-500", "from-70%", "to-zinc-900"],
+    gradient: ["from-yellow-600", "from-70%", "to-zinc-900"],
   },
   green: {
     rainbowCount: 12,
