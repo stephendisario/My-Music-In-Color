@@ -11,6 +11,7 @@ import { addImageToPlaylist, addTracksToPlaylist, createPlaylist } from "../api/
 import { Alert, Button, Snackbar } from "@mui/material";
 import { toJpeg, toPng } from "html-to-image";
 import SpotifyLogo from "./SpotifyLogo";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number }) => {
   const { collages, tabValue, id } = useMyContext();
@@ -19,6 +20,7 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
   const [rainbowCollage, setRainbowCollage] = useState<ColorTrack[]>([]);
   const [rainbowCollageWithoutDupes, setRainbowCollageWithoutDupes] = useState<ColorTrack[]>([]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [isCreatePlaylistLoading, setIsCreatePlaylistLoading] = useState<boolean>(false);
 
   const artRef = useRef<HTMLDivElement>(null);
   const infoRef = useRef<HTMLDivElement>(null);
@@ -39,16 +41,18 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
   };
 
   const handleCreatePlaylist = async (tracks: ColorTrack[]) => {
+    setIsCreatePlaylistLoading(true);
     const playlistId = await createPlaylist(color, getTerm(tabValue), id);
     await addTracksToPlaylist(
       playlistId,
       tracks.map((track) => track.uri)
     );
     let dataUrl = await handleDownload(playlistRef, false);
-    dataUrl = dataUrl?.split(',')[1];
+    dataUrl = dataUrl?.split(",")[1];
 
     await addImageToPlaylist(playlistId, dataUrl!);
 
+    setIsCreatePlaylistLoading(false);
     setOpenSnackbar(true);
   };
 
@@ -76,7 +80,7 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
           width: `${node.offsetWidth}px`,
           height: `${node.offsetHeight}px`,
         },
-        }
+      };
 
       try {
         const dataUrl = await toJpeg(node, {
@@ -207,7 +211,12 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
             {hideDuplicates ? "Show Duplicates" : "Hide Duplicates"}
           </Button>
           <Button onClick={() => handleDownload(artRef, true)}>Download Image</Button>
-          <Button onClick={() => handleCreatePlaylist(tracks)}>Create Playlist</Button>
+          <LoadingButton
+            loading={isCreatePlaylistLoading}
+            onClick={() => handleCreatePlaylist(tracks)}
+          >
+            Create Playlist
+          </LoadingButton>
         </div>
 
         <div ref={artRef}>

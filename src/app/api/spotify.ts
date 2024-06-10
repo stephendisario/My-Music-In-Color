@@ -80,8 +80,6 @@ export const addImageToPlaylist = async (playlistId: string, imgUrl: string) => 
       },
       body: imgUrl,
     });
-
-
   } catch (error: any) {
     console.error("Error adding image to playlist:", error.message);
   }
