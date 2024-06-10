@@ -71,9 +71,6 @@ export const addImageToPlaylist = async (playlistId: string, imgUrl: string) => 
   const session = await verifySession();
   const accessToken = session.payload;
 
-  const test = imgUrl.split(",");
-  console.log(test[1]);
-
   try {
     const response = await fetch(`${SPOTIFY_API_BASE_URL}/v1/playlists/${playlistId}/images`, {
       method: "PUT",
@@ -84,13 +81,7 @@ export const addImageToPlaylist = async (playlistId: string, imgUrl: string) => 
       body: imgUrl,
     });
 
-    const body: any = await response.json();
 
-    if (!response.ok) {
-      throw new Error(JSON.stringify(body));
-    }
-
-    return body;
   } catch (error: any) {
     console.error("Error adding image to playlist:", error.message);
   }
