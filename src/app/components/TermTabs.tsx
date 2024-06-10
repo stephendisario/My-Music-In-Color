@@ -17,11 +17,12 @@ export default function TermTabs({ color }: { color: string }) {
       }}
       centered
       sx={{
+        zIndex: 30,
         "& .MuiTab-root": {
           color: color, // Custom color for tab text
         },
         "& .Mui-selected": {
-          color: color, // Custom color for selected tab text
+          color: color === "white" ? "rgb(255,255,255)" : color, // Custom color for selected tab text
         },
         "& .MuiTabs-indicator": {
           backgroundColor: color, // Custom color for the indicator
