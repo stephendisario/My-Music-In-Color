@@ -83,6 +83,24 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
       };
 
       try {
+        await toJpeg(node, {
+          quality: isDownload ? 1 : 0.3,
+          cacheBust: true,
+          backgroundColor,
+          ...(isDownload && scaledObject),
+        });await toJpeg(node, {
+          quality: isDownload ? 1 : 0.3,
+          cacheBust: true,
+          backgroundColor,
+          ...(isDownload && scaledObject),
+        });await toJpeg(node, {
+          quality: isDownload ? 1 : 0.3,
+          cacheBust: true,
+          backgroundColor,
+          ...(isDownload && scaledObject),
+        });
+
+
         const dataUrl = await toJpeg(node, {
           quality: isDownload ? 1 : 0.3,
           cacheBust: true,
@@ -130,15 +148,17 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
         : collages[color].slice(0, 8);
 
     return (
-      <div className="w-1/2 flex flex-col justify-center items-center">
+      <div className="flex flex-col justify-start sm:justify-center items-center sm:max-w-lg">
         <div className="flex flex-row justify-center invisible">
           <Tabs value={0}>
             <Tab label="8 x 8" />
             <Tab label="5 x 5" />
           </Tabs>
         </div>
-        <Button onClick={() => handleDownload(infoRef, true)}>Download Image</Button>
-        <div ref={infoRef} className="w-2/3 flex flex-row flex-wrap justify-center">
+        <Button sx={{ fontSize: "10px" }} onClick={() => handleDownload(infoRef, true)}>
+          Download Image
+        </Button>
+        <div ref={infoRef} className="flex flex-row flex-wrap justify-center">
           {tracks.map((track, index) => {
             const image = track?.album?.images?.[1]?.url;
             const name = track?.name;
@@ -164,14 +184,20 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
                   >
                     {name} - {artist}
                   </p>
-                  <Image
-                    unoptimized
-                    alt={name}
-                    width={64}
-                    height={64}
-                    src={image}
+                  <div
                     className="ml-auto"
-                  />
+                    style={{ width: collageSize === 0 ? "12.5%" : "20%", height: "auto" }}
+                  >
+                    <Image
+                      unoptimized
+                      alt={name}
+                      width={300}
+                      height={300}
+                      src={image}
+                      className="w-full h-full"
+                      crossOrigin="anonymous"
+                    />
+                  </div>
                 </a>
               </div>
             );
@@ -192,9 +218,7 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
     const tracks = allTracks.slice(0, collageSize === 0 ? 64 : 25);
 
     return (
-      <div
-        className={`relative w-1/2 flex flex-col justify-center items-center ml-auto mr-auto content-center items-stretch ${collageSize === 1 ? "max-w-xs" : "max-w-lg"}`}
-      >
+      <div className={`flex flex-col justify-start sm:justify-center items-center sm:max-w-lg `}>
         <div className="flex flex-row justify-center">
           <Tabs
             value={collageSize}
@@ -206,12 +230,15 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
           </Tabs>
         </div>
 
-        <div className="flex flex-row justify-between">
-          <Button onClick={() => toggleDuplicates()}>
+        <div className="flex flex-row justify-between w-full">
+          <Button sx={{ fontSize: "10px" }} onClick={() => toggleDuplicates()}>
             {hideDuplicates ? "Show Duplicates" : "Hide Duplicates"}
           </Button>
-          <Button onClick={() => handleDownload(artRef, true)}>Download Image</Button>
+          <Button sx={{ fontSize: "10px" }} onClick={() => handleDownload(artRef, true)}>
+            Download Image
+          </Button>
           <LoadingButton
+            sx={{ fontSize: "10px" }}
             loading={isCreatePlaylistLoading}
             onClick={() => handleCreatePlaylist(tracks)}
           >
@@ -220,15 +247,28 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
         </div>
 
         <div ref={artRef}>
-          <div className="flex flex-row flex-wrap" ref={playlistRef}>
+          <div className="flex flex-row flex-wrap w-full" ref={playlistRef}>
             {tracks.map((track) => {
               const image = track?.album?.images?.[1]?.url;
               const name = track?.name;
               const spotifyUrl = track?.external_urls?.spotify;
               return (
                 <CustomTooltip track={track} key={track.id}>
-                  <a href={spotifyUrl} target="_blank" rel="noopener noreferrer">
-                    <Image unoptimized alt={name} width={64} height={64} src={image} />
+                  <a
+                    href={spotifyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ width: collageSize === 0 ? "12.5%" : "20%", height: "auto" }}
+                  >
+                    <Image
+                      unoptimized
+                      alt={name}
+                      src={image}
+                      width={300}
+                      height={300}
+                      className="w-full h-full"
+                      crossOrigin="anonymous"
+                    />
                   </a>
                 </CustomTooltip>
               );
@@ -241,7 +281,7 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
   };
 
   return (
-    <div className="flex flex-row grow">
+    <div className="flex-1 overflow-x-scroll snap-x snap-mandatory">
       <Snackbar
         open={openSnackbar}
         autoHideDuration={3000}
@@ -253,9 +293,14 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
           Playlist created successfully
         </Alert>
       </Snackbar>
-      {index % 2 === 0 && info()}
-      {art()}
-      {index % 2 !== 0 && info()}
+      <div className="flex w-full h-full">
+        <div className="flex-shrink-0 w-screen sm:w-1/2 snap-start flex justify-center px-2">
+          {index % 2 === 0 ? info() : art()}
+        </div>
+        <div className="flex-shrink-0 w-screen sm:w-1/2 snap-start flex justify-center px-2">
+          {index % 2 !== 0 ? info() : art()}
+        </div>
+      </div>
     </div>
   );
 };

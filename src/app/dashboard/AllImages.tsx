@@ -69,7 +69,7 @@ const AllImages = () => {
           })}
         </div>
         <div className="flex-grow"></div>
-        <div className="pb-3">
+        <div className="p-3">
           <SpotifyLogo color={"white"} />
         </div>
       </div>

@@ -10,7 +10,7 @@ const Dashboard = async () => {
   const loadingTracks = await getTopTracks("short_term", 1);
 
   return (
-    <div className="snap-y snap-mandatory snap-always	h-screen overflow-scroll">
+    <div className="contents">
       <Welcome user={user!} loadingTracks={loadingTracks!} />
       <Suspense fallback={<div>POOP!</div>}>
         <ContentWrapper />

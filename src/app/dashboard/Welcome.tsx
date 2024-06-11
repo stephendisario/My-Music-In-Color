@@ -14,7 +14,7 @@ interface WelcomeProps {
 
 const Welcome: React.FC<WelcomeProps> = ({ user, loadingTracks }) => {
   return (
-    <div className="snap-center relative h-screen">
+    <div className="snap-start relative h-screen">
       <InColourBackground />
       {/* Content */}
       <div className="absolute top-0 left-0 w-full h-full z-10">

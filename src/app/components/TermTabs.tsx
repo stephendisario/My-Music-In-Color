@@ -12,8 +12,11 @@ export default function TermTabs({ color }: { color: string }) {
     <Tabs
       value={tabValue}
       onChange={(_e, newValue: number) => {
-        setTabValue(newValue);
-        setCollages(newValue === 0 ? long : newValue === 1 ? medium : short);
+        //TODO: address loading of medium and short term in a more permanent way
+        if (Object.keys(medium).length > 0 && Object.keys(short).length > 0) {
+          setTabValue(newValue);
+          setCollages(newValue === 0 ? long : newValue === 1 ? medium : short);
+        }
       }}
       centered
       sx={{
