@@ -186,7 +186,7 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
                   </p>
                   <div
                     className="ml-auto"
-                    style={{ width: collageSize === 0 ? "12.5%" : "20%", height: "auto" }}
+                    style={{ width: "12.5", height: "auto" }}
                   >
                     <Image
                       unoptimized
