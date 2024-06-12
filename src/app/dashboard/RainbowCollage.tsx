@@ -14,7 +14,7 @@ import Collage from "../components/Collage";
 const RainbowCollage = () => {
   return (
     <div
-      className={`snap-center relative h-screen flex flex-col bg-gradient-to-b from-black to-stone-300`}
+      className={`snap-start relative h-screen flex flex-col bg-gradient-to-b from-black to-stone-300`}
     >
       <TermTabs color="white" />
       <Collage color="rainbow" index={0} />

@@ -36,7 +36,7 @@ export const collageConfig = {
   },
   green: {
     rainbowCount: 12,
-    hueRange: [81, 169],
+    hueRange: [79, 169],
     saturationRange: [23, 100],
     lightnessRange: [15, 80],
     gradient: ["from-zinc-900", "from-10%", "via-green-600", "via-80%", "to-zinc-900"],
@@ -86,7 +86,7 @@ const Collages = () => {
     !loading &&
     (Object.keys(collageConfig) as Colors[]).map((color, index) => (
       <div
-        className={`snap-center relative h-screen flex flex-col bg-gradient-to-b ${collageConfig[color as Colors].gradient.join(" ")}`}
+        className={`p-safe-t p-safe-r p-safe-b p-safe-l snap-start relative h-screen flex flex-col bg-gradient-to-b ${collageConfig[color as Colors].gradient.join(" ")}`}
         key={color}
       >
         <TermTabs color={color === "black" ? "white" : color} />

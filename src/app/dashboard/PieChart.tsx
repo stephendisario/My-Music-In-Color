@@ -43,7 +43,7 @@ const PieChart = () => {
 
   return (
     <div
-      className={`snap-center relative h-screen flex flex-col justify-center items-center`}
+      className={`snap-start relative h-screen flex flex-col justify-center items-center`}
       style={{
         background: `linear-gradient(to bottom, ${yourColor === "black" ? "" : toHslString(collages[yourColor || "red"]?.[0].hsl)}, rgba(0, 0, 0, 1))`,
       }}
