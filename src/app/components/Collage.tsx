@@ -9,7 +9,7 @@ import CustomTooltip from "../components/CustomTooltip";
 import { Colors, collageConfig } from "../dashboard/Collages";
 import { addImageToPlaylist, addTracksToPlaylist, createPlaylist } from "../api/spotify";
 import { Alert, Button, Snackbar } from "@mui/material";
-import { toJpeg, toPng } from "html-to-image";
+import { toBlob, toJpeg, toPng } from "html-to-image";
 import SpotifyLogo from "./SpotifyLogo";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { HuePicker } from "react-color";
@@ -69,21 +69,21 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
     setCollageSize(value);
   };
 
-  const handleCreatePlaylist = async (tracks: ColorTrack[]) => {
-    setIsCreatePlaylistLoading(true);
-    const playlistId = await createPlaylist(currentColor, getTerm(tabValue), id);
-    await addTracksToPlaylist(
-      playlistId,
-      tracks.map((track) => track.uri)
-    );
-    let dataUrl = await handleDownload(playlistRef, false);
-    dataUrl = dataUrl?.split(",")[1];
+  // const handleCreatePlaylist = async (tracks: ColorTrack[]) => {
+  //   setIsCreatePlaylistLoading(true);
+  //   const playlistId = await createPlaylist(currentColor, getTerm(tabValue), id);
+  //   await addTracksToPlaylist(
+  //     playlistId,
+  //     tracks.map((track) => track.uri)
+  //   );
+  //   let dataUrl = await handleDownload(playlistRef, false);
+  //   dataUrl = dataUrl?.split(",")[1];
 
-    await addImageToPlaylist(playlistId, dataUrl!);
+  //   await addImageToPlaylist(playlistId, dataUrl!);
 
-    setIsCreatePlaylistLoading(false);
-    setOpenSnackbar(true);
-  };
+  //   setIsCreatePlaylistLoading(false);
+  //   setOpenSnackbar(true);
+  // };
 
   const handleDownload = useCallback(
     async (currRef: any, isDownload: boolean) => {
@@ -113,26 +113,26 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
       };
 
       try {
-        await toJpeg(node, {
+        await toBlob(node, {
           quality: isDownload ? 1 : 0.3,
           cacheBust: true,
           backgroundColor,
           ...(isDownload && scaledObject),
         });
-        await toJpeg(node, {
+        await toBlob(node, {
           quality: isDownload ? 1 : 0.3,
           cacheBust: true,
           backgroundColor,
           ...(isDownload && scaledObject),
         });
-        await toJpeg(node, {
+        await toBlob(node, {
           quality: isDownload ? 1 : 0.3,
           cacheBust: true,
           backgroundColor,
           ...(isDownload && scaledObject),
         });
 
-        const dataUrl = await toJpeg(node, {
+        const dataUrl = await toBlob(node, {
           quality: isDownload ? 1 : 0.3,
           cacheBust: true,
           backgroundColor,
@@ -142,7 +142,7 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
         if (isDownload) {
           const link = document.createElement("a");
           link.download = `${getTerm(tabValue)} - ${currentColor}`;
-          link.href = dataUrl;
+          // link.href = dataUrl;
           link.click();
         } else return dataUrl;
       } catch (error: any) {
@@ -155,23 +155,25 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
   const shareImage = async () => {
     try {
       // Convert base64 string to Blob
-      const url = await handleDownload(infoRef, false);
-      const byteCharacters = atob(url?.split(",")[1]!);
-      const byteNumbers = new Array(byteCharacters.length);
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
-      }
-      const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: "image/jpeg" });
+      const blob = await handleDownload(infoRef, false);
+      // const byteCharacters = atob(url?.split(",")[1]!);
+      // const byteNumbers = new Array(byteCharacters.length);
+      // for (let i = 0; i < byteCharacters.length; i++) {
+      //   byteNumbers[i] = byteCharacters.charCodeAt(i);
+      // }
+      // const byteArray = new Uint8Array(byteNumbers);
+      // const blob = new Blob([byteArray], { type: "image/jpeg" });
 
-      // Create URL from Blob
-      const imageUrl = URL.createObjectURL(blob);
+      // // Create URL from Blob
+      // const imageUrl = URL.createObjectURL(blob);
 
       // Check if Web Share API is supported
       if (navigator.share) {
         await navigator.share({
           title: "Shared Image",
-          files: [new File([blob], "test", { type: "image/jpeg" })],
+          files: [new File([blob!], "test.png", { type: "image/png",
+            lastModified: new Date().getTime(),
+           })],
           text: "Check out this image!",
         });
       } else {
@@ -179,7 +181,6 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
       }
 
       // Clean up the URL object after sharing
-      URL.revokeObjectURL(imageUrl);
     } catch (error) {
       console.error("Error sharing image:", error);
     }
@@ -316,7 +317,7 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
           <LoadingButton
             sx={{ fontSize: "10px" }}
             loading={isCreatePlaylistLoading}
-            onClick={() => handleCreatePlaylist(tracks)}
+            // onClick={() => handleCreatePlaylist(tracks)}
           >
             Create Playlist
           </LoadingButton>
