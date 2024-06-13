@@ -170,11 +170,9 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
       // Check if Web Share API is supported
       if (navigator.share) {
         await navigator.share({
-          title: "Shared Image",
           files: [new File([blob!], "test.png", { type: "image/png",
             lastModified: new Date().getTime(),
            })],
-          text: "Check out this image!",
         });
       } else {
         alert("Web Share API is not supported in your browser.");
