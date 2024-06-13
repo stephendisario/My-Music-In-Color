@@ -13,12 +13,12 @@ import Collage from "../components/Collage";
 
 const RainbowCollage = () => {
   return (
-    <div
-      className={`snap-start relative h-screen flex flex-col bg-gradient-to-b from-black to-stone-300`}
-    >
-      <TermTabs color="white" />
-      <Collage color="rainbow" index={0} />
-    </div>
+    // <div
+    //   className={`snap-start relative h-screen flex flex-col bg-gradient-to-b from-black to-stone-300`}
+    // >
+    // {/* <TermTabs color="white" /> */}
+    <Collage color="rainbow" index={0} />
+    // </div>
   );
 };
 export default RainbowCollage;

@@ -129,9 +129,9 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({
     injectColor(topShortTracks!, "short_term");
   };
 
-  useEffect(() => {
-    if (!loading) injections();
-  }, [loading]);
+  // useEffect(() => {
+  //   if (!loading) injections();
+  // }, [loading]);
 
   if (loading) {
     return <div>Loading...</div>;
