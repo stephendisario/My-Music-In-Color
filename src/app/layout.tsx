@@ -20,9 +20,7 @@ export default function RootLayout({
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
-      <body className={`${inter.className}`}>
-         {children}
-      </body>
+      <body className={`${inter.className}`}>{children}</body>
     </html>
   );
 }
