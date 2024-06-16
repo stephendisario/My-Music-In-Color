@@ -11,7 +11,7 @@ const CustomSlider = ({ value, onChange }: { value: number; onChange: any }) => 
   };
 
   return (
-    <div className="w-1/3">
+    <div className="w-4/5 sm:w-1/3">
       <input
         type="range"
         min="0"

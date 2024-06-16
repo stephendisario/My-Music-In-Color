@@ -12,8 +12,14 @@ import { Alert, Button, Snackbar } from "@mui/material";
 import { toBlob, toJpeg, toPng } from "html-to-image";
 import SpotifyLogo from "./SpotifyLogo";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { HuePicker } from "react-color";
 import CustomSlider from "./CustomSlider";
+import IosShareIcon from "@mui/icons-material/IosShare";
+import IconButton from "@mui/material/IconButton";
+import Checkbox from "@mui/material/Checkbox";
+import CustomCheckbox from "./CustomCheckbox";
+import test from "../../Frame.svg";
+import CheckboxWithStyle from "./CheckboxWithStyle";
+import DownloadIcon from "@mui/icons-material/Download";
 
 const snapPoints = [
   { color: "red", position: 0 },
@@ -49,6 +55,9 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
   const [rainbowCollageWithoutDupes, setRainbowCollageWithoutDupes] = useState<ColorTrack[]>([]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [isCreatePlaylistLoading, setIsCreatePlaylistLoading] = useState<boolean>(false);
+
+  const [isMosaic, setIsMosaic] = useState<boolean>(true);
+
   const [pickerColor, setPickerColor] = useState(0);
 
   const artRef = useRef<HTMLDivElement>(null);
@@ -61,118 +70,130 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
     setOpenSnackbar(false);
   };
 
-  const toggleDuplicates = () => {
-    setHideDuplicates((prevState) => !prevState);
+  const handleCreatePlaylist = async (tracks: ColorTrack[]) => {
+    setIsCreatePlaylistLoading(true);
+    const playlistId = await createPlaylist(currentColor, getTerm(tabValue), id);
+    await addTracksToPlaylist(
+      playlistId,
+      tracks.map((track) => track.uri)
+    );
+    let dataUrl: string = (await handleDownload(playlistRef, false, false)) as string;
+    dataUrl = dataUrl?.split(",")[1];
+
+    console.log(dataUrl);
+
+    await addImageToPlaylist(playlistId, dataUrl!);
+
+    setIsCreatePlaylistLoading(false);
+    setOpenSnackbar(true);
   };
 
-  const handleCollageSize = (value: number) => {
-    setCollageSize(value);
+  const handleDownload = async (currRef: any, isDownload: boolean, isShare: boolean) => {
+    const ref = currRef;
+    if (ref.current === null) {
+      return;
+    }
+
+    const node = ref.current;
+    const scale = 2; // Adjust the scale factor as needed
+
+    const width = node.offsetWidth * scale;
+    const height = node.offsetHeight * scale;
+
+    const backgroundColor =
+      currentColor === "rainbow" || currentColor === "white" ? "white" : "black";
+
+    const scaledObject: any = {
+      width,
+      height,
+      style: {
+        transform: `scale(${scale})`,
+        transformOrigin: "top left",
+        width: `${node.offsetWidth}px`,
+        height: `${node.offsetHeight}px`,
+      },
+    };
+
+    try {
+      let dataUrl;
+      if (isShare) {
+        console.log("isshare");
+        await toBlob(node, {
+          quality: 1,
+          cacheBust: true,
+          backgroundColor,
+          ...scaledObject,
+        });
+        await toBlob(node, {
+          quality: 1,
+          cacheBust: true,
+          backgroundColor,
+          ...scaledObject,
+        });
+        await toBlob(node, {
+          quality: 1,
+          cacheBust: true,
+          backgroundColor,
+          ...scaledObject,
+        });
+
+        dataUrl = await toBlob(node, {
+          quality: 1,
+          cacheBust: true,
+          backgroundColor,
+          ...scaledObject,
+        });
+      } else {
+        console.log("isDownload", isDownload, isShare);
+        await toJpeg(node, {
+          quality: isDownload ? 1 : 0.3,
+          cacheBust: true,
+          backgroundColor,
+          ...(isDownload && scaledObject),
+        });
+        await toJpeg(node, {
+          quality: isDownload ? 1 : 0.3,
+          cacheBust: true,
+          backgroundColor,
+          ...(isDownload && scaledObject),
+        });
+        await toJpeg(node, {
+          quality: isDownload ? 1 : 0.3,
+          cacheBust: true,
+          backgroundColor,
+          ...(isDownload && scaledObject),
+        });
+
+        dataUrl = await toJpeg(node, {
+          quality: isDownload ? 1 : 0.3,
+          cacheBust: true,
+          backgroundColor,
+          ...(isDownload && scaledObject),
+        });
+      }
+
+      if (isDownload && !isShare && dataUrl) {
+        const link = document.createElement("a");
+        link.download = `${getTerm(tabValue)} - ${currentColor}`;
+        link.href = dataUrl as string;
+        link.click();
+      } else return dataUrl;
+    } catch (error: any) {
+      console.error("Error downloading image", error.message);
+    }
   };
-
-  // const handleCreatePlaylist = async (tracks: ColorTrack[]) => {
-  //   setIsCreatePlaylistLoading(true);
-  //   const playlistId = await createPlaylist(currentColor, getTerm(tabValue), id);
-  //   await addTracksToPlaylist(
-  //     playlistId,
-  //     tracks.map((track) => track.uri)
-  //   );
-  //   let dataUrl = await handleDownload(playlistRef, false);
-  //   dataUrl = dataUrl?.split(",")[1];
-
-  //   await addImageToPlaylist(playlistId, dataUrl!);
-
-  //   setIsCreatePlaylistLoading(false);
-  //   setOpenSnackbar(true);
-  // };
-
-  const handleDownload = useCallback(
-    async (currRef: any, isDownload: boolean) => {
-      const ref = currRef;
-      if (ref.current === null) {
-        return;
-      }
-
-      const node = ref.current;
-      const scale = 2; // Adjust the scale factor as needed
-
-      const width = node.offsetWidth * scale;
-      const height = node.offsetHeight * scale;
-
-      const backgroundColor =
-        currentColor === "rainbow" || currentColor === "white" ? "white" : "black";
-
-      const scaledObject: any = {
-        width,
-        height,
-        style: {
-          transform: `scale(${scale})`,
-          transformOrigin: "top left",
-          width: `${node.offsetWidth}px`,
-          height: `${node.offsetHeight}px`,
-        },
-      };
-
-      try {
-        await toBlob(node, {
-          quality: isDownload ? 1 : 0.3,
-          cacheBust: true,
-          backgroundColor,
-          ...(isDownload && scaledObject),
-        });
-        await toBlob(node, {
-          quality: isDownload ? 1 : 0.3,
-          cacheBust: true,
-          backgroundColor,
-          ...(isDownload && scaledObject),
-        });
-        await toBlob(node, {
-          quality: isDownload ? 1 : 0.3,
-          cacheBust: true,
-          backgroundColor,
-          ...(isDownload && scaledObject),
-        });
-
-        const dataUrl = await toBlob(node, {
-          quality: isDownload ? 1 : 0.3,
-          cacheBust: true,
-          backgroundColor,
-          ...(isDownload && scaledObject),
-        });
-
-        if (isDownload) {
-          const link = document.createElement("a");
-          link.download = `${getTerm(tabValue)} - ${currentColor}`;
-          // link.href = dataUrl;
-          link.click();
-        } else return dataUrl;
-      } catch (error: any) {
-        console.error("Error downloading image", error.message);
-      }
-    },
-    [infoRef, artRef]
-  );
 
   const shareImage = async () => {
     try {
-      // Convert base64 string to Blob
-      const blob = await handleDownload(infoRef, false);
-      // const byteCharacters = atob(url?.split(",")[1]!);
-      // const byteNumbers = new Array(byteCharacters.length);
-      // for (let i = 0; i < byteCharacters.length; i++) {
-      //   byteNumbers[i] = byteCharacters.charCodeAt(i);
-      // }
-      // const byteArray = new Uint8Array(byteNumbers);
-      // const blob = new Blob([byteArray], { type: "image/jpeg" });
-
-      // // Create URL from Blob
-      // const imageUrl = URL.createObjectURL(blob);
-
-      // Check if Web Share API is supported
+      const blob = await handleDownload(isMosaic ? artRef : infoRef, false, true);
       if (navigator.share) {
         await navigator.share({
-          files: [new File([blob!], "test.png", { type: "image/png",
-            lastModified: new Date().getTime(),
-           })],
+          files: [
+            new File([blob!], "test.png", {
+              type: "image/png",
+              lastModified: new Date().getTime(),
+            }),
+          ],
         });
       } else {
         alert("Web Share API is not supported in your browser.");
@@ -190,6 +211,42 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
     setRainbowCollageWithoutDupes(getRainbowCollage(true, collages));
     // }
   }, [collages]);
+
+  const header = (tracks: ColorTrack[]) => (
+    <div className="flex flex-row justify-start w-full items-end">
+      <div className="sm:hidden">
+        <IconButton onClick={() => shareImage()}>
+          <IosShareIcon sx={{ color: "black" }} />
+        </IconButton>
+      </div>
+      <div className="sm:block hidden">
+        <IconButton onClick={() => handleDownload(isMosaic ? artRef : infoRef, true, false)}>
+          <DownloadIcon sx={{ color: "black" }} />
+        </IconButton>
+      </div>
+      {isMosaic && (
+        <CheckboxWithStyle
+          color={color}
+          hideDuplicates={hideDuplicates}
+          setHideDuplicates={setHideDuplicates}
+        />
+      )}
+      {isMosaic && (
+        <button
+          className="text-black border-2 border-black rounded-full px-4 text-xs h-1/2 self-center	hover:bg-[rgba(0,0,0,.06)] ml-auto"
+          onClick={() => handleCreatePlaylist(tracks)}
+        >
+          create playlist
+        </button>
+      )}
+      <button
+        className={`text-black border-2 border-black rounded-full px-4 text-xs h-1/2 self-center w-28 hover:bg-[rgba(0,0,0,.06)] ${!isMosaic ? "ml-auto" : "ml-1"}`}
+        onClick={() => setIsMosaic((prevState) => !prevState)}
+      >
+        see {!isMosaic ? "mosaic" : "faves"}
+      </button>
+    </div>
+  );
 
   const logos = useCallback(
     (words: string) => {
@@ -217,22 +274,7 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
 
     return (
       <div className="flex flex-col justify-start sm:justify-center items-center sm:max-w-lg">
-        {/* <div className="flex flex-row justify-center">
-        <Tabs
-            value={collageSize}
-            onChange={(_e, v) => handleCollageSize(v)}
-            aria-label="basic tabs example"
-          >
-            <Tab label="mosaic" />
-            <Tab label="faves" />
-          </Tabs>
-        </div> */}
-        <Button sx={{ fontSize: "10px" }} onClick={() => handleDownload(infoRef, true)}>
-          Download Image
-        </Button>
-        <Button sx={{ fontSize: "10px" }} onClick={() => shareImage()}>
-          Share Image
-        </Button>
+        {header([])}
         <div ref={infoRef} className="flex flex-row flex-wrap justify-center">
           {tracks.map((track, index) => {
             const image = track?.album?.images?.[1]?.url;
@@ -293,36 +335,11 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
     const tracks = allTracks.slice(0, collageSize === 0 ? 64 : 25);
 
     return (
-      <div className={`flex flex-col justify-start sm:justify-center items-center sm:max-w-lg `}>
-        {/* <div className="flex flex-row justify-center">
-          <Tabs
-            value={collageSize}
-            onChange={(_e, v) => handleCollageSize(v)}
-            aria-label="basic tabs example"
-          >
-            <Tab label="mosaic" />
-            <Tab label="faves" />
-          </Tabs>
-        </div> */}
-
-        <div className="flex flex-row justify-between w-full">
-          <Button sx={{ fontSize: "10px" }} onClick={() => toggleDuplicates()}>
-            {hideDuplicates ? "Show Duplicates" : "Hide Duplicates"}
-          </Button>
-          <Button sx={{ fontSize: "10px" }} onClick={() => handleDownload(artRef, true)}>
-            Download Image
-          </Button>
-          <LoadingButton
-            sx={{ fontSize: "10px" }}
-            loading={isCreatePlaylistLoading}
-            // onClick={() => handleCreatePlaylist(tracks)}
-          >
-            Create Playlist
-          </LoadingButton>
-        </div>
+      <div className={`flex flex-col justify-start sm:justify-center items-center sm:max-w-lg`}>
+        {header(tracks)}
 
         <div ref={artRef}>
-          <div className="flex flex-row flex-wrap w-full" ref={playlistRef}>
+          <div className="flex flex-row flex-wrap w-full sm:h-[512px]" ref={playlistRef}>
             {tracks.map((track) => {
               const image = track?.album?.images?.[1]?.url;
               const name = track?.name;
@@ -372,44 +389,26 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
         background: `linear-gradient(to bottom, ${currentColor === "rainbow" || currentColor === "black" ? "grey" : currentColor}, #000000)`,
       }}
     >
-      <div className="flex-1 overflow-x-scroll snap-x snap-mandatory">
+      <div className="flex-1">
         <Snackbar
           open={openSnackbar}
           autoHideDuration={3000}
           onClose={handleSnackbarClose}
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
-          sx={{ mt: 4 }}
         >
           <Alert elevation={6} variant="filled" onClose={handleSnackbarClose} severity="success">
             Playlist created successfully
           </Alert>
         </Snackbar>
-        <div className="flex w-full h-full justify-center itemss-center flex-col">
+        <div className="flex w-full h-full justify-center flex-col">
           <div className="flex flex-row">
-            <div className="flex-shrink-0 w-screen sm:w-1/2 snap-start flex justify-center pl-16">
-              {info()}
-            </div>
-            <div className="flex-shrink-0 w-screen sm:w-1/2 snap-start flex justify-center pr-16">
-              {art()}
+            <div className="flex-shrink-0 w-screen flex justify-center">
+              {isMosaic ? art() : info()}
             </div>
           </div>
           <div className="flex items-center justify-center">
-            {/* <HuePicker
-                color={huePickerColor}
-                onChange={(color) => {
-                  const closest = findClosestSnapPoint(color.hsl.h)
-                  setCurrentColor(closest.color as Colors | 'rainbow')
-                  setHuePickerColor({ h: closest.position, s: color.hsl.s * 100, l: color.hsl.l * 100 });
-                }}
-              /> */}
             <CustomSlider value={pickerColor} onChange={handleSliderChange} />
           </div>
-          {/* <div className="flex items-center justify-center min-h-16 bg-gray-200">
-      <div className="w-1/2 p-4 bg-white shadow-lg rounded-lg">
-        <h2 className="text-lg font-bold mb-2">Custom Gradient Slider</h2>
-        <CustomSlider />
-      </div>
-    </div> */}
         </div>
       </div>
     </div>

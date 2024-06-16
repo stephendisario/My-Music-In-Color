@@ -90,7 +90,7 @@ const Collages = () => {
       //   key={color}
       // >
       // {/* <TermTabs color={color === "black" ? "white" : color} /> */}
-      <Collage color={color} index={index} key={index}/>
+      <Collage color={color} index={index} key={index} />
       // </div>
     ))
   );
