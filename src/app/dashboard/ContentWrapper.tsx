@@ -15,7 +15,7 @@ const ContentWrapper = async () => {
       {/* <PieChart /> */}
       <RainbowCollage />
       {/* <Collages /> */}
-      <AllImages />
+      {/* <AllImages /> */}
     </MyContextProvider>
   );
 };

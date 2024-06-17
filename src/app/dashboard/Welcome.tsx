@@ -18,9 +18,9 @@ const Welcome: React.FC<WelcomeProps> = ({ user, loadingTracks }) => {
       <InColourBackground />
       {/* Content */}
       <div className="absolute top-0 left-0 w-full h-full z-10">
-        <NavBar showLogout={true} />
         {/* Other content */}
         <div className="flex w-full h-full flex-col justify-center items-center pb-16">
+          <NavBar showLogout={true} />
           {/* Your main content goes here */}
           <h1 className="text-5xl font-bold">Hi {user.display_name.split(" ")[0]}</h1>
           <div className="absolute bottom-0 left-auto pb-3">

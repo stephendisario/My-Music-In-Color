@@ -20,6 +20,8 @@ import CustomCheckbox from "./CustomCheckbox";
 import test from "../../Frame.svg";
 import CheckboxWithStyle from "./CheckboxWithStyle";
 import DownloadIcon from "@mui/icons-material/Download";
+import NavBar from "./NavBar";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const snapPoints = [
   { color: "red", position: 0 },
@@ -213,44 +215,51 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
   }, [collages]);
 
   const header = (tracks: ColorTrack[]) => (
-    <div className="flex flex-row justify-start w-full items-end">
-      <div className="sm:hidden">
-        <IconButton onClick={() => shareImage()}>
-          <IosShareIcon sx={{ color: "black" }} />
-        </IconButton>
+    <div className="flex flex-row w-full justify-between items-end relative">
+      <div className="flex flex-row">
+        <div className="sm:hidden">
+          <IconButton onClick={() => shareImage()}>
+            <IosShareIcon sx={{ color: "black" }} />
+          </IconButton>
+        </div>
+        <div className="sm:block hidden">
+          <IconButton onClick={() => handleDownload(isMosaic ? artRef : infoRef, true, false)}>
+            <DownloadIcon sx={{ color: "black" }} />
+          </IconButton>
+        </div>
+        {isMosaic && (
+          <CheckboxWithStyle
+            color={currentColor}
+            hideDuplicates={hideDuplicates}
+            setHideDuplicates={setHideDuplicates}
+          />
+        )}
       </div>
-      <div className="sm:block hidden">
-        <IconButton onClick={() => handleDownload(isMosaic ? artRef : infoRef, true, false)}>
-          <DownloadIcon sx={{ color: "black" }} />
-        </IconButton>
-      </div>
-      {isMosaic && (
-        <CheckboxWithStyle
-          color={color}
-          hideDuplicates={hideDuplicates}
-          setHideDuplicates={setHideDuplicates}
-        />
-      )}
-      {isMosaic && (
-        <button
-          className="text-black border-2 border-black rounded-full px-4 text-xs h-1/2 self-center	hover:bg-[rgba(0,0,0,.06)] ml-auto"
-          onClick={() => handleCreatePlaylist(tracks)}
-        >
-          create playlist
-        </button>
-      )}
       <button
-        className={`text-black border-2 border-black rounded-full px-4 text-xs h-1/2 self-center w-28 hover:bg-[rgba(0,0,0,.06)] ${!isMosaic ? "ml-auto" : "ml-1"}`}
+        className={`text-black absolute left-1/2 transform -translate-x-1/2 border-2 border-black rounded-full px-4 text-xs h-1/2 self-center w-28 hover:bg-[rgba(0,0,0,.06)] `}
         onClick={() => setIsMosaic((prevState) => !prevState)}
       >
         see {!isMosaic ? "mosaic" : "faves"}
       </button>
+      {isMosaic && (
+        <button
+          className="text-black border-2 border-black rounded-full px-4 text-xs h-1/2 self-center	hover:bg-[rgba(0,0,0,.06)] w-[116px]"
+          onClick={() => {
+            if (!isCreatePlaylistLoading) handleCreatePlaylist(tracks);
+          }}
+        >
+          {isCreatePlaylistLoading ? (
+            <CircularProgress sx={{ color: "black" }} size={10} />
+          ) : (
+            "create playlist"
+          )}
+        </button>
+      )}
     </div>
   );
 
   const logos = useCallback(
     (words: string) => {
-      // const logosColor = currentColor === "rainbow" || currentColor === "white" ? "black" : "white";
       const logosColor = "white";
 
       return (
@@ -273,7 +282,7 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
         : collages[currentColor].slice(0, 8);
 
     return (
-      <div className="flex flex-col justify-start sm:justify-center items-center sm:max-w-lg">
+      <div className="flex flex-col justify-center items-center sm:max-w-lg">
         {header([])}
         <div ref={infoRef} className="flex flex-row flex-wrap justify-center">
           {tracks.map((track, index) => {
@@ -335,7 +344,7 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
     const tracks = allTracks.slice(0, collageSize === 0 ? 64 : 25);
 
     return (
-      <div className={`flex flex-col justify-start sm:justify-center items-center sm:max-w-lg`}>
+      <div className={`flex flex-col justify-center items-center sm:max-w-lg`}>
         {header(tracks)}
 
         <div ref={artRef}>
@@ -383,33 +392,26 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
 
   return (
     <div
-      className={`p-safe-t p-safe-r p-safe-b p-safe-l snap-start relative h-screen flex flex-col`}
+      className={`p-safe-t p-safe-r p-safe-b p-safe-l snap-start relative h-screen flex flex-col items-center`}
       key={color}
       style={{
         background: `linear-gradient(to bottom, ${currentColor === "rainbow" || currentColor === "black" ? "grey" : currentColor}, #000000)`,
       }}
     >
-      <div className="flex-1">
-        <Snackbar
-          open={openSnackbar}
-          autoHideDuration={3000}
-          onClose={handleSnackbarClose}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        >
-          <Alert elevation={6} variant="filled" onClose={handleSnackbarClose} severity="success">
-            Playlist created successfully
-          </Alert>
-        </Snackbar>
-        <div className="flex w-full h-full justify-center flex-col">
-          <div className="flex flex-row">
-            <div className="flex-shrink-0 w-screen flex justify-center">
-              {isMosaic ? art() : info()}
-            </div>
-          </div>
-          <div className="flex items-center justify-center">
-            <CustomSlider value={pickerColor} onChange={handleSliderChange} />
-          </div>
-        </div>
+      <NavBar showLogout={true} />
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert elevation={6} variant="filled" onClose={handleSnackbarClose} severity="success">
+          Playlist created successfully
+        </Alert>
+      </Snackbar>
+      <div className="flex w-full h-full justify-center items-center flex-col px-2 sm:px-0">
+        {isMosaic ? art() : info()}
+        <CustomSlider value={pickerColor} onChange={handleSliderChange} />
       </div>
     </div>
   );

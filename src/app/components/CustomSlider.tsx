@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 const CustomSlider = ({ value, onChange }: { value: number; onChange: any }) => {
   const handleChange = (e: any) => {
@@ -19,9 +19,33 @@ const CustomSlider = ({ value, onChange }: { value: number; onChange: any }) => 
         step={value >= 70 ? "5" : "10"}
         value={value}
         className="w-full h-6 outline-none appearance-none"
-        style={gradientStyle}
+        style={{
+          ...gradientStyle,
+          // Custom styles for the thumb
+          WebkitAppearance: "none",
+          appearance: "none",
+        }}
         onChange={handleChange}
       />
+      <style jsx>{`
+        input[type="range"]::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 30px; /* Width of the thumb */
+          height: 30px; /* Height of the thumb */
+          background: white; /* Color of the thumb */
+          cursor: pointer;
+          border-radius: 50%; /* Make the thumb a circle */
+        }
+
+        input[type="range"]::-moz-range-thumb {
+          width: 30px; /* Width of the thumb */
+          height: 30px; /* Height of the thumb */
+          background: white; /* Color of the thumb */
+          cursor: pointer;
+          border-radius: 50%; /* Make the thumb a circle */
+        }
+      `}</style>
     </div>
   );
 };

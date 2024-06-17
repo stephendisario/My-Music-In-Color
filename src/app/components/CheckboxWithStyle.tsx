@@ -9,6 +9,18 @@ const CheckboxWithStyle = ({
   hideDuplicates: boolean;
   setHideDuplicates: any;
 }) => {
+  let bgColor;
+
+  if (color === "red") bgColor = "bg-red-600";
+  if (color === "orange") bgColor = "bg-orange-400";
+  if (color === "yellow") bgColor = "bg-yellow-300";
+  if (color === "green") bgColor = "bg-green-600";
+  if (color === "blue") bgColor = "bg-blue-600";
+  if (color === "violet") bgColor = "bg-violet-500";
+  if (color === "black") bgColor = "bg-stone-600";
+  if (color === "white") bgColor = "bg-stone-600";
+  if (color === "rainbow") bgColor = "bg-stone-600";
+
   const handleChange = () => {
     setHideDuplicates((prevState: any) => !prevState);
   };
@@ -25,13 +37,14 @@ const CheckboxWithStyle = ({
       <label htmlFor="styled-checkbox" className="relative cursor-pointer">
         <div className="hover:bg-[rgba(0,0,0,0.06)] w-9 h-9 flex justify-center items-center rounded-full">
           <div
-            style={{ background: color }}
-            className="w-5 h-5 border-2 bg-red-500 border-black text-black flex items-center justify-center rounded-sm"
+            className={`w-5 h-5 border-2 ${bgColor} border-black text-black flex items-center justify-center rounded-sm`}
           >
             A
           </div>
           {!hideDuplicates && (
-            <div className="w-5 h-5 border-2 bg-red-500 border-black text-black flex items-center justify-center rounded-sm absolute left-1/3 bottom-1/3">
+            <div
+              className={`w-5 h-5 border-2 ${bgColor} border-black text-black flex items-center justify-center rounded-sm absolute left-[40%] bottom-[40%]`}
+            >
               A
             </div>
           )}
