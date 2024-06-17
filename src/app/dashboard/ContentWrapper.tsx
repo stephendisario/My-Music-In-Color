@@ -14,8 +14,8 @@ const ContentWrapper = async () => {
     <MyContextProvider longTermTracks={topLongTracks!} id={user!.id}>
       {/* <PieChart /> */}
       <RainbowCollage />
-      <Collages />
-      <AllImages />
+      {/* <Collages /> */}
+      {/* <AllImages /> */}
     </MyContextProvider>
   );
 };

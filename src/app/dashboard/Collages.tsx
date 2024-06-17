@@ -85,13 +85,13 @@ const Collages = () => {
   return (
     !loading &&
     (Object.keys(collageConfig) as Colors[]).map((color, index) => (
-      <div
-        className={`p-safe-t p-safe-r p-safe-b p-safe-l snap-start relative h-screen flex flex-col bg-gradient-to-b ${collageConfig[color as Colors].gradient.join(" ")}`}
-        key={color}
-      >
-        <TermTabs color={color === "black" ? "white" : color} />
-        <Collage color={color} index={index} />
-      </div>
+      // <div
+      //   className={`p-safe-t p-safe-r p-safe-b p-safe-l snap-start relative h-screen flex flex-col bg-gradient-to-b ${collageConfig[color as Colors].gradient.join(" ")}`}
+      //   key={color}
+      // >
+      // {/* <TermTabs color={color === "black" ? "white" : color} /> */}
+      <Collage color={color} index={index} key={index} />
+      // </div>
     ))
   );
 };
