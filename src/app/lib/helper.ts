@@ -52,7 +52,7 @@ export const getUniqueImages = (tracks: Track[]) => {
       console.log(track);
       return;
     }
-    if (!uniqueImagesMap[url]) uniqueImagesMap[url] = [];
+    if (!uniqueImagesMap[url]) uniqueImagesMap[url] = {};
     return;
   });
   return uniqueImagesMap;
@@ -118,4 +118,14 @@ export const getRainbowCollage = (isHide: boolean, collages: Collages) => {
   });
 
   return rainbowArray;
+};
+
+export const getBase64ColorImage = (hsl: HSLColor) => {
+  const canvas = document.createElement("canvas");
+  canvas.width = 1;
+  canvas.height = 1;
+  const ctx = canvas.getContext("2d");
+  ctx!.fillStyle = `hsl(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)`;
+  ctx!.fillRect(0, 0, 1, 1);
+  return canvas.toDataURL();
 };

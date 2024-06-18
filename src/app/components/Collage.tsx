@@ -22,31 +22,20 @@ import CheckboxWithStyle from "./CheckboxWithStyle";
 import DownloadIcon from "@mui/icons-material/Download";
 import NavBar from "./NavBar";
 import CircularProgress from "@mui/material/CircularProgress";
+import Skeleton from "@mui/material/Skeleton";
+import { CirclePicker } from "react-color";
 
 const snapPoints = [
-  { color: "red", position: 0 },
-  { color: "orange", position: 10 },
-  { color: "yellow", position: 20 },
-  { color: "green", position: 30 },
-  { color: "blue", position: 40 },
-  { color: "violet", position: 50 },
-  { color: "black", position: 60 },
-  { color: "white", position: 70 },
-  { color: "rainbow", position: 75 },
+  { color: "red", hex: "#ff0000" },
+  { color: "orange", hex: "#ffa500" },
+  { color: "yellow", hex: "#ffff00" },
+  { color: "green", hex: "#008000" },
+  { color: "blue", hex: "#0000ff" },
+  { color: "violet", hex: "#ee82ee" },
+  { color: "black", hex: "#000000" },
+  { color: "white", hex: "#ffffff" },
+  { color: "rainbow", hex: "#808080" },
 ];
-
-const findClosestSnapPoint = (hue: number) => {
-  let closest = snapPoints[0];
-  let minDiff = Math.abs(hue - snapPoints[0].position);
-  for (let i = 1; i < snapPoints.length; i++) {
-    let diff = Math.abs(hue - snapPoints[i].position);
-    if (diff < minDiff) {
-      minDiff = diff;
-      closest = snapPoints[i];
-    }
-  }
-  return closest;
-};
 
 const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number }) => {
   const [currentColor, setCurrentColor] = useState<Colors | "rainbow">("red");
@@ -215,7 +204,7 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
   }, [collages]);
 
   const header = (tracks: ColorTrack[]) => (
-    <div className="flex flex-row w-full justify-between items-end relative">
+    <div className="flex flex-row w-full sm:w-[512px] justify-between items-end relative">
       <div className="flex flex-row">
         <div className="sm:hidden">
           <IconButton onClick={() => shareImage()}>
@@ -263,7 +252,7 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
       const logosColor = "white";
 
       return (
-        <div className={`my-2 px-2 flex flex-row items-center logos`}>
+        <div className={`my-2 px-2 flex flex-row items-center logos sm:w-[512px]`}>
           <div className="mr-auto" style={{ color: logosColor }}>
             {`my ${words} - ${currentColor}`}
             <p>mymusicincolor.com</p>
@@ -369,25 +358,18 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
                       height={300}
                       className="w-full h-full"
                       crossOrigin="anonymous"
+                      placeholder="blur"
+                      blurDataURL={track.base64Url || ""}
                     />
                   </a>
                 </CustomTooltip>
               );
             })}
           </div>
-          {logos("mosaic")}
+          {logos("musaic")}
         </div>
       </div>
     );
-  };
-
-  const handleSliderChange = (value: any) => {
-    console.log("here", value);
-    const closest = snapPoints.find((snap) => snap.position.toString() === value);
-    if (closest) {
-      setCurrentColor(closest.color as Colors | "rainbow");
-      setPickerColor(closest.position);
-    }
   };
 
   return (
@@ -411,7 +393,18 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
       </Snackbar>
       <div className="flex w-full h-full justify-center items-center flex-col px-2 sm:px-0">
         {isMosaic ? art() : info()}
-        <CustomSlider value={pickerColor} onChange={handleSliderChange} />
+        {/* <CustomSlider value={pickerColor} onChange={handleSliderChange} /> */}
+        <CirclePicker
+          color={"red"}
+          onChange={(color) => {
+            setCurrentColor(
+              snapPoints.find((c) => c.hex === color.hex)?.color as Colors | "rainbow"
+            );
+          }}
+          colors={["red", "orange", "yellow", "green", "blue", "violet", "black", "white", "gray"]}
+          width="512px"
+          className="justify-center"
+        />
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 "use client";
 // @ts-ignore
 import ColorThief from "colorthief";
-import { rgbToHsl } from "./helper";
+import { getBase64ColorImage, rgbToHsl } from "./helper";
 
 const colorThief = new ColorThief();
 
@@ -26,9 +26,15 @@ export const addColor = async (unqieImagesMap: UniqueImagesMap): Promise<UniqueI
           image.onload = async () => {
             const rgb = colorThief.getColor(image, 1);
             const hsl = rgbToHsl(rgb);
-            unqieImagesMap[url] = hsl;
+            const base64Url = getBase64ColorImage(hsl);
+
+            const imageData = {
+              hsl,
+              base64Url,
+            };
+            unqieImagesMap[url] = imageData;
             //add unseen images to local
-            addToLocalImageMap[url] = hsl;
+            addToLocalImageMap[url] = imageData;
             resolve();
           };
 
