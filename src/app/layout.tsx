@@ -16,7 +16,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="snap-y snap-mandatory snap-always overflow-y-scroll scroll-smooth">
+    <html
+      lang="en"
+      className="snap-y snap-mandatory snap-always overflow-y-scroll overflow-x-hidden scroll-smooth"
+    >
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>

@@ -1,7 +1,7 @@
 "use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { addColor } from "../lib/colorthief";
-import { getUniqueImages, removeDuplicatesFromCollage } from "../lib/helper";
+import { getBase64ColorImage, getUniqueImages, removeDuplicatesFromCollage } from "../lib/helper";
 import { Collages, Colors, collageConfig } from "../dashboard/Collages";
 import TermTabs from "./TermTabs";
 import { getTopTracks } from "../api/spotify";
@@ -56,7 +56,9 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({
     const fillTracksWithColor: ColorTrack[] = tracks.map((track) => {
       const url = track?.album?.images?.[2]?.url;
       if (!url) return track;
-      else return { ...track, hsl: uniqueImagesMapFilled[url] } as ColorTrack;
+
+      const imgData = uniqueImagesMapFilled[url];
+      return { ...track, ...{ hsl: imgData.hsl, base64Url: imgData.base64Url } } as ColorTrack;
     });
 
     const deepCopy: ColorTrack[] = JSON.parse(JSON.stringify(fillTracksWithColor));

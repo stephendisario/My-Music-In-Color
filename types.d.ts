@@ -42,6 +42,7 @@ type HSLColor = [number, number, number];
 interface ColorTrack extends Track {
   rgb?: RGBColor;
   hsl?: HSLColor;
+  base64Url?: string;
 }
 
 
@@ -55,4 +56,6 @@ interface Artist {
   name: string;
 }
 
-type UniqueImagesMap = { [key: string]: number[] }
+type UniqueImagesMap = { [key:string]: {
+  hsl?: HSLColor, base64Url?: string 
+}}
