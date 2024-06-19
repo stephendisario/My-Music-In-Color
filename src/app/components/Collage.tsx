@@ -271,9 +271,9 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
         : collages[currentColor].slice(0, 8);
 
     return (
-      <div className="flex flex-col justify-center items-center sm:max-w-lg">
+      <div className="flex flex-col justify-center items-center w-full sm:max-w-lg">
         {header([])}
-        <div ref={infoRef} className="flex flex-row flex-wrap justify-center">
+        <div ref={infoRef} className="flex flex-col w-full justify-center">
           {tracks.map((track, index) => {
             const image = track?.album?.images?.[1]?.url;
             const name = track?.name;
@@ -295,12 +295,12 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
                   className="flex flex-row items-center"
                 >
                   <p
-                    className={`p-2 ${lightness! >= 50 || (currentColor === "yellow" && lightness! >= 50) ? "text-black" : "text-white"}`}
+                    className={`w-[80%] text-sm text-ellipsis overflow-hidden text-wrap px-2 ${lightness! >= 50 || (currentColor === "yellow" && lightness! >= 50) ? "text-black" : "text-white"}`}
                   >
                     {name} - {artist}
                   </p>
                   <div
-                    className="ml-auto"
+                    className="ml-auto aspect-square"
                     style={{ width: collageSize === 0 ? "12.5%" : "12.5%", height: "auto" }}
                   >
                     <Image
@@ -333,10 +333,10 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
     const tracks = allTracks.slice(0, collageSize === 0 ? 64 : 25);
 
     return (
-      <div className={`flex flex-col justify-center items-center sm:max-w-lg`}>
+      <div className={`flex flex-col justify-center items-center w-full sm:max-w-lg`}>
         {header(tracks)}
 
-        <div ref={artRef}>
+        <div ref={artRef} className="w-full sm:max-w-lg">
           <div className="flex flex-row flex-wrap w-full sm:h-[512px]" ref={playlistRef}>
             {tracks.map((track) => {
               const image = track?.album?.images?.[1]?.url;
@@ -402,8 +402,9 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
             );
           }}
           colors={["red", "orange", "yellow", "green", "blue", "violet", "black", "white", "gray"]}
-          width="512px"
           className="justify-center"
+          width="100%"
+          circleSize={26}
         />
       </div>
     </div>
