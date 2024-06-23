@@ -2,27 +2,19 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useMyContext } from "../components/ColorContext";
 import Image from "next/image";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
 import { getRainbowCollage, getTerm, toHslString } from "../lib/helper";
 import CustomTooltip from "../components/CustomTooltip";
 import { Colors, collageConfig } from "../dashboard/Collages";
 import { addImageToPlaylist, addTracksToPlaylist, createPlaylist } from "../api/spotify";
-import { Alert, Button, Snackbar } from "@mui/material";
-import { toBlob, toJpeg, toPng } from "html-to-image";
+import { Alert, Snackbar } from "@mui/material";
+import { toBlob, toJpeg } from "html-to-image";
 import SpotifyLogo from "./SpotifyLogo";
-import LoadingButton from "@mui/lab/LoadingButton";
-import CustomSlider from "./CustomSlider";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import IconButton from "@mui/material/IconButton";
-import Checkbox from "@mui/material/Checkbox";
-import CustomCheckbox from "./CustomCheckbox";
-import test from "../../Frame.svg";
 import CheckboxWithStyle from "./CheckboxWithStyle";
 import DownloadIcon from "@mui/icons-material/Download";
 import NavBar from "./NavBar";
 import CircularProgress from "@mui/material/CircularProgress";
-import Skeleton from "@mui/material/Skeleton";
 import { CirclePicker } from "react-color";
 
 const snapPoints = [
@@ -40,8 +32,7 @@ const snapPoints = [
 const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number }) => {
   const [currentColor, setCurrentColor] = useState<Colors | "rainbow">("red");
   const { collages, tabValue, id } = useMyContext();
-  const [collageSize, setCollageSize] = useState<number>(0);
-  const [hideDuplicates, setHideDuplicates] = useState<boolean>(false);
+  const [hideDuplicates, setHideDuplicates] = useState<boolean>(true);
   const [rainbowCollage, setRainbowCollage] = useState<ColorTrack[]>([]);
   const [rainbowCollageWithoutDupes, setRainbowCollageWithoutDupes] = useState<ColorTrack[]>([]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -91,8 +82,7 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
     const width = node.offsetWidth * scale;
     const height = node.offsetHeight * scale;
 
-    const backgroundColor =
-      currentColor === "rainbow" || currentColor === "white" ? "white" : "black";
+    const backgroundColor = "black";
 
     const scaledObject: any = {
       width,
@@ -180,7 +170,7 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
       if (navigator.share) {
         await navigator.share({
           files: [
-            new File([blob!], "test.png", {
+            new File([blob!], `my ${isMosaic ? "musaic" : "faves"} - ${currentColor}.png`, {
               type: "image/png",
               lastModified: new Date().getTime(),
             }),
@@ -228,7 +218,7 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
         className={`text-black absolute left-1/2 transform -translate-x-1/2 border-2 border-black rounded-full px-4 text-xs h-1/2 self-center w-28 hover:bg-[rgba(0,0,0,.06)] `}
         onClick={() => setIsMosaic((prevState) => !prevState)}
       >
-        see {!isMosaic ? "mosaic" : "faves"}
+        see {!isMosaic ? "musaic" : "faves"}
       </button>
       {isMosaic && (
         <button
@@ -299,10 +289,7 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
                   >
                     {name} - {artist}
                   </p>
-                  <div
-                    className="ml-auto aspect-square"
-                    style={{ width: collageSize === 0 ? "12.5%" : "12.5%", height: "auto" }}
-                  >
+                  <div className="ml-auto aspect-square" style={{ width: "12.5%", height: "auto" }}>
                     <Image
                       unoptimized
                       alt={name}
@@ -330,7 +317,37 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
         : hideDuplicates
           ? collages[`${currentColor}WithoutDupes`]
           : collages[currentColor];
-    const tracks = allTracks.slice(0, collageSize === 0 ? 64 : 25);
+
+    let collageSize;
+    let width;
+
+    if (allTracks.length >= 64) {
+      collageSize = 64;
+      width = "12.5%";
+    } else if (allTracks.length >= 49) {
+      collageSize = 49;
+      width = "14.285%";
+    } else if (allTracks.length >= 36) {
+      collageSize = 36;
+      width = "16.66%";
+    } else if (allTracks.length >= 25) {
+      collageSize = 25;
+      width = "20%";
+    } else if (allTracks.length >= 16) {
+      collageSize = 16;
+      width = "25%";
+    } else if (allTracks.length >= 9) {
+      collageSize = 9;
+      width = "33.33%";
+    } else if (allTracks.length >= 4) {
+      collageSize = 4;
+      width = "50%";
+    } else {
+      collageSize = 1;
+      width = "100%";
+    }
+
+    const tracks = allTracks.slice(0, collageSize);
 
     return (
       <div className={`flex flex-col justify-center items-center w-full sm:max-w-lg`}>
@@ -344,12 +361,7 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
               const spotifyUrl = track?.external_urls?.spotify;
               return (
                 <CustomTooltip track={track} key={track.id}>
-                  <a
-                    href={spotifyUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ width: collageSize === 0 ? "12.5%" : "20%", height: "auto" }}
-                  >
+                  <div style={{ width: width, height: "auto" }}>
                     <Image
                       unoptimized
                       alt={name}
@@ -361,7 +373,7 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
                       placeholder="blur"
                       blurDataURL={track.base64Url || ""}
                     />
-                  </a>
+                  </div>
                 </CustomTooltip>
               );
             })}
@@ -394,18 +406,28 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
       <div className="flex w-full h-full justify-center items-center flex-col px-2 sm:px-0">
         {isMosaic ? art() : info()}
         {/* <CustomSlider value={pickerColor} onChange={handleSliderChange} /> */}
-        <CirclePicker
-          color={"red"}
-          onChange={(color) => {
-            setCurrentColor(
-              snapPoints.find((c) => c.hex === color.hex)?.color as Colors | "rainbow"
-            );
-          }}
-          colors={["red", "orange", "yellow", "green", "blue", "violet", "black", "white", "gray"]}
-          className="justify-center"
-          width="100%"
-          circleSize={26}
-        />
+        <div className="flex flex-row">
+          <CirclePicker
+            color={"red"}
+            onChange={(color) => {
+              setCurrentColor(
+                snapPoints.find((c) => c.hex === color.hex)?.color as Colors | "rainbow"
+              );
+            }}
+            colors={["red", "orange", "yellow", "green", "blue", "violet", "black", "white"]}
+            className="justify-center"
+            width="100%"
+            circleSize={26}
+          />
+          <button
+            className={`text-black rounded-full text-sm text-center self-center w-[26px] h-[26px] ml-[14px] transition-transform transform hover:scale-[1.2] ${currentColor === "rainbow" && "shadow-[0_0_2px_2px_rgba(255,255,255,0.4)]"}`}
+            style={{
+              background:
+                "linear-gradient(45deg, rgba(255,0,0,1) 10%, rgba(255,165,0,1) 30%, rgba(255,255,0,1) 50%, rgba(0,128,0,1) 60%, rgba(0,0,255,1) 70%, rgba(75,0,130,1) 80%, rgba(238,130,238,1) 100%)",
+            }}
+            onClick={() => setCurrentColor("rainbow")}
+          />
+        </div>
       </div>
     </div>
   );
