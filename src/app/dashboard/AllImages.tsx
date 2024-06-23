@@ -60,11 +60,12 @@ const AllImages = () => {
             const name = track?.name;
             const spotifyUrl = track?.external_urls?.spotify;
             return (
-              <CustomTooltip track={track} key={track.id}>
-                <a href={spotifyUrl} target="_blank" rel="noopener noreferrer">
-                  <Image unoptimized alt={name} width={64} height={64} src={image} />
-                </a>
-              </CustomTooltip>
+              // <CustomTooltip track={track} key={track.id}>
+              //   <a href={spotifyUrl} target="_blank" rel="noopener noreferrer">
+              //     <Image unoptimized alt={name} width={64} height={64} src={image} />
+              //   </a>
+              // </CustomTooltip>
+              <p key={track.id}>hey</p>
             );
           })}
         </div>

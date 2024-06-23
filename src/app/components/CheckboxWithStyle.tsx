@@ -16,9 +16,9 @@ const CheckboxWithStyle = ({
   if (color === "yellow") bgColor = "bg-yellow-300";
   if (color === "green") bgColor = "bg-green-600";
   if (color === "blue") bgColor = "bg-blue-600";
-  if (color === "violet") bgColor = "bg-violet-500";
+  if (color === "violet") bgColor = "bg-fuchsia-500";
   if (color === "black") bgColor = "bg-stone-600";
-  if (color === "white") bgColor = "bg-stone-600";
+  if (color === "white") bgColor = "bg-slate-200";
   if (color === "rainbow") bgColor = "bg-stone-600";
 
   const handleChange = () => {
