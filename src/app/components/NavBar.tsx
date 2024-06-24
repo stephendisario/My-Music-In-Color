@@ -18,8 +18,8 @@ const NavBar = ({ showLogout }: { showLogout: boolean }) => {
   };
 
   return (
-    <div className="absolute z-50 top-0 right-2">
-      <IconButton onClick={(event) => handleClick(event)} className="sm:mr-3 mt-2">
+    <div className="absolute z-50 top-0 right-0">
+      <IconButton onClick={(event) => handleClick(event)} className="">
         <MenuIcon sx={{ color: "black" }} />
       </IconButton>
       <Menu

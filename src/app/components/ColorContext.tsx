@@ -4,7 +4,7 @@ import { addColor } from "../lib/colorthief";
 import { getBase64ColorImage, getUniqueImages, removeDuplicatesFromCollage } from "../lib/helper";
 import { Collages, Colors, collageConfig } from "../dashboard/Collages";
 import TermTabs from "./TermTabs";
-import { getTopTracks } from "../api/spotify";
+import { getTopTracks, getUserProfile } from "../api/spotify";
 
 interface MyContextType {
   tabValue: number;
@@ -13,10 +13,13 @@ interface MyContextType {
   collages: Collages;
   setCollages: React.Dispatch<React.SetStateAction<Collages>>;
   loading: boolean;
-  long: Collages;
-  medium: Collages;
-  short: Collages;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  loadingColor: boolean;
+  loadingTracks: boolean;
   id: string;
+  name: string;
+
+  setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const MyContext = createContext<MyContextType | undefined>(undefined);
@@ -30,16 +33,10 @@ export const useMyContext = () => {
 };
 
 interface MyContextProviderProps {
-  longTermTracks: Track[];
   children: React.ReactNode;
-  id: string;
 }
 
-export const MyContextProvider: React.FC<MyContextProviderProps> = ({
-  longTermTracks,
-  id,
-  children,
-}) => {
+export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }) => {
   const [tabValue, setTabValue] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [sortedColorTracks, setSortedColorTracks] = useState<ColorTrack[]>([]);
@@ -47,11 +44,18 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({
   const [long, setLong] = useState<Collages>({} as Collages);
   const [medium, setMedium] = useState<Collages>({} as Collages);
   const [short, setShort] = useState<Collages>({} as Collages);
+  const [loadingColor, setLoadingColor] = useState<boolean>(true);
+  const [loadingTracks, setLoadingTracks] = useState<boolean>(true);
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
-  const injectColor = async (tracks: Track[], term: "long_term" | "medium_term" | "short_term") => {
+  const [id, setId] = useState<string>("");
+  const [name, setName] = useState<string>("");
+
+  const injectColor = async (tracks: Track[]) => {
     //TODO: Clean list of incomplete tracks
     const uniqueImagesMapEmpty = getUniqueImages(tracks);
     const uniqueImagesMapFilled = await addColor(uniqueImagesMapEmpty);
+    setLoadingColor(false);
 
     const fillTracksWithColor: ColorTrack[] = tracks.map((track) => {
       const url = track?.album?.images?.[2]?.url;
@@ -71,16 +75,8 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({
 
     const groups = groupTracks(fillTracksWithColor);
 
-    if (term === "long_term") {
-      setCollages(groups);
-      setSortedColorTracks(sorted);
-      setLoading(false);
-      setLong(groups);
-    } else if (term === "medium_term") {
-      setMedium(groups);
-    } else if (term === "short_term") {
-      setShort(groups);
-    }
+    setCollages(groups);
+    setLoadingColor(false);
   };
 
   const groupTracks = (colorTracks: ColorTrack[]) => {
@@ -121,23 +117,25 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({
   };
 
   useEffect(() => {
-    injectColor(longTermTracks, "long_term");
-  }, []);
+    const test = async () => {
+      const user = await getUserProfile();
+      setId(user?.id!);
+      setName(user?.display_name!);
+      const totalTracks: any = await getTopTracks("long_term", 1);
+      const poo: any = await getTopTracks("long_term");
+      if (poo) injectColor(poo.tracks);
+      setLoadingTracks(false);
+      console.log(poo);
+    };
+    if (loggedIn) test();
+  }, [loggedIn]);
 
-  const injections = async () => {
-    const topMediumTracks = await getTopTracks("medium_term");
-    const topShortTracks = await getTopTracks("short_term");
-    injectColor(topMediumTracks!, "medium_term");
-    injectColor(topShortTracks!, "short_term");
-  };
-
-  // useEffect(() => {
-  //   if (!loading) injections();
-  // }, [loading]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  useEffect(() => {
+    if (!loadingColor)
+      setTimeout(() => {
+        setLoading(false);
+      }, 3000);
+  }, [loadingColor]);
 
   return (
     <MyContext.Provider
@@ -148,10 +146,12 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({
         collages,
         setCollages,
         loading,
-        long,
-        medium,
-        short,
+        setLoading,
+        loadingColor,
+        loadingTracks,
         id,
+        setLoggedIn,
+        name,
       }}
     >
       {children}

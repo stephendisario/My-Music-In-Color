@@ -1,22 +1,24 @@
+"use client";
 import React from "react";
 import Collages from "./Collages";
 import AllImages from "./AllImages";
 import PieChart from "./PieChart";
-import { MyContextProvider } from "../components/ColorContext";
+import { MyContextProvider, useMyContext } from "../components/ColorContext";
 import RainbowCollage from "./RainbowCollage";
 import { getTopTracks, getUserProfile } from "../api/spotify";
+import Collage from "../components/Collage";
 
-const ContentWrapper = async () => {
-  const topLongTracks = await getTopTracks("long_term");
-  const user = await getUserProfile();
+const ContentWrapper = () => {
+  const { collages, id, loading, loadingColor, loadingTracks } = useMyContext();
 
-  return (
-    <MyContextProvider longTermTracks={topLongTracks!} id={user!.id}>
-      {/* <PieChart /> */}
-      <RainbowCollage />
-      {/* <Collages /> */}
-      {/* <AllImages /> */}
-    </MyContextProvider>
+  const stuff = () => (
+    <div className={`relative h-screen flex flex-col items-center justify-center`}>
+      <div>Fetching Tracks {loadingTracks ? "..." : " DONE!"}</div>
+      <div>Extracting Colors {loadingColor ? "..." : " DONE!"}</div>
+      <div>Generating Collages {loading ? "..." : " DONE!"}</div>
+    </div>
   );
+
+  return loading ? stuff() : <Collage color="red" index={0} collages={collages} id={id} />;
 };
 export default ContentWrapper;
