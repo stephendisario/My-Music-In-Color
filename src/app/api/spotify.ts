@@ -203,5 +203,5 @@ export const fetchWithOffset = async <T>(
     return [...accumulator, ...currentResponse.items];
   }, []);
 
-  return allTopTracks;
+  return { tracks: allTopTracks, total: total } as any;
 };

@@ -92,10 +92,12 @@ export function getTerm(tabValue: number) {
 export const removeDuplicatesFromCollage = (tracks: ColorTrack[]) => {
   const seenIds = new Set<string>();
   return tracks.filter((track) => {
-    if (seenIds.has(track.album.id)) {
+    if (seenIds.has(track.album.id) || (seenIds.has(track.artists?.[0]?.name) && seenIds.has(track.name))) {
       return false;
     } else {
       seenIds.add(track.album.id);
+      seenIds.add(track.name);
+      seenIds.add(track.artists?.[0]?.name);
       return true;
     }
   });

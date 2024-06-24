@@ -4,8 +4,14 @@ import { useMyContext } from "../components/ColorContext";
 import Image from "next/image";
 import { getRainbowCollage, getTerm, toHslString } from "../lib/helper";
 import CustomTooltip from "../components/CustomTooltip";
-import { Colors, collageConfig } from "../dashboard/Collages";
-import { addImageToPlaylist, addTracksToPlaylist, createPlaylist } from "../api/spotify";
+import { Collages, Colors, collageConfig } from "../dashboard/Collages";
+import {
+  addImageToPlaylist,
+  addTracksToPlaylist,
+  createPlaylist,
+  getTopTracks,
+  getUserProfile,
+} from "../api/spotify";
 import { Alert, Snackbar } from "@mui/material";
 import { toBlob, toJpeg } from "html-to-image";
 import SpotifyLogo from "./SpotifyLogo";
@@ -16,6 +22,7 @@ import DownloadIcon from "@mui/icons-material/Download";
 import NavBar from "./NavBar";
 import CircularProgress from "@mui/material/CircularProgress";
 import { CirclePicker } from "react-color";
+import Link from "next/link";
 
 const snapPoints = [
   { color: "red", hex: "#ff0000" },
@@ -29,14 +36,25 @@ const snapPoints = [
   { color: "rainbow", hex: "#808080" },
 ];
 
-const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number }) => {
+const Collage = ({
+  color,
+  index,
+  collages,
+  id,
+}: {
+  color: Colors | "rainbow";
+  index: number;
+  collages: Collages;
+  id: string;
+}) => {
   const [currentColor, setCurrentColor] = useState<Colors | "rainbow">("red");
-  const { collages, tabValue, id } = useMyContext();
   const [hideDuplicates, setHideDuplicates] = useState<boolean>(true);
   const [rainbowCollage, setRainbowCollage] = useState<ColorTrack[]>([]);
   const [rainbowCollageWithoutDupes, setRainbowCollageWithoutDupes] = useState<ColorTrack[]>([]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [isCreatePlaylistLoading, setIsCreatePlaylistLoading] = useState<boolean>(false);
+
+  const { name } = useMyContext();
 
   const [isMosaic, setIsMosaic] = useState<boolean>(true);
 
@@ -54,7 +72,7 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
 
   const handleCreatePlaylist = async (tracks: ColorTrack[]) => {
     setIsCreatePlaylistLoading(true);
-    const playlistId = await createPlaylist(currentColor, getTerm(tabValue), id);
+    const playlistId = await createPlaylist(currentColor, "my last year", id);
     await addTracksToPlaylist(
       playlistId,
       tracks.map((track) => track.uri)
@@ -155,7 +173,7 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
 
       if (isDownload && !isShare && dataUrl) {
         const link = document.createElement("a");
-        link.download = `${getTerm(tabValue)} - ${currentColor}`;
+        link.download = `my last year - ${currentColor}`;
         link.href = dataUrl as string;
         link.click();
       } else return dataUrl;
@@ -195,6 +213,7 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
 
   const header = (tracks: ColorTrack[]) => (
     <div className="flex flex-row w-full sm:w-[512px] justify-between items-end relative">
+      <div className="absolute top-[-50px] text-4xl text-black">mymusicincolor</div>
       <div className="flex flex-row">
         <div className="sm:hidden">
           <IconButton onClick={() => shareImage()}>
@@ -386,12 +405,15 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
 
   return (
     <div
-      className={`p-safe-t p-safe-r p-safe-b p-safe-l snap-start relative h-screen flex flex-col items-center`}
+      className={`p-safe-t p-safe-r p-safe-b p-safe-l snap-start relative h-[calc(100dvh)] flex flex-col items-center`}
       key={color}
       style={{
         background: `linear-gradient(to bottom, ${currentColor === "rainbow" || currentColor === "black" ? "grey" : currentColor}, #000000)`,
       }}
     >
+      {/* <div className="fixed flex flex-col items-start w-full pl-2 pt-10">
+        <div className="text-black text-4xl">mymusicincolor</div>
+      </div> */}
       <NavBar showLogout={true} />
       <Snackbar
         open={openSnackbar}
@@ -427,6 +449,19 @@ const Collage = ({ color, index }: { color: Colors | "rainbow"; index: number })
             }}
             onClick={() => setCurrentColor("rainbow")}
           />
+        </div>
+        <div className="absolute bottom-[10px]">
+          <p className="">
+            made by{" "}
+            <Link
+              href={"https://github.com/stephendisario/My-Music-In-Color"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 underline"
+            >
+              stephen disario
+            </Link>
+          </p>
         </div>
       </div>
     </div>

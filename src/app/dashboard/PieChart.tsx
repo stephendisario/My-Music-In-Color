@@ -48,7 +48,7 @@ const PieChart = () => {
         background: `linear-gradient(to bottom, ${yourColor === "black" ? "" : toHslString(collages[yourColor || "red"]?.[0].hsl)}, rgba(0, 0, 0, 1))`,
       }}
     >
-      <TermTabs color="white" />
+      {/* <TermTabs color="white" /> */}
       <div className="flex flex-row grow w-full">
         <div className="w-1/2">{data && <Pie data={data} />}</div>
         <div className="mx-auto">Your Color: {yourColor}</div>
