@@ -153,7 +153,7 @@ const Collage = ({
     const width = node.offsetWidth * scale;
     const height = node.offsetHeight * scale;
 
-    const backgroundColor = "white";
+    const backgroundColor = currentColor !== "white" ? 'black' : 'white';
 
     const scaledObject: any = {
       width,
@@ -259,6 +259,7 @@ const Collage = ({
 
       // Clean up the URL object after sharing
     } catch (error) {
+      setIsShareLoading(false);
       console.error("Error sharing image:", error);
     }
   };
