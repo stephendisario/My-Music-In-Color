@@ -134,7 +134,7 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }
     if (!loadingColor)
       setTimeout(() => {
         setLoading(false);
-      }, 3000);
+      }, 1000);
   }, [loadingColor]);
 
   return (

@@ -21,10 +21,38 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="theme-color" content="#000000" /> 
+        <meta name="theme-color" content="#000000" />
         <title>My Music In Color</title>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+          rel="stylesheet"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap"
+          rel="stylesheet"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap"
+          rel="stylesheet"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;600&display=swap"
+          rel="stylesheet"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Oxygen:wght@400;600&display=swap"
+          rel="stylesheet"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&display=swap"
+          rel="stylesheet"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;600&display=swap"
+          rel="stylesheet"
+        />
       </head>
-      <body className={`${inter.className}`}>
+      <body className={``}>
         <MyContextProvider>{children}</MyContextProvider>
       </body>
     </html>

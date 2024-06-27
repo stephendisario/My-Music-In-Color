@@ -8,6 +8,7 @@
   --background-end-rgb: 0, 0, 0;
 }
 
+
 body {
   color: white;
   background: linear-gradient(
@@ -17,6 +18,8 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+
 
 @layer utilities {
   .text-balance {

@@ -36,6 +36,18 @@ const snapPoints = [
   { color: "rainbow", hex: "#808080" },
 ];
 
+const gradients = {
+  red: "from-red-500 to-red-700",
+  orange: "from-orange-500 to-orange-600",
+  yellow: "from-yellow-500 to-yellow-600",
+  green: "from-green-500 to-green-800",
+  blue: "from-blue-500 to-blue-800",
+  violet: "from-violet-500 to-violet-800",
+  black: "from-[#4b4b4b] to-[#1a1a1a]",
+  white: "from-[#f0f0f0] to-[#b0b0b0]",
+  rainbow: "from-stone-500 to-stone-800",
+};
+
 const Collage = ({
   color,
   index,
@@ -53,6 +65,8 @@ const Collage = ({
   const [rainbowCollageWithoutDupes, setRainbowCollageWithoutDupes] = useState<ColorTrack[]>([]);
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [isCreatePlaylistLoading, setIsCreatePlaylistLoading] = useState<boolean>(false);
+  const [isDownloadLoading, setIsDownloadLoading] = useState<boolean>(false);
+  const [isShareLoading, setIsShareLoading] = useState<boolean>(false);
 
   const { name } = useMyContext();
 
@@ -66,13 +80,51 @@ const Collage = ({
 
   const collageToUse = hideDuplicates ? rainbowCollageWithoutDupes : rainbowCollage;
 
+  const allTracks =
+    currentColor === "rainbow"
+      ? collageToUse
+      : hideDuplicates
+        ? collages[`${currentColor}WithoutDupes`]
+        : collages[currentColor];
+
+  let collageSize;
+  let width;
+
+  if (allTracks.length >= 64) {
+    collageSize = 64;
+    width = "12.5%";
+  } else if (allTracks.length >= 49) {
+    collageSize = 49;
+    width = "14.285%";
+  } else if (allTracks.length >= 36) {
+    collageSize = 36;
+    width = "16.66%";
+  } else if (allTracks.length >= 25) {
+    collageSize = 25;
+    width = "20%";
+  } else if (allTracks.length >= 16) {
+    collageSize = 16;
+    width = "25%";
+  } else if (allTracks.length >= 9) {
+    collageSize = 9;
+    width = "33.33%";
+  } else if (allTracks.length >= 4) {
+    collageSize = 4;
+    width = "50%";
+  } else {
+    collageSize = 1;
+    width = "100%";
+  }
+
+  const collageTracks = allTracks.slice(0, collageSize);
+
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
   };
 
   const handleCreatePlaylist = async (tracks: ColorTrack[]) => {
     setIsCreatePlaylistLoading(true);
-    const playlistId = await createPlaylist(currentColor, "my last year", id);
+    const playlistId = await createPlaylist(currentColor, "my musaic", id);
     await addTracksToPlaylist(
       playlistId,
       tracks.map((track) => track.uri)
@@ -89,6 +141,7 @@ const Collage = ({
   };
 
   const handleDownload = async (currRef: any, isDownload: boolean, isShare: boolean) => {
+    setIsDownloadLoading(true);
     const ref = currRef;
     if (ref.current === null) {
       return;
@@ -100,7 +153,7 @@ const Collage = ({
     const width = node.offsetWidth * scale;
     const height = node.offsetHeight * scale;
 
-    const backgroundColor = "black";
+    const backgroundColor = "white";
 
     const scaledObject: any = {
       width,
@@ -176,6 +229,7 @@ const Collage = ({
         link.download = `my last year - ${currentColor}`;
         link.href = dataUrl as string;
         link.click();
+        setIsDownloadLoading(false);
       } else return dataUrl;
     } catch (error: any) {
       console.error("Error downloading image", error.message);
@@ -184,6 +238,7 @@ const Collage = ({
 
   const shareImage = async () => {
     try {
+      setIsShareLoading(true);
       const blob = await handleDownload(isMosaic ? artRef : infoRef, false, true);
       if (navigator.share) {
         await navigator.share({
@@ -194,9 +249,13 @@ const Collage = ({
             }),
           ],
         });
+        setIsShareLoading(false);
       } else {
+        setIsShareLoading(false);
         alert("Web Share API is not supported in your browser.");
       }
+
+      setIsShareLoading(false);
 
       // Clean up the URL object after sharing
     } catch (error) {
@@ -212,59 +271,75 @@ const Collage = ({
   }, [collages]);
 
   const header = (tracks: ColorTrack[]) => (
-    <div className="flex flex-row w-full sm:w-[512px] justify-between items-end relative">
-      <div className="absolute top-[-50px] text-4xl text-black">mymusicincolor</div>
+    <div className="flex flex-row w-full sm:w-[512px] justify-center absolute bottom-[-10px] gap-2 relative mt-2">
       <div className="flex flex-row">
         <div className="sm:hidden">
-          <IconButton onClick={() => shareImage()}>
+          {/* <IconButton onClick={() => shareImage()}>
             <IosShareIcon sx={{ color: "black" }} />
-          </IconButton>
+          </IconButton> */}
+          <button
+            className={`${currentColor !== "white" ? "border-white bg-white text-black mix-blend-lighten hover:bg-[rgba(255,255,255,.8)]" : "border-black bg-black text-white mix-blend-darken hover:bg-[rgba(0,0,0,.8)]"} h-10 border-2 font-bold rounded-full text-lg text-nowrap h-full self-center	hover:bg-[rgba(0,0,0,.1)] w-[145px]`}
+            onClick={() => {
+              shareImage();
+            }}
+          >
+            {isShareLoading ? <CircularProgress sx={{ color: "white" }} size={15} /> : "share"}
+          </button>
         </div>
         <div className="sm:block hidden">
-          <IconButton onClick={() => handleDownload(isMosaic ? artRef : infoRef, true, false)}>
+          {/* <IconButton onClick={() => handleDownload(isMosaic ? artRef : infoRef, true, false)}>
             <DownloadIcon sx={{ color: "black" }} />
-          </IconButton>
+          </IconButton> */}
+          <button
+            className={`${currentColor !== "white" ? "border-white bg-white text-black mix-blend-lighten hover:bg-[rgba(255,255,255,.8)]" : "border-black bg-black text-white mix-blend-darken hover:bg-[rgba(0,0,0,.8)]"} h-10 border-2  font-bold rounded-full text-lg text-nowrap h-full self-center w-[145px]`}
+            onClick={() => {
+              handleDownload(artRef, true, false);
+            }}
+          >
+            {isDownloadLoading ? (
+              <CircularProgress sx={{ color: "white" }} size={15} />
+            ) : (
+              "download"
+            )}
+          </button>
         </div>
-        {isMosaic && (
+        {/* {isMosaic && (
           <CheckboxWithStyle
             color={currentColor}
             hideDuplicates={hideDuplicates}
             setHideDuplicates={setHideDuplicates}
           />
-        )}
+        )} */}
       </div>
+
       <button
-        className={`text-black absolute left-1/2 transform -translate-x-1/2 border-2 border-black rounded-full px-4 text-xs h-1/2 self-center w-28 hover:bg-[rgba(0,0,0,.06)] `}
-        onClick={() => setIsMosaic((prevState) => !prevState)}
+        className={`${currentColor !== "white" ? "text-white border-white" : "text-black border-black"} border-2 rounded-full text-lg font-bold text-nowrap h-full hover:bg-[rgba(0,0,0,.1)] w-[145px]`}
+        onClick={() => {
+          if (!isCreatePlaylistLoading) handleCreatePlaylist(tracks);
+        }}
       >
-        see {!isMosaic ? "musaic" : "faves"}
+        {isCreatePlaylistLoading ? (
+          <CircularProgress sx={{ color: "white" }} size={15} />
+        ) : (
+          "create playlist"
+        )}
       </button>
-      {isMosaic && (
-        <button
-          className="text-black border-2 border-black rounded-full px-4 text-xs h-1/2 self-center	hover:bg-[rgba(0,0,0,.06)] w-[116px]"
-          onClick={() => {
-            if (!isCreatePlaylistLoading) handleCreatePlaylist(tracks);
-          }}
-        >
-          {isCreatePlaylistLoading ? (
-            <CircularProgress sx={{ color: "black" }} size={10} />
-          ) : (
-            "create playlist"
-          )}
-        </button>
-      )}
     </div>
   );
 
   const logos = useCallback(
     (words: string) => {
-      const logosColor = "white";
+      const logosColor = currentColor === "white" ? "black" : "white";
 
       return (
-        <div className={`my-2 px-2 flex flex-row items-center logos sm:w-[512px]`}>
-          <div className="mr-auto" style={{ color: logosColor }}>
-            {`my ${words} - ${currentColor}`}
-            <p>mymusicincolor.com</p>
+        <div className={`my-2 flex flex-row items-center logos sm:w-[512px]`}>
+          <div className="mr-auto text-md" style={{ color: logosColor }}>
+            {
+              <p>
+                my {words} - {currentColor}
+              </p>
+            }
+            {<p>mymusicincolor.com</p>}
           </div>
           <SpotifyLogo color={logosColor} />
         </div>
@@ -281,7 +356,6 @@ const Collage = ({
 
     return (
       <div className="flex flex-col justify-center items-center w-full sm:max-w-lg">
-        {header([])}
         <div ref={infoRef} className="flex flex-col w-full justify-center">
           {tracks.map((track, index) => {
             const image = track?.album?.images?.[1]?.url;
@@ -330,51 +404,12 @@ const Collage = ({
   };
 
   const art = () => {
-    const allTracks =
-      currentColor === "rainbow"
-        ? collageToUse
-        : hideDuplicates
-          ? collages[`${currentColor}WithoutDupes`]
-          : collages[currentColor];
-
-    let collageSize;
-    let width;
-
-    if (allTracks.length >= 64) {
-      collageSize = 64;
-      width = "12.5%";
-    } else if (allTracks.length >= 49) {
-      collageSize = 49;
-      width = "14.285%";
-    } else if (allTracks.length >= 36) {
-      collageSize = 36;
-      width = "16.66%";
-    } else if (allTracks.length >= 25) {
-      collageSize = 25;
-      width = "20%";
-    } else if (allTracks.length >= 16) {
-      collageSize = 16;
-      width = "25%";
-    } else if (allTracks.length >= 9) {
-      collageSize = 9;
-      width = "33.33%";
-    } else if (allTracks.length >= 4) {
-      collageSize = 4;
-      width = "50%";
-    } else {
-      collageSize = 1;
-      width = "100%";
-    }
-
-    const tracks = allTracks.slice(0, collageSize);
-
     return (
       <div className={`flex flex-col justify-center items-center w-full sm:max-w-lg`}>
-        {header(tracks)}
-
         <div ref={artRef} className="w-full sm:max-w-lg">
+          {/* <div className="text-4xl text-black mr-auto">my musaic - {currentColor}</div> */}
           <div className="flex flex-row flex-wrap w-full sm:h-[512px]" ref={playlistRef}>
-            {tracks.map((track) => {
+            {collageTracks.map((track) => {
               const image = track?.album?.images?.[1]?.url;
               const name = track?.name;
               const spotifyUrl = track?.external_urls?.spotify;
@@ -405,15 +440,18 @@ const Collage = ({
 
   return (
     <div
-      className={`p-safe-t p-safe-r p-safe-b p-safe-l snap-start relative h-[calc(100dvh)] flex flex-col items-center`}
+      className={`p-safe-t p-safe-r p-safe-b p-safe-l snap-start relative h-[calc(100dvh)] flex flex-col items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
       key={color}
-      style={{
-        background: `linear-gradient(to bottom, ${currentColor === "rainbow" || currentColor === "black" ? "grey" : currentColor}, #000000)`,
-      }}
+      style={
+        currentColor === "rainbow"
+          ? {
+              background:
+                "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)",
+            }
+          : {}
+      }
     >
-      {/* <div className="fixed flex flex-col items-start w-full pl-2 pt-10">
-        <div className="text-black text-4xl">mymusicincolor</div>
-      </div> */}
+      <div className="fixed flex flex-col items-start w-full pl-2 pt-10"></div>
       <NavBar showLogout={true} />
       <Snackbar
         open={openSnackbar}
@@ -426,6 +464,21 @@ const Collage = ({
         </Alert>
       </Snackbar>
       <div className="flex w-full h-full justify-center items-center flex-col px-2 sm:px-0">
+        {/* <div className="text-black text-4xl">mymusicincolor</div> */}
+        <div className="mb-1 flex flex-row justify-between w-full sm:w-[512px] items-end">
+          <p
+            className={`${currentColor !== "white" ? "text-white border-white" : "text-black border-black"} text-3xl`}
+          >
+            my {isMosaic ? "musaic" : "faves"}
+          </p>
+
+          <button
+            className={`${currentColor !== "white" ? "text-white border-white" : "text-black border-black"} border-2 rounded-full text-lg text-nowrap w-28 hover:bg-[rgba(0,0,0,.1)] `}
+            onClick={() => setIsMosaic((prevState) => !prevState)}
+          >
+            see {!isMosaic ? "musaic" : "faves"}
+          </button>
+        </div>
         {isMosaic ? art() : info()}
         {/* <CustomSlider value={pickerColor} onChange={handleSliderChange} /> */}
         <div className="flex flex-row">
@@ -437,7 +490,6 @@ const Collage = ({
               );
             }}
             colors={["red", "orange", "yellow", "green", "blue", "violet", "black", "white"]}
-            className="justify-center"
             width="100%"
             circleSize={26}
           />
@@ -450,19 +502,7 @@ const Collage = ({
             onClick={() => setCurrentColor("rainbow")}
           />
         </div>
-        <div className="absolute bottom-[10px]">
-          <p className="">
-            made by{" "}
-            <Link
-              href={"https://github.com/stephendisario/My-Music-In-Color"}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-500 underline"
-            >
-              stephen disario
-            </Link>
-          </p>
-        </div>
+        {header(collageTracks)}
       </div>
     </div>
   );
