@@ -1,5 +1,6 @@
+"use client";
 import { Divider, Tooltip } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { toHslString } from "../lib/helper";
 import black from "../../../public/Spotify_Icon_RGB_Black.png";
 import white from "../../../public/Spotify_Icon_RGB_White.png";
@@ -16,6 +17,7 @@ const CustomTooltip = ({
   const textColor = track?.hsl?.[2] && track?.hsl?.[2] > 50 ? "black" : "white";
   const spotifyURI = track.uri;
   const webURL = track?.external_urls?.spotify;
+  // const [open, setOpen] = useState(false);
 
   const handleLinkClick = (event: any) => {
     event.preventDefault();
@@ -26,6 +28,9 @@ const CustomTooltip = ({
 
   return (
     <Tooltip
+      // onTouchMoveCapture={(e) => setOpen(false)}
+      // onTouchStartCapture={() => setOpen(true)}
+      // open={open}
       enterTouchDelay={0}
       leaveTouchDelay={4000}
       PopperProps={{ disablePortal: true }}

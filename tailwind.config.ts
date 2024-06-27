@@ -8,6 +8,16 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        poppins: ['"Poppins"', 'sans-serif'],
+        nunito: ['Nunito', 'sans-serif'],
+        quicksand: ['Quicksand', 'sans-serif'],
+        cabin: ['Cabin', 'sans-serif'],
+        oxygen: ['Oxygen', 'sans-serif'],
+        ubuntu: ['Ubuntu', 'sans-serif'],
+        comfortaa: ['Comfortaa', 'sans-serif'],
+        roboto: ['"Libre Baskerville"', 'sans-serif'],
+      },
       padding: {
         'safe-t': 'env(safe-area-inset-top)',
         'safe-r': 'env(safe-area-inset-right)',
