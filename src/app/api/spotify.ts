@@ -182,7 +182,7 @@ export const fetchWithOffset = async <T>(
     .join(",");
 
   let promiseArray = [];
-  while (!iterations ? offset < 10000 : count < iterations) {
+  while (!iterations ? offset < 6000 : count < iterations) {
     promiseArray.push(
       customFetch(
         `${url}?limit=${limit}&offset=${offset}&time_range=${timeRange}&fields=next,items(${fieldsString})`,
