@@ -365,14 +365,17 @@ const Collage = ({
       return (
         <div className={`py-4 flex flex-row justify-between items-center logos`}>
           <div className="text-md" style={{ color: logosColor }}>
-            {/* {
-              <p>
-                my {words} - {currentColor}
+            {
+              <p className="text-3xl">
+                my musaic
               </p>
-            } */}
-            {<p>mymusicincolor.com</p>}
+            }
+            {<p className="opacity-80">mymusicincolor.com</p>}
+            <div className="mt-6">
+            <SpotifyLogo color={logosColor}/>
+            </div>
+
           </div>
-          <SpotifyLogo color={logosColor} />
         </div>
       );
     },
@@ -443,7 +446,6 @@ const Collage = ({
         }}
       >
         <div className="w-full bg-black px-4 pt-2 rounded-lg shadow-lg bg-opacity-75">
-          <div className="text-3xl text-white">my musaic</div>
           <div className="flex flex-row flex-wrap w-full sm:h-[512px]" ref={playlistRef}>
             {collageTracks.map((track) => {
               const image = track?.album?.images?.[1]?.url;
