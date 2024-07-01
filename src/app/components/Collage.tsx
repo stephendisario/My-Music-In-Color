@@ -363,13 +363,13 @@ const Collage = ({
       const logosColor = currentColor === "white" ? "black" : "white";
 
       return (
-        <div className={`my-2 flex flex-row justify-between items-center logos`}>
+        <div className={`py-4 flex flex-row justify-between items-center logos`}>
           <div className="text-md" style={{ color: logosColor }}>
-            {
+            {/* {
               <p>
                 my {words} - {currentColor}
               </p>
-            }
+            } */}
             {<p>mymusicincolor.com</p>}
           </div>
           <SpotifyLogo color={logosColor} />
@@ -436,14 +436,14 @@ const Collage = ({
 
   const art = () => {
     return (
-      <div ref={artRef} className={`flex flex-col justify-center items-center w-full sm:w-[580px] p-4 aspect-[9/16]`}
+      <div ref={artRef} className={`flex flex-col justify-center items-center w-full sm:w-[580px] px-4 aspect-[9/16]`}
         style={{
           background:
                 "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)",
         }}
       >
-        <div className="w-full bg-black p-4 rounded-lg shadow-lg bg-opacity-75">
-          {/* <div className="text-4xl text-black mr-auto">my musaic - {currentColor}</div> */}
+        <div className="w-full bg-black px-4 pt-2 rounded-lg shadow-lg bg-opacity-75">
+          <div className="text-3xl text-white">my musaic</div>
           <div className="flex flex-row flex-wrap w-full sm:h-[512px]" ref={playlistRef}>
             {collageTracks.map((track) => {
               const image = track?.album?.images?.[1]?.url;
