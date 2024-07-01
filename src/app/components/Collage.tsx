@@ -180,8 +180,7 @@ const Collage = ({
     const scale = 2; // Adjust the scale factor as needed
 
     const width = node.offsetWidth * scale;
-    const height = node.offsetHeight * scale;
-
+    const height = width * (16/9)
     // const backgroundColor = currentColor !== "white" ? 'black' : 'white';
     const backgroundColor = ''
 
