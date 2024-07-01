@@ -436,13 +436,13 @@ const Collage = ({
 
   const art = () => {
     return (
-      <div ref={artRef} className={`flex flex-col justify-center items-center w-full sm:max-w-lg bg-black p-4 rounded-lg shadow-lg bg-opacity-75 aspect-[9/16]`}
+      <div ref={artRef} className={`flex flex-col justify-center items-center w-full sm:w-[580px] p-4 aspect-[9/16]`}
         style={{
           background:
                 "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)",
         }}
       >
-        <div className="w-full sm:max-w-lg">
+        <div className="w-full bg-black p-4 rounded-lg shadow-lg bg-opacity-75">
           {/* <div className="text-4xl text-black mr-auto">my musaic - {currentColor}</div> */}
           <div className="flex flex-row flex-wrap w-full sm:h-[512px]" ref={playlistRef}>
             {collageTracks.map((track) => {
