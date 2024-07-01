@@ -180,7 +180,7 @@ const Collage = ({
     const scale = 2; // Adjust the scale factor as needed
 
     const width = node.offsetWidth * scale;
-    const height = width * (16/9)
+    const height = node.offsetHeight * scale;
     // const backgroundColor = currentColor !== "white" ? 'black' : 'white';
     const backgroundColor = ''
 
@@ -436,7 +436,7 @@ const Collage = ({
 
   const art = () => {
     return (
-      <div ref={artRef} className={`flex flex-col justify-center items-center w-full sm:max-w-lg bg-black p-4 rounded-lg shadow-lg bg-opacity-75`}
+      <div ref={artRef} className={`flex flex-col justify-center items-center w-full sm:max-w-lg bg-black p-4 rounded-lg shadow-lg bg-opacity-75 aspect-[9/16]`}
         style={{
           background:
                 "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)",
