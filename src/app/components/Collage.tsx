@@ -650,7 +650,7 @@ const Collage = ({
         </div>
       </div>
       <div
-        className={`p-safe-t p-safe-r p-safe-b p-safe-l snap-start relative h-screen flex flex-col items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
+        className={`p-safe-t p-safe-r p-safe-b p-safe-l snap-start relative h-[calc(100dvh)] flex flex-col items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
         style={
           currentColor === "rainbow"
             ? {
@@ -664,10 +664,10 @@ const Collage = ({
           {/* {isMosaic ? art() : info()} */}
           <div
             ref={artRef}
-            className={`flex flex-col justify-center items-center w-full px-4 aspect-[9/16]`}
+            className={`flex flex-col justify-center items-center w-full px-4 aspect-[9/16] bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
             style={{
               background:
-                "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)",
+                currentColor === 'rainbow' ? "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)" : '',
             }}
           >
             <div className="w-full bg-black p-4 rounded-lg shadow-lg bg-opacity-75">
