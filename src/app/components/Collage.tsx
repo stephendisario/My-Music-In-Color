@@ -411,7 +411,7 @@ const Collage = ({
                 {
                   name: "offset",
                   options: {
-                    offset: [0, isMobile ? 20 : 0],
+                    offset: [0, 0],
                   },
                 },
               ],
