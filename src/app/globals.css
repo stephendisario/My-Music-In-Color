@@ -19,9 +19,93 @@ body {
     rgb(var(--background-start-rgb));
 }
 
-
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+
+.rainbow-background {
+  background: linear-gradient(0deg, #f56565, #ed8936, #ecc94b, #48bb78, #4299e1, #9f7aea, #f56565);
+  background-size: 1200% 1200%;
+
+  -webkit-animation: AnimationName 40s ease infinite;
+  -moz-animation: AnimationName 40s ease infinite;
+  -o-animation: AnimationName 40s ease infinite;
+  animation: AnimationName 40s ease infinite;
+}
+
+
+
+@-webkit-keyframes AnimationName {
+  0%{background-position:33% 0%}
+  50%{background-position:68% 100%}
+  100%{background-position:33% 0%}
+}
+@-moz-keyframes AnimationName {
+  0%{background-position:33% 0%}
+  50%{background-position:68% 100%}
+  100%{background-position:33% 0%}
+}
+@-o-keyframes AnimationName {
+  0%{background-position:33% 0%}
+  50%{background-position:68% 100%}
+  100%{background-position:33% 0%}
+}
+@keyframes AnimationName {
+  0%{background-position:33% 0%}
+  50%{background-position:68% 100%}
+  100%{background-position:33% 0%}
+}
+
+@keyframes moveRight1 {
+  0% {
+    transform: translateX(-200%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes moveRight2 {
+  0% {
+    transform: translateX(-240%);
+  }
+  100% {
+    transform: translateX(-0%);
+  }
+}
+
+@keyframes moveLeft1 {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-240%);
+  }
+}
+
+.move-text {
+  animation: moveRight1 180s linear infinite;
+}
+
+.move-text-2 {
+  animation: moveRight2 180s linear infinite;
+}
+
+.move-text-l {
+  animation: moveLeft1 180s linear infinite;
+}
+
+.mobile-move-text {
+  animation: moveRight1 45s linear infinite;
+}
+
+.mobile-move-text-2 {
+  animation: moveRight2 45s linear infinite;
+}
+
+.mobile-move-text-l {
+  animation: moveLeft1 45s linear infinite;
 }

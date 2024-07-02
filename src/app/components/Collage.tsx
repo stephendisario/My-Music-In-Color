@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMyContext } from "../components/ColorContext";
 import Image from "next/image";
 import { getRainbowCollage, getTerm, shuffle, toHslString } from "../lib/helper";
@@ -28,6 +28,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // Import specific icons
 import { faPalette, faShuffle, faXmark } from "@fortawesome/free-solid-svg-icons";
+import MovingText from "./MovingText";
 
 const snapPoints = [
   { color: "red", hex: "#ff0000" },
@@ -43,7 +44,7 @@ const snapPoints = [
 
 const gradients = {
   red: "from-red-500 to-red-700",
-  orange: "from-orange-500 to-orange-600",
+  orange: "from-orange-500 to-orange-700",
   yellow: "from-yellow-500 to-yellow-600",
   green: "from-green-500 to-green-800",
   blue: "from-blue-500 to-blue-800",
@@ -64,7 +65,7 @@ const Collage = ({
   collages: Collages;
   id: string;
 }) => {
-  const { setCollages } = useMyContext();
+  const { setCollages, isMobile, totalTracks } = useMyContext();
   const [currentColor, setCurrentColor] = useState<Colors | "rainbow">("rainbow");
   const [hideDuplicates, setHideDuplicates] = useState<boolean>(true);
   const [rainbowCollage, setRainbowCollage] = useState<ColorTrack[]>([]);
@@ -78,24 +79,14 @@ const Collage = ({
 
   const [defaultCollage, setDefaultCollage] = useState<ColorTrack[]>([]);
 
-  const [isMobile, setIsMobile] = useState(false);
+  const repeatedText = "mymusicincolor";
 
-  useEffect(() => {
-    // Function to update the state based on window width
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    // Call handleResize once to set the initial state
-    handleResize();
-
-    // Add event listener for window resize
-    window.addEventListener("resize", handleResize);
-
-    // Cleanup event listener on component unmount
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
+  const total = useMemo(() => {
+    console.log("fire");
+    return (Object.keys(collageConfig) as Colors[]).reduce(
+      (sum, color) => sum + collages[`${color}WithoutDupes`].length,
+      0
+    );
   }, []);
 
   useEffect(() => {
@@ -348,32 +339,48 @@ const Collage = ({
 
   useEffect(() => {
     if (currentColor === "rainbow") {
-    setRainbowCollage(getRainbowCollage(true, collages));
-    setRainbowCollageWithoutDupes(getRainbowCollage(true, collages));
+      setRainbowCollage(getRainbowCollage(true, collages));
+      setRainbowCollageWithoutDupes(getRainbowCollage(true, collages));
     }
   }, [collages]);
 
   const header = (tracks: ColorTrack[]) => (
-    <div className="flex flex-row w-full sm:w-[548px] justify-center items-center gap-2 relative mt-2 px-4">
+    <div className="flex flex-row w-full sm:h-md:w-[422px] sm:h-lg:w-[548px] justify-center items-center gap-2 relative mt-2 px-4">
       <div
-        className="absolute top-0 left-0 flex flex-row"
+        className="absolute top-0 left-0 flex flex-col h-10"
         style={{ padding: isMobile ? "inherit" : "" }}
       >
-        <IconButton onClick={() => handleShuffle()}>
-          <FontAwesomeIcon icon={faShuffle} color={currentColor !== "white" ? "white" : "black"} />
-        </IconButton>
-        <div className={shuffled ? "visible" : "invisible"}>
-          <IconButton
-            onClick={() => {
-              setShuffled(false);
-              if (currentColor === "rainbow") setRainbowCollageWithoutDupes(rainbowCollage);
-              else handleReset();
-            }}
-            sx={{ width: "120%" }}
-          >
-            <FontAwesomeIcon icon={faXmark} color={currentColor !== "white" ? "white" : "black"} />
+        <div className="flex flex-row items-start">
+          <IconButton onClick={() => handleShuffle()} sx={{ marginTop: "-8px" }}>
+            <FontAwesomeIcon
+              icon={faShuffle}
+              color={currentColor !== "white" ? "white" : "black"}
+            />
           </IconButton>
+          <div className={`items-start flex flex-row ${shuffled ? "visible" : "invisible"}`}>
+            <IconButton
+              onClick={() => {
+                setShuffled(false);
+                if (currentColor === "rainbow") setRainbowCollageWithoutDupes(rainbowCollage);
+                else handleReset();
+              }}
+              sx={{ width: "120%", marginTop: "-8px" }}
+            >
+              <FontAwesomeIcon
+                icon={faXmark}
+                color={currentColor !== "white" ? "white" : "black"}
+              />
+            </IconButton>
+          </div>
         </div>
+        {shuffled && (
+          <p
+            className={`${currentColor === "white" ? "text-black" : "text-white"} pl-1 mt-1 text-lg`}
+          >
+            {currentColor !== "rainbow" ? collages[`${currentColor}WithoutDupes`].length : total}{" "}
+            tracks
+          </p>
+        )}
       </div>
       <div className="flex flex-col">
         <div className="flex flex-row">
@@ -429,11 +436,19 @@ const Collage = ({
           )}
         </button>
       </div>
-      <div className=" absolute top-0 right-0" style={{ padding: isMobile ? "inherit" : "" }}>
+      <div
+        className=" absolute top-0 right-0 flex flex-row items-start"
+        style={{ padding: isMobile ? "inherit" : "" }}
+      >
         <Tooltip
           open={showColorTooltip}
           onClose={(e: any) => {
-            if (!e?.relatedTarget) setShowColorTooltip(false);
+            if (
+              !isMobile &&
+              e?.relatedTarget?.title &&
+              snapPoints.some((s) => s.color === e.relatedTarget.title)
+            ) {
+            } else setShowColorTooltip(false);
           }}
           onTouchCancel={() => setShowColorTooltip(false)}
           disableHoverListener
@@ -457,7 +472,8 @@ const Collage = ({
             <div className={`flex ${isMobile ? "flex-row" : "flex-col"}`}>
               <CirclePicker
                 color={"red"}
-                onChange={(color) => {
+                onChange={(color, e) => {
+                  console.log(e);
                   setTimeout(() => setShowColorTooltip(false), 0);
                   handleReset();
                   setCurrentColor(
@@ -469,6 +485,7 @@ const Collage = ({
                 circleSize={26}
               />
               <button
+                title="rainbow"
                 className={` rounded-full self-center w-[26px] h-[26px] ml-[14px] sm:mt-[14px] sm:ml-0 transition-transform transform hover:scale-[1.2] ${currentColor === "rainbow" && "shadow-[0_0_2px_2px_rgba(255,255,255,0.4)]"}`}
                 style={{
                   background:
@@ -483,7 +500,10 @@ const Collage = ({
             </div>
           }
         >
-          <IconButton onClick={() => setShowColorTooltip((prevState) => !prevState)}>
+          <IconButton
+            onClick={() => setShowColorTooltip((prevState) => !prevState)}
+            sx={{ marginTop: "-8px" }}
+          >
             <FontAwesomeIcon
               icon={faPalette}
               color={currentColor !== "white" ? "white" : "black"}
@@ -612,7 +632,7 @@ const Collage = ({
   return (
     <div className="relative">
       <div
-        className={`snap-start relative h-[calc(100dvh)] flex flex-col items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
+        className={`snap-start relative h-[calc(100dvh)] flex flex-row justify-center items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
         key={color}
         style={
           currentColor === "rainbow"
@@ -623,7 +643,25 @@ const Collage = ({
             : {}
         }
       >
-        <NavBar showLogout={true} />
+        {/* <div className="flex w-1/2 h-full justify-center items-center flex-col overflow-hidden grow-0 text-6xl opacity-50">
+          <p className="pr-36">{repeatedText}</p>
+          <p className="pl-40">{repeatedText}</p>
+          <p className="pr-32">{repeatedText}</p>
+          <p className="pl-24">{repeatedText}</p>
+          <p className="pr-16">{repeatedText}</p>
+          <p className="pl-8">{repeatedText}</p>
+          <p>{repeatedText}</p>
+          <p className="pr-8">{repeatedText}</p>
+          <p className="pl-16">{repeatedText}</p>
+          <p className="pr-24">{repeatedText}</p>
+          <p className="pl-48">{repeatedText}</p>
+          <p className="pr-32">{repeatedText}</p>
+          <p className="pl-16">{repeatedText}</p>
+          <p className="pr-24">{repeatedText}</p>
+          <p className="pr-11">{repeatedText}</p>
+        </div> */}
+        {/* <MovingText isMusaic={true}/> */}
+        <NavBar showLogout={true} color={currentColor === "white" ? "black" : "white"} />
         <Snackbar
           open={openSnackbar}
           autoHideDuration={3000}
@@ -634,8 +672,11 @@ const Collage = ({
             Playlist created successfully
           </Alert>
         </Snackbar>
-        <div className="flex w-full sm:w-[576px] h-full justify-center items-center flex-col">
+        <div className="flex w-full mb-7 sm:mb-0 sm:h-lg:w-[576px] sm:h-md:w-[450px] h-full justify-center relative items-center flex-col sm:overflow-y-scroll">
           {/* {isMosaic ? art() : info()} */}
+          <div className={`text-4xl  w-full px-4 mb-1`}>
+            <p className={`${currentColor === 'white' ? 'text-black' : 'text-white'} flex items-start`}>mymusicincolor</p>
+          </div>
           <div
             className={`flex flex-col justify-center items-center w-full px-4`}
             style={{
@@ -673,7 +714,26 @@ const Collage = ({
           </div>
           {header(collageTracks)}
         </div>
+
+        {/* <div className="flex w-1/2 h-full justify-center items-center flex-col overflow-hidden grow-0 text-6xl opacity-50">
+          <p className="pl-36">{repeatedText}</p>
+          <p className="pr-40">{repeatedText}</p>
+          <p className="pl-32">{repeatedText}</p>
+          <p className="pr-24">{repeatedText}</p>
+          <p className="pl-16">{repeatedText}</p>
+          <p className="pr-8">{repeatedText}</p>
+          <p>{repeatedText}</p>
+          <p className="pl-8">{repeatedText}</p>
+          <p className="pr-16">{repeatedText}</p>
+          <p className="pl-24">{repeatedText}</p>
+          <p className="pr-48">{repeatedText}</p>
+          <p className="pl-32">{repeatedText}</p>
+          <p className="pr-16">{repeatedText}</p>
+          <p className="pl-24">{repeatedText}</p>
+          <p className="pl-11">{repeatedText}</p>
+        </div> */}
       </div>
+
       {(isDownloadLoading || isShareLoading) && (
         <div
           className={` absolute left-0 right-0 mx-auto z-80 h-screen flex flex-col items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
@@ -698,7 +758,7 @@ const Collage = ({
                     : "",
               }}
             >
-              <div className="w-full bg-black p-4 rounded-lg shadow-lg bg-opacity-75">
+              <div className="w-full bg-black p-4 rounded-lg bg-opacity-75">
                 <div className="flex flex-row flex-wrap">
                   {collageTracks.map((track) => {
                     const image = track?.album?.images?.[1]?.url;

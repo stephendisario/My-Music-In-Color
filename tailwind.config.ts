@@ -8,6 +8,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      screens: {
+        'h-md': { 'raw': '(min-height: 100px)' },
+        'h-lg': { 'raw': '(min-height: 825px)' },
+      },
       fontFamily: {
         poppins: ['"Poppins"', 'sans-serif'],
         nunito: ['Nunito', 'sans-serif'],

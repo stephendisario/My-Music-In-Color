@@ -181,8 +181,10 @@ export const fetchWithOffset = async <T>(
     })
     .join(",");
 
+  const cap = total > 6000 ? 6000 : total;
+
   let promiseArray = [];
-  while (!iterations ? offset < 6000 : count < iterations) {
+  while (!iterations ? offset < cap : count < iterations) {
     promiseArray.push(
       customFetch(
         `${url}?limit=${limit}&offset=${offset}&time_range=${timeRange}&fields=next,items(${fieldsString})`,
@@ -203,5 +205,5 @@ export const fetchWithOffset = async <T>(
     return [...accumulator, ...currentResponse.items];
   }, []);
 
-  return { tracks: allTopTracks, total: total } as any;
+  return { tracks: allTopTracks, total: cap } as any;
 };
