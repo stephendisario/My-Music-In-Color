@@ -650,7 +650,7 @@ const Collage = ({
         </div>
       </div>
       <div
-        className={` snap-start relative h-[calc(100dvh)] flex flex-col items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
+        className={` snap-start relative h-screen flex flex-col items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
         style={
           currentColor === "rainbow"
             ? {
@@ -698,7 +698,6 @@ const Collage = ({
               {logos("musaic")}
             </div>
           </div>
-          {header(collageTracks)}
         </div>
       </div>
     </div>
