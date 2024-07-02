@@ -208,7 +208,7 @@ const Collage = ({
   };
 
   const handleDownload = async (currRef: any, isDownload: boolean, isShare: boolean) => {
-    if (isDownload || isShare) setIsDownloadLoading(true);
+    if (isDownload) setIsDownloadLoading(true);
     await new Promise((resolve) => setTimeout(resolve, 1000));
     const ref = currRef;
     if (ref.current === null) {
@@ -317,22 +317,17 @@ const Collage = ({
             }),
           ],
         });
-        setIsShareLoading(false);
-        setIsDownloadLoading(false);
       } else {
         setIsShareLoading(false);
-        setIsDownloadLoading(false);
 
         alert("Web Share API is not supported in your browser.");
       }
 
       setIsShareLoading(false);
-      setIsDownloadLoading(false);
 
       // Clean up the URL object after sharing
     } catch (error) {
       setIsShareLoading(false);
-      setIsDownloadLoading(false);
       console.error("Error sharing image:", error);
     }
   };
