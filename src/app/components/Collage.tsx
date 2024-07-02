@@ -680,7 +680,7 @@ const Collage = ({
                       const name = track?.name;
                       const spotifyUrl = track?.external_urls?.spotify;
                       return (
-                        <div className="aspect-square" style={{ width: width, height: "auto" }}>
+                        <div className="aspect-square" style={{ width: width, height: "auto" }} key={track.id}>
                           <Image
                             unoptimized
                             alt={name}
