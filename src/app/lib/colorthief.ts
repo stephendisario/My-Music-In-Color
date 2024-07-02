@@ -17,7 +17,7 @@ export const addColor = async (unqieImagesMap: UniqueImagesMap): Promise<UniqueI
     Object.keys(unqieImagesMap).map(async (url) => {
       return new Promise<void>((resolve) => {
         //if users local storage has the image color, use that
-        if (localUniqueImageMap && localUniqueImageMap[url]) {
+        if (localUniqueImageMap && localUniqueImageMap[url]?.base64Url && localUniqueImageMap[url]?.hsl) {
           unqieImagesMap[url] = localUniqueImageMap[url];
           resolve();
         } else {
@@ -27,7 +27,6 @@ export const addColor = async (unqieImagesMap: UniqueImagesMap): Promise<UniqueI
             const rgb = colorThief.getColor(image, 1);
             const hsl = rgbToHsl(rgb);
             const base64Url = getBase64ColorImage(hsl);
-            console.log(image.src, hsl, base64Url)
 
             const imageData = {
               hsl,
