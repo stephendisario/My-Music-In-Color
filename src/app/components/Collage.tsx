@@ -2,7 +2,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useMyContext } from "../components/ColorContext";
 import Image from "next/image";
-import { getRainbowCollage, getTerm, toHslString } from "../lib/helper";
+import { getRainbowCollage, getTerm, shuffle, toHslString } from "../lib/helper";
 import CustomTooltip from "../components/CustomTooltip";
 import { Collages, Colors, collageConfig } from "../dashboard/Collages";
 import {
@@ -64,6 +64,7 @@ const Collage = ({
   collages: Collages;
   id: string;
 }) => {
+  const { setCollages } = useMyContext();
   const [currentColor, setCurrentColor] = useState<Colors | "rainbow">("rainbow");
   const [hideDuplicates, setHideDuplicates] = useState<boolean>(true);
   const [rainbowCollage, setRainbowCollage] = useState<ColorTrack[]>([]);
@@ -74,6 +75,8 @@ const Collage = ({
   const [isShareLoading, setIsShareLoading] = useState<boolean>(false);
   const [shuffled, setShuffled] = useState<boolean>(false);
   const [showColorTooltip, setShowColorTooltip] = useState<boolean>(false);
+
+  const [defaultCollage, setDefaultCollage] = useState<ColorTrack[]>([]);
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -94,6 +97,13 @@ const Collage = ({
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    setShuffled(false);
+    if (currentColor !== "rainbow") {
+      setDefaultCollage(collages[`${currentColor}WithoutDupes`]);
+    }
+  }, [currentColor]);
 
   const { name } = useMyContext();
 
@@ -145,31 +155,49 @@ const Collage = ({
 
   const collageTracks = allTracks.slice(0, collageSize);
 
+  const handleReset = () => {
+    setCollages((prevState) => {
+      const deepCopy = JSON.parse(JSON.stringify(prevState));
+      return { ...deepCopy, [`${currentColor}WithoutDupes`]: defaultCollage };
+    });
+  };
+
   const handleSnackbarClose = () => {
     setOpenSnackbar(false);
   };
 
   const handleShuffle = () => {
     setShuffled(true);
-    let rainbowArray: ColorTrack[] = [];
 
-    (Object.keys(collageConfig) as Colors[]).forEach((color) => {
-      let random = true;
-      if (color === "black" || color === "white") return;
-      for (let i = 0; i < collageConfig[color].rainbowCount; i++) {
-        //TODO: clean this up
-        if (collages[`${color}WithoutDupes`].length <= collageConfig[color].rainbowCount)
-          random = false;
-        let index = random
-          ? Math.floor(Math.random() * (collages[`${color}WithoutDupes`].length - 1))
-          : i;
-        while (random && rainbowArray.includes(collages[`${color}WithoutDupes`][index]))
-          index = Math.floor(Math.random() * (collages[`${color}WithoutDupes`].length - 1));
-        if (collages[`${color}WithoutDupes`][index])
-          rainbowArray.push(collages[`${color}WithoutDupes`][index]);
-      }
-    });
-    setRainbowCollageWithoutDupes(rainbowArray);
+    if (currentColor === "rainbow") {
+      let rainbowArray: ColorTrack[] = [];
+
+      (Object.keys(collageConfig) as Colors[]).forEach((color) => {
+        let random = true;
+        if (color === "black" || color === "white") return;
+        for (let i = 0; i < collageConfig[color].rainbowCount; i++) {
+          //TODO: clean this up
+          if (collages[`${color}WithoutDupes`].length <= collageConfig[color].rainbowCount)
+            random = false;
+          let index = random
+            ? Math.floor(Math.random() * (collages[`${color}WithoutDupes`].length - 1))
+            : i;
+          while (random && rainbowArray.includes(collages[`${color}WithoutDupes`][index]))
+            index = Math.floor(Math.random() * (collages[`${color}WithoutDupes`].length - 1));
+          if (collages[`${color}WithoutDupes`][index])
+            rainbowArray.push(collages[`${color}WithoutDupes`][index]);
+        }
+      });
+      setRainbowCollageWithoutDupes(rainbowArray);
+    } else {
+      setCollages((prevState) => {
+        const deepCopy = JSON.parse(JSON.stringify(prevState));
+        return {
+          ...deepCopy,
+          [`${currentColor}WithoutDupes`]: shuffle(deepCopy[`${currentColor}WithoutDupes`]),
+        };
+      });
+    }
   };
 
   const handleCreatePlaylist = async (tracks: ColorTrack[]) => {
@@ -299,32 +327,30 @@ const Collage = ({
           ],
         });
         setIsShareLoading(false);
-        setIsDownloadLoading(false)
-
+        setIsDownloadLoading(false);
       } else {
         setIsShareLoading(false);
-        setIsDownloadLoading(false)
+        setIsDownloadLoading(false);
 
         alert("Web Share API is not supported in your browser.");
       }
 
       setIsShareLoading(false);
-      setIsDownloadLoading(false)
-
+      setIsDownloadLoading(false);
 
       // Clean up the URL object after sharing
     } catch (error) {
       setIsShareLoading(false);
-      setIsDownloadLoading(false)
+      setIsDownloadLoading(false);
       console.error("Error sharing image:", error);
     }
   };
 
   useEffect(() => {
-    // if (currentColor === "rainbow") {
+    if (currentColor === "rainbow") {
     setRainbowCollage(getRainbowCollage(true, collages));
     setRainbowCollageWithoutDupes(getRainbowCollage(true, collages));
-    // }
+    }
   }, [collages]);
 
   const header = (tracks: ColorTrack[]) => (
@@ -340,7 +366,8 @@ const Collage = ({
           <IconButton
             onClick={() => {
               setShuffled(false);
-              setRainbowCollageWithoutDupes(rainbowCollage);
+              if (currentColor === "rainbow") setRainbowCollageWithoutDupes(rainbowCollage);
+              else handleReset();
             }}
             sx={{ width: "120%" }}
           >
@@ -412,20 +439,10 @@ const Collage = ({
           disableHoverListener
           arrow
           slotProps={{
-            popper: {
-              modifiers: [
-                {
-                  name: "offset",
-                  options: {
-                    offset: [0, 0],
-                  },
-                },
-              ],
-            },
             tooltip: {
               sx: {
-                maxWidth: isMobile ? "100%" : "42px",
-                maxHeight: "100%",
+                maxWidth: isMobile ? "100vw" : "42px",
+                marginLeft: "5px",
                 bgcolor: "rgba(0,0,0,0.75)",
                 "& .MuiTooltip-arrow": {
                   color: "rgba(0,0,0,0.75)",
@@ -442,6 +459,7 @@ const Collage = ({
                 color={"red"}
                 onChange={(color) => {
                   setTimeout(() => setShowColorTooltip(false), 0);
+                  handleReset();
                   setCurrentColor(
                     snapPoints.find((c) => c.hex === color.hex)?.color as Colors | "rainbow"
                   );
@@ -458,6 +476,7 @@ const Collage = ({
                 }}
                 onClick={() => {
                   setTimeout(() => setShowColorTooltip(false), 0);
+                  handleReset();
                   setCurrentColor("rainbow");
                 }}
               />
