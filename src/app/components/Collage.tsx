@@ -632,7 +632,7 @@ const Collage = ({
   return (
     <div className="relative">
       <div
-        className={`snap-start relative h-[calc(100dvh)] flex flex-row justify-center items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
+        className={`snap-start relative h-screen flex flex-row justify-center items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
         key={color}
         style={
           currentColor === "rainbow"
@@ -758,7 +758,7 @@ const Collage = ({
                     : "",
               }}
             >
-              <div className="w-full bg-black p-4 rounded-lg shadow-lg bg-opacity-75">
+              <div className="w-full bg-black p-4 rounded-lg bg-opacity-75">
                 <div className="flex flex-row flex-wrap">
                   {collageTracks.map((track) => {
                     const image = track?.album?.images?.[1]?.url;
