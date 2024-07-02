@@ -27,6 +27,7 @@ export const addColor = async (unqieImagesMap: UniqueImagesMap): Promise<UniqueI
             const rgb = colorThief.getColor(image, 1);
             const hsl = rgbToHsl(rgb);
             const base64Url = getBase64ColorImage(hsl);
+            console.log(image.src, hsl, base64Url)
 
             const imageData = {
               hsl,
