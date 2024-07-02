@@ -19,6 +19,12 @@ body {
     rgb(var(--background-start-rgb));
 }
 
+html, body {
+  overflow: hidden;
+  height: 100%;
+  margin: 0;
+}
+
 
 @layer utilities {
   .text-balance {
