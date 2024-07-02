@@ -672,7 +672,7 @@ const Collage = ({
             Playlist created successfully
           </Alert>
         </Snackbar>
-        <div className="flex w-full mb-12 sm:mb-0 sm:h-lg:w-[576px] sm:h-md:w-[450px] h-full justify-center relative items-center flex-col sm:overflow-y-scroll">
+        <div className="flex w-full mb-7 sm:mb-0 sm:h-lg:w-[576px] sm:h-md:w-[450px] h-full justify-center relative items-center flex-col sm:overflow-y-scroll">
           {/* {isMosaic ? art() : info()} */}
           <div className={`text-4xl  w-full px-4 mb-1`}>
             <p className={`${currentColor === 'white' ? 'text-black' : 'text-white'} flex items-start`}>mymusicincolor</p>
