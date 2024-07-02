@@ -208,8 +208,6 @@ const Collage = ({
   };
 
   const handleDownload = async (currRef: any, isDownload: boolean, isShare: boolean) => {
-    if (isDownload) setIsDownloadLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
     const ref = currRef;
     if (ref.current === null) {
       return;
@@ -306,7 +304,6 @@ const Collage = ({
 
   const shareImage = async () => {
     try {
-      setIsShareLoading(true);
       const blob = await handleDownload(isMosaic ? artRef : infoRef, false, true);
       if (navigator.share) {
         await navigator.share({
@@ -326,7 +323,7 @@ const Collage = ({
       setIsShareLoading(false);
 
       // Clean up the URL object after sharing
-    } catch (error) {
+    } catch (error: any) {
       setIsShareLoading(false);
       console.error("Error sharing image:", error);
     }
@@ -386,6 +383,7 @@ const Collage = ({
             <button
               className={`${currentColor !== "white" ? "border-white bg-white text-black mix-blend-lighten hover:bg-[rgba(255,255,255,.8)]" : "border-black bg-black text-white mix-blend-darken hover:bg-[rgba(0,0,0,.8)]"} h-10 border-2 font-bold rounded-full text-lg text-nowrap h-full self-center	hover:bg-[rgba(0,0,0,.1)] w-[145px]`}
               onClick={() => {
+                setIsShareLoading(true)
                 shareImage();
               }}
             >
@@ -399,6 +397,7 @@ const Collage = ({
             <button
               className={`${currentColor !== "white" ? "border-white bg-white text-black mix-blend-lighten hover:bg-[rgba(255,255,255,.8)]" : "border-black bg-black text-white mix-blend-darken hover:bg-[rgba(0,0,0,.8)]"} h-10 border-2  font-bold rounded-full text-lg text-nowrap h-full self-center w-[145px]`}
               onClick={() => {
+                setIsDownloadLoading(true)
                 handleDownload(artRef, true, false);
               }}
             >
@@ -627,7 +626,7 @@ const Collage = ({
   return (
     <div className="relative">
       <div
-        className={`snap-start relative h-[calc(100dvh)] flex flex-row justify-center items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
+        className={`relative h-[calc(100dvh)] sm:h-screen flex flex-row justify-center items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]} z-30`}
         key={color}
         style={
           currentColor === "rainbow"
@@ -638,24 +637,6 @@ const Collage = ({
             : {}
         }
       >
-        {/* <div className="flex w-1/2 h-full justify-center items-center flex-col overflow-hidden grow-0 text-6xl opacity-50">
-          <p className="pr-36">{repeatedText}</p>
-          <p className="pl-40">{repeatedText}</p>
-          <p className="pr-32">{repeatedText}</p>
-          <p className="pl-24">{repeatedText}</p>
-          <p className="pr-16">{repeatedText}</p>
-          <p className="pl-8">{repeatedText}</p>
-          <p>{repeatedText}</p>
-          <p className="pr-8">{repeatedText}</p>
-          <p className="pl-16">{repeatedText}</p>
-          <p className="pr-24">{repeatedText}</p>
-          <p className="pl-48">{repeatedText}</p>
-          <p className="pr-32">{repeatedText}</p>
-          <p className="pl-16">{repeatedText}</p>
-          <p className="pr-24">{repeatedText}</p>
-          <p className="pr-11">{repeatedText}</p>
-        </div> */}
-        {/* <MovingText isMusaic={true}/> */}
         <NavBar showLogout={true} color={currentColor === "white" ? "black" : "white"} />
         <Snackbar
           open={openSnackbar}
@@ -710,28 +691,11 @@ const Collage = ({
           {header(collageTracks)}
         </div>
 
-        {/* <div className="flex w-1/2 h-full justify-center items-center flex-col overflow-hidden grow-0 text-6xl opacity-50">
-          <p className="pl-36">{repeatedText}</p>
-          <p className="pr-40">{repeatedText}</p>
-          <p className="pl-32">{repeatedText}</p>
-          <p className="pr-24">{repeatedText}</p>
-          <p className="pl-16">{repeatedText}</p>
-          <p className="pr-8">{repeatedText}</p>
-          <p>{repeatedText}</p>
-          <p className="pl-8">{repeatedText}</p>
-          <p className="pr-16">{repeatedText}</p>
-          <p className="pl-24">{repeatedText}</p>
-          <p className="pr-48">{repeatedText}</p>
-          <p className="pl-32">{repeatedText}</p>
-          <p className="pr-16">{repeatedText}</p>
-          <p className="pl-24">{repeatedText}</p>
-          <p className="pl-11">{repeatedText}</p>
-        </div> */}
       </div>
 
-      {(isDownloadLoading || isShareLoading) && (
+
         <div
-          className={` absolute left-0 right-0 mx-auto z-80 h-screen flex flex-col items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
+          className={`absolute top-0 left-0 right-0 mx-auto z-80 h-screen flex flex-col items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
           style={
             currentColor === "rainbow"
               ? {
@@ -785,7 +749,7 @@ const Collage = ({
             </div>
           </div>
         </div>
-      )}
+      
     </div>
   );
 };
