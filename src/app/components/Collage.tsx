@@ -82,11 +82,12 @@ const Collage = ({
   const repeatedText = "mymusicincolor";
 
   const total = useMemo(() => {
-    console.log('fire')
-    return (Object.keys(collageConfig) as Colors[]).reduce((sum, color) => sum + collages[`${color}WithoutDupes`].length,0)
-  }, [])
-
-
+    console.log("fire");
+    return (Object.keys(collageConfig) as Colors[]).reduce(
+      (sum, color) => sum + collages[`${color}WithoutDupes`].length,
+      0
+    );
+  }, []);
 
   useEffect(() => {
     setShuffled(false);
@@ -338,8 +339,8 @@ const Collage = ({
 
   useEffect(() => {
     if (currentColor === "rainbow") {
-    setRainbowCollage(getRainbowCollage(true, collages));
-    setRainbowCollageWithoutDupes(getRainbowCollage(true, collages));
+      setRainbowCollage(getRainbowCollage(true, collages));
+      setRainbowCollageWithoutDupes(getRainbowCollage(true, collages));
     }
   }, [collages]);
 
@@ -350,23 +351,36 @@ const Collage = ({
         style={{ padding: isMobile ? "inherit" : "" }}
       >
         <div className="flex flex-row items-start">
-        <IconButton onClick={() => handleShuffle()} sx={{marginTop: '-8px'}}>
-          <FontAwesomeIcon icon={faShuffle} color={currentColor !== "white" ? "white" : "black"} />
-        </IconButton>
-        <div className={`items-start flex flex-row ${shuffled ? "visible" : "invisible"}`}>
-          <IconButton
-            onClick={() => {
-              setShuffled(false);
-              if (currentColor === "rainbow") setRainbowCollageWithoutDupes(rainbowCollage);
-              else handleReset();
-            }}
-            sx={{ width: "120%",marginTop: '-8px' }}
-          >
-            <FontAwesomeIcon icon={faXmark} color={currentColor !== "white" ? "white" : "black"} />
+          <IconButton onClick={() => handleShuffle()} sx={{ marginTop: "-8px" }}>
+            <FontAwesomeIcon
+              icon={faShuffle}
+              color={currentColor !== "white" ? "white" : "black"}
+            />
           </IconButton>
+          <div className={`items-start flex flex-row ${shuffled ? "visible" : "invisible"}`}>
+            <IconButton
+              onClick={() => {
+                setShuffled(false);
+                if (currentColor === "rainbow") setRainbowCollageWithoutDupes(rainbowCollage);
+                else handleReset();
+              }}
+              sx={{ width: "120%", marginTop: "-8px" }}
+            >
+              <FontAwesomeIcon
+                icon={faXmark}
+                color={currentColor !== "white" ? "white" : "black"}
+              />
+            </IconButton>
+          </div>
         </div>
-        </div>
-        {shuffled && <p className={`${currentColor === 'white' ? 'text-black' : 'text-white'} pl-1 mt-1 text-lg`}>{currentColor !== 'rainbow' ? collages[`${currentColor}WithoutDupes`].length : total} tracks</p>}
+        {shuffled && (
+          <p
+            className={`${currentColor === "white" ? "text-black" : "text-white"} pl-1 mt-1 text-lg`}
+          >
+            {currentColor !== "rainbow" ? collages[`${currentColor}WithoutDupes`].length : total}{" "}
+            tracks
+          </p>
+        )}
       </div>
       <div className="flex flex-col">
         <div className="flex flex-row">
@@ -422,12 +436,19 @@ const Collage = ({
           )}
         </button>
       </div>
-      <div className=" absolute top-0 right-0 flex flex-row items-start" style={{ padding: isMobile ? "inherit" : "" }}>
+      <div
+        className=" absolute top-0 right-0 flex flex-row items-start"
+        style={{ padding: isMobile ? "inherit" : "" }}
+      >
         <Tooltip
           open={showColorTooltip}
           onClose={(e: any) => {
-            if(!isMobile && e?.relatedTarget?.title && snapPoints.some(s => s.color === e.relatedTarget.title))  {}
-            else setShowColorTooltip(false)
+            if (
+              !isMobile &&
+              e?.relatedTarget?.title &&
+              snapPoints.some((s) => s.color === e.relatedTarget.title)
+            ) {
+            } else setShowColorTooltip(false);
           }}
           onTouchCancel={() => setShowColorTooltip(false)}
           disableHoverListener
@@ -452,7 +473,7 @@ const Collage = ({
               <CirclePicker
                 color={"red"}
                 onChange={(color, e) => {
-                  console.log(e)
+                  console.log(e);
                   setTimeout(() => setShowColorTooltip(false), 0);
                   handleReset();
                   setCurrentColor(
@@ -464,7 +485,7 @@ const Collage = ({
                 circleSize={26}
               />
               <button
-              title='rainbow'
+                title="rainbow"
                 className={` rounded-full self-center w-[26px] h-[26px] ml-[14px] sm:mt-[14px] sm:ml-0 transition-transform transform hover:scale-[1.2] ${currentColor === "rainbow" && "shadow-[0_0_2px_2px_rgba(255,255,255,0.4)]"}`}
                 style={{
                   background:
@@ -479,7 +500,10 @@ const Collage = ({
             </div>
           }
         >
-          <IconButton onClick={() => setShowColorTooltip((prevState) => !prevState)} sx={{marginTop: '-8px',}}>
+          <IconButton
+            onClick={() => setShowColorTooltip((prevState) => !prevState)}
+            sx={{ marginTop: "-8px" }}
+          >
             <FontAwesomeIcon
               icon={faPalette}
               color={currentColor !== "white" ? "white" : "black"}
@@ -619,7 +643,7 @@ const Collage = ({
             : {}
         }
       >
-       {/* <div className="flex w-1/2 h-full justify-center items-center flex-col overflow-hidden grow-0 text-6xl opacity-50">
+        {/* <div className="flex w-1/2 h-full justify-center items-center flex-col overflow-hidden grow-0 text-6xl opacity-50">
           <p className="pr-36">{repeatedText}</p>
           <p className="pl-40">{repeatedText}</p>
           <p className="pr-32">{repeatedText}</p>
@@ -637,7 +661,7 @@ const Collage = ({
           <p className="pr-11">{repeatedText}</p>
         </div> */}
         {/* <MovingText isMusaic={true}/> */}
-        <NavBar showLogout={true} color={currentColor === 'white' ? 'black' : 'white'}/>
+        <NavBar showLogout={true} color={currentColor === "white" ? "black" : "white"} />
         <Snackbar
           open={openSnackbar}
           autoHideDuration={3000}

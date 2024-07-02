@@ -5,6 +5,7 @@ import { toHslString } from "../lib/helper";
 import black from "../../../public/Spotify_Icon_RGB_Black.png";
 import white from "../../../public/Spotify_Icon_RGB_White.png";
 import Image from "next/image";
+import { useMyContext } from "./ColorContext";
 
 const CustomTooltip = ({
   track,
@@ -13,7 +14,7 @@ const CustomTooltip = ({
   track: ColorTrack;
   children: React.ReactElement;
 }) => {
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  const { isMobile } = useMyContext();
   const textColor = track?.hsl?.[2] && track?.hsl?.[2] > 50 ? "black" : "white";
   const spotifyURI = track.uri;
   const webURL = track?.external_urls?.spotify;

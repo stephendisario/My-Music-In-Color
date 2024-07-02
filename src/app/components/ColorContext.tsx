@@ -48,7 +48,7 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }
   const [loadingColor, setLoadingColor] = useState<boolean>(true);
   const [loadingTracks, setLoadingTracks] = useState<boolean>(true);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
-  const [totalTracks, setTotalTracks] = useState<number>(0)
+  const [totalTracks, setTotalTracks] = useState<number>(0);
 
   const [id, setId] = useState<string>("");
   const [name, setName] = useState<string>("");
@@ -144,7 +144,7 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }
       setId(user?.id!);
       setName(user?.display_name!);
       const totalTracks: any = await getTopTracks("long_term", 1);
-      setTotalTracks(totalTracks.total)
+      setTotalTracks(totalTracks.total);
       const poo: any = await getTopTracks("long_term");
       if (poo) injectColor(poo.tracks);
       setLoadingTracks(false);
@@ -176,7 +176,7 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }
         setLoggedIn,
         name,
         totalTracks,
-        isMobile
+        isMobile,
       }}
     >
       {children}

@@ -181,7 +181,7 @@ export const fetchWithOffset = async <T>(
     })
     .join(",");
 
-  const cap = total > 6000 ? 6000 : total
+  const cap = total > 6000 ? 6000 : total;
 
   let promiseArray = [];
   while (!iterations ? offset < cap : count < iterations) {

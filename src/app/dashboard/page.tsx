@@ -13,7 +13,8 @@ import MovingText from "../components/MovingText";
 export const fetchCache = "force-cache";
 
 const Dashboard = () => {
-  const { collages, id, loading, loadingColor, loadingTracks, setLoggedIn, totalTracks } = useMyContext();
+  const { collages, id, loading, loadingColor, loadingTracks, setLoggedIn, totalTracks } =
+    useMyContext();
 
   useEffect(() => {
     setLoggedIn(true);
@@ -25,7 +26,9 @@ const Dashboard = () => {
     >
       <MovingText />
       <div className="max-w-screen-md mx-auto bg-black bg-opacity-100 rounded-lg shadow-lg p-4 sm:p-6 md:p-8 z-30 text-center">
-        <div>Fetching {totalTracks} Tracks {loadingTracks ? "..." : " DONE!"}</div>
+        <div>
+          Fetching {totalTracks} Tracks {loadingTracks ? "..." : " DONE!"}
+        </div>
         <div>Extracting Colors {loadingColor ? "..." : " DONE!"}</div>
         <div>Generating Collages {loading ? "..." : " DONE!"}</div>
       </div>

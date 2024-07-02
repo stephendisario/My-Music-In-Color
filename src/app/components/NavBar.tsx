@@ -7,7 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 
-const NavBar = ({ showLogout, color = 'white' }: { showLogout: boolean, color?: string }) => {
+const NavBar = ({ showLogout, color = "white" }: { showLogout: boolean; color?: string }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -32,19 +32,13 @@ const NavBar = ({ showLogout, color = 'white' }: { showLogout: boolean, color?: 
         }}
       >
         <Link href={"/dashboard"}>
-          <MenuItem onClick={handleClose}>
-            Dashboard
-          </MenuItem>
+          <MenuItem onClick={handleClose}>Dashboard</MenuItem>
         </Link>
         <Link href={"/about"}>
-          <MenuItem onClick={handleClose}>
-            About
-          </MenuItem>
+          <MenuItem onClick={handleClose}>About</MenuItem>
         </Link>
         <Link href={"/privacy-policy"}>
-          <MenuItem onClick={handleClose}>
-            Privacy Policy
-          </MenuItem>
+          <MenuItem onClick={handleClose}>Privacy Policy</MenuItem>
         </Link>
         <MenuItem
           onClick={() => {
