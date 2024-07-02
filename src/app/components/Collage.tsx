@@ -182,8 +182,6 @@ const Collage = ({
     let dataUrl: string = (await handleDownload(playlistRef, false, false)) as string;
     dataUrl = dataUrl?.split(",")[1];
 
-    console.log(dataUrl);
-
     await addImageToPlaylist(playlistId, dataUrl!);
 
     setIsCreatePlaylistLoading(false);
@@ -191,7 +189,8 @@ const Collage = ({
   };
 
   const handleDownload = async (currRef: any, isDownload: boolean, isShare: boolean) => {
-    setIsDownloadLoading(true);
+    if (isDownload || isShare) setIsDownloadLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     const ref = currRef;
     if (ref.current === null) {
       return;
@@ -384,7 +383,7 @@ const Collage = ({
         </div>
 
         <button
-          className={`${currentColor !== "white" ? "text-white border-white" : "text-black border-black"} rounded-full text-lg text-nowrap h-full hover:bg-[rgba(0,0,0,.1)] w-[145px]`}
+          className={`${currentColor !== "white" ? "text-white border-white" : "text-black border-black"} mt-1 rounded-full text-lg text-nowrap h-full hover:bg-[rgba(0,0,0,.1)] w-[145px]`}
           onClick={() => {
             if (!isCreatePlaylistLoading) handleCreatePlaylist(tracks);
           }}
@@ -435,7 +434,7 @@ const Collage = ({
               <CirclePicker
                 color={"red"}
                 onChange={(color) => {
-                  setTimeout(() => setShowColorTooltip(false), 700);
+                  setTimeout(() => setShowColorTooltip(false), 0);
                   setCurrentColor(
                     snapPoints.find((c) => c.hex === color.hex)?.color as Colors | "rainbow"
                   );
@@ -451,14 +450,14 @@ const Collage = ({
                     "linear-gradient(45deg, rgba(255,0,0,1) 10%, rgba(255,165,0,1) 30%, rgba(255,255,0,1) 50%, rgba(0,128,0,1) 60%, rgba(0,0,255,1) 70%, rgba(75,0,130,1) 80%, rgba(238,130,238,1) 100%)",
                 }}
                 onClick={() => {
-                  setTimeout(() => setShowColorTooltip(false), 700);
+                  setTimeout(() => setShowColorTooltip(false), 0);
                   setCurrentColor("rainbow");
                 }}
               />
             </div>
           }
         >
-          <IconButton onClick={() => setShowColorTooltip(true)}>
+          <IconButton onClick={() => setShowColorTooltip((prevState) => !prevState)}>
             <FontAwesomeIcon
               icon={faPalette}
               color={currentColor !== "white" ? "white" : "black"}
@@ -585,7 +584,7 @@ const Collage = ({
   };
 
   return (
-    <div className="overflow-y-hidden">
+    <div className="relative">
       <div
         className={`snap-start relative h-[calc(100dvh)] flex flex-col items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
         key={color}
@@ -649,57 +648,60 @@ const Collage = ({
           {header(collageTracks)}
         </div>
       </div>
-      <div
-        className={` snap-start relative h-screen flex flex-col items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
-        style={
-          currentColor === "rainbow"
-            ? {
-                background:
-                  "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)",
-              }
-            : {}
-        }
-      >
-        <div className="flex w-full sm:w-[576px] h-full justify-center items-center flex-col">
-          {/* {isMosaic ? art() : info()} */}
+      {isDownloadLoading ||
+        (isShareLoading && (
           <div
-            ref={artRef}
-            className={`flex flex-col justify-center items-center w-full px-4 aspect-[9/16] bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
-            style={{
-              background:
-                currentColor === 'rainbow' ? "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)" : '',
-            }}
+            className={` absolute left-0 right-0 mx-auto z-80 h-screen flex flex-col items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
+            style={
+              currentColor === "rainbow"
+                ? {
+                    background:
+                      "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)",
+                  }
+                : {}
+            }
           >
-            <div className="w-full bg-black p-4 rounded-lg shadow-lg bg-opacity-75">
-              <div className="flex flex-row flex-wrap">
-                {collageTracks.map((track) => {
-                  const image = track?.album?.images?.[1]?.url;
-                  const name = track?.name;
-                  const spotifyUrl = track?.external_urls?.spotify;
-                  return (
-                    <CustomTooltip track={track} key={track.id}>
-                      <div className="aspect-square" style={{ width: width, height: "auto" }}>
-                        <Image
-                          unoptimized
-                          alt={name}
-                          src={image}
-                          width={300}
-                          height={300}
-                          className="w-full h-full"
-                          crossOrigin="anonymous"
-                          placeholder="blur"
-                          blurDataURL={track.base64Url || ""}
-                        />
-                      </div>
-                    </CustomTooltip>
-                  );
-                })}
+            <div className="flex w-full sm:w-[576px] h-full justify-center items-center flex-col">
+              {/* {isMosaic ? art() : info()} */}
+              <div
+                ref={artRef}
+                className={`flex flex-col justify-center items-center w-full px-4 aspect-[9/16] bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
+                style={{
+                  background:
+                    currentColor === "rainbow"
+                      ? "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)"
+                      : "",
+                }}
+              >
+                <div className="w-full bg-black p-4 rounded-lg shadow-lg bg-opacity-75">
+                  <div className="flex flex-row flex-wrap">
+                    {collageTracks.map((track) => {
+                      const image = track?.album?.images?.[1]?.url;
+                      const name = track?.name;
+                      const spotifyUrl = track?.external_urls?.spotify;
+                      return (
+                        <div className="aspect-square" style={{ width: width, height: "auto" }}>
+                          <Image
+                            unoptimized
+                            alt={name}
+                            src={image}
+                            width={300}
+                            height={300}
+                            className="w-full h-full"
+                            crossOrigin="anonymous"
+                            placeholder="blur"
+                            blurDataURL={track.base64Url || ""}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                  {logos("musaic")}
+                </div>
               </div>
-              {logos("musaic")}
             </div>
           </div>
-        </div>
-      </div>
+        ))}
     </div>
   );
 };

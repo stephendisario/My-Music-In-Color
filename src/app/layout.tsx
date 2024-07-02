@@ -18,13 +18,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`overflow-y-hidden`}>
+    <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="theme-color" content="#000000" />
         <title>My Music In Color</title>
       </head>
-      <body className={`overflow-y-hidden`}>
+      <body>
         <MyContextProvider>{children}</MyContextProvider>
       </body>
     </html>
