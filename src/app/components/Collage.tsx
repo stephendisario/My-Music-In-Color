@@ -709,7 +709,7 @@ const Collage = ({
             {/* {isMosaic ? art() : info()} */}
             <div
               ref={artRef}
-              className={`flex flex-col justify-center items-center w-full px-4 aspect-[9/16] bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
+              className={`${isMobile ? "aspect-[9/16]" : ""} flex flex-col justify-center items-center w-full px-4 bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
               style={{
                 background:
                   currentColor === "rainbow"

@@ -97,6 +97,8 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }
 
     const groups = groupTracks(fillTracksWithColor);
 
+    console.log('groups', groups)
+
     setCollages(groups);
     setLoadingColor(false);
   };
