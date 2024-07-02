@@ -76,7 +76,10 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }
   const injectColor = async (tracks: Track[]) => {
     //TODO: Clean list of incomplete tracks
     const uniqueImagesMapEmpty = getUniqueImages(tracks);
+    console.log('empty', uniqueImagesMapEmpty)
     const uniqueImagesMapFilled = await addColor(uniqueImagesMapEmpty);
+    console.log('filled', uniqueImagesMapFilled)
+
     setLoadingColor(false);
 
     const fillTracksWithColor: ColorTrack[] = tracks.map((track) => {
