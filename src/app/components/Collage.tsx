@@ -632,7 +632,7 @@ const Collage = ({
   return (
     <div className="relative">
       <div
-        className={`snap-start relative h-screen flex flex-row justify-center items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
+        className={`snap-start relative h-[calc(100dvh)] flex flex-row justify-center items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
         key={color}
         style={
           currentColor === "rainbow"
@@ -672,10 +672,10 @@ const Collage = ({
             Playlist created successfully
           </Alert>
         </Snackbar>
-        <div className="flex w-full sm:h-lg:w-[576px] sm:h-md:w-[450px] h-full justify-center relative items-center flex-col sm:overflow-y-scroll">
+        <div className="flex w-full mb-12 sm:mb-0 sm:h-lg:w-[576px] sm:h-md:w-[450px] h-full justify-center relative items-center flex-col sm:overflow-y-scroll">
           {/* {isMosaic ? art() : info()} */}
           <div className={`text-4xl  w-full px-4 mb-1`}>
-            <p className="flex items-start">mymusicincolor</p>
+            <p className={`${currentColor === 'white' ? 'text-black' : 'text-white'} flex items-start`}>mymusicincolor</p>
           </div>
           <div
             className={`flex flex-col justify-center items-center w-full px-4`}
