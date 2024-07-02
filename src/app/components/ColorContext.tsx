@@ -18,8 +18,9 @@ interface MyContextType {
   loadingTracks: boolean;
   id: string;
   name: string;
-
+  totalTracks: number;
   setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  isMobile: boolean;
 }
 
 const MyContext = createContext<MyContextType | undefined>(undefined);
@@ -47,9 +48,30 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }
   const [loadingColor, setLoadingColor] = useState<boolean>(true);
   const [loadingTracks, setLoadingTracks] = useState<boolean>(true);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [totalTracks, setTotalTracks] = useState<number>(0)
 
   const [id, setId] = useState<string>("");
   const [name, setName] = useState<string>("");
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Function to update the state based on window width
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    // Call handleResize once to set the initial state
+    handleResize();
+
+    // Add event listener for window resize
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const injectColor = async (tracks: Track[]) => {
     //TODO: Clean list of incomplete tracks
@@ -122,6 +144,7 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }
       setId(user?.id!);
       setName(user?.display_name!);
       const totalTracks: any = await getTopTracks("long_term", 1);
+      setTotalTracks(totalTracks.total)
       const poo: any = await getTopTracks("long_term");
       if (poo) injectColor(poo.tracks);
       setLoadingTracks(false);
@@ -152,6 +175,8 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }
         id,
         setLoggedIn,
         name,
+        totalTracks,
+        isMobile
       }}
     >
       {children}

@@ -7,7 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 
-const NavBar = ({ showLogout }: { showLogout: boolean }) => {
+const NavBar = ({ showLogout, color = 'white' }: { showLogout: boolean, color?: string }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -20,7 +20,7 @@ const NavBar = ({ showLogout }: { showLogout: boolean }) => {
   return (
     <div className="absolute z-50 top-0 right-0">
       <IconButton onClick={(event) => handleClick(event)} className="">
-        <MenuIcon sx={{ color: "black" }} />
+        <MenuIcon sx={{ color: color }} />
       </IconButton>
       <Menu
         id="basic-menu"
@@ -31,15 +31,21 @@ const NavBar = ({ showLogout }: { showLogout: boolean }) => {
           "aria-labelledby": "basic-button",
         }}
       >
-        <MenuItem onClick={handleClose}>
-          <Link href={"/dashboard"}>Dashboard</Link>
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <Link href={"/about"}>About</Link>
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <Link href={"/privacy-policy"}>Privacy Policy</Link>
-        </MenuItem>
+        <Link href={"/dashboard"}>
+          <MenuItem onClick={handleClose}>
+            Dashboard
+          </MenuItem>
+        </Link>
+        <Link href={"/about"}>
+          <MenuItem onClick={handleClose}>
+            About
+          </MenuItem>
+        </Link>
+        <Link href={"/privacy-policy"}>
+          <MenuItem onClick={handleClose}>
+            Privacy Policy
+          </MenuItem>
+        </Link>
         <MenuItem
           onClick={() => {
             logout();
