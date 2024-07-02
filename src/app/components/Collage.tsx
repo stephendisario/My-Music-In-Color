@@ -12,7 +12,7 @@ import {
   getTopTracks,
   getUserProfile,
 } from "../api/spotify";
-import { Alert, Snackbar } from "@mui/material";
+import { Alert, Snackbar, Tooltip } from "@mui/material";
 import { toBlob, toJpeg } from "html-to-image";
 import SpotifyLogo from "./SpotifyLogo";
 import IosShareIcon from "@mui/icons-material/IosShare";
@@ -24,10 +24,10 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { CirclePicker } from "react-color";
 import Link from "next/link";
 // Import FontAwesomeIcon component
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 // Import specific icons
-import { faShuffle, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faPalette, faShuffle, faXmark } from "@fortawesome/free-solid-svg-icons";
 
 const snapPoints = [
   { color: "red", hex: "#ff0000" },
@@ -72,7 +72,28 @@ const Collage = ({
   const [isCreatePlaylistLoading, setIsCreatePlaylistLoading] = useState<boolean>(false);
   const [isDownloadLoading, setIsDownloadLoading] = useState<boolean>(false);
   const [isShareLoading, setIsShareLoading] = useState<boolean>(false);
-  const [shuffled, setShuffled] = useState<boolean>(false)
+  const [shuffled, setShuffled] = useState<boolean>(false);
+  const [showColorTooltip, setShowColorTooltip] = useState<boolean>(false);
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Function to update the state based on window width
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    // Call handleResize once to set the initial state
+    handleResize();
+
+    // Add event listener for window resize
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const { name } = useMyContext();
 
@@ -129,15 +150,16 @@ const Collage = ({
   };
 
   const handleShuffle = () => {
-    setShuffled(true)
+    setShuffled(true);
     let rainbowArray: ColorTrack[] = [];
 
     (Object.keys(collageConfig) as Colors[]).forEach((color) => {
-      let random = true
+      let random = true;
       if (color === "black" || color === "white") return;
       for (let i = 0; i < collageConfig[color].rainbowCount; i++) {
         //TODO: clean this up
-        if (collages[`${color}WithoutDupes`].length <= collageConfig[color].rainbowCount) random = false;
+        if (collages[`${color}WithoutDupes`].length <= collageConfig[color].rainbowCount)
+          random = false;
         let index = random
           ? Math.floor(Math.random() * (collages[`${color}WithoutDupes`].length - 1))
           : i;
@@ -146,10 +168,9 @@ const Collage = ({
         if (collages[`${color}WithoutDupes`][index])
           rainbowArray.push(collages[`${color}WithoutDupes`][index]);
       }
-    })
-    setRainbowCollageWithoutDupes(rainbowArray)
-  }
-
+    });
+    setRainbowCollageWithoutDupes(rainbowArray);
+  };
 
   const handleCreatePlaylist = async (tracks: ColorTrack[]) => {
     setIsCreatePlaylistLoading(true);
@@ -182,8 +203,7 @@ const Collage = ({
     const width = node.offsetWidth * scale;
     const height = node.offsetHeight * scale;
     // const backgroundColor = currentColor !== "white" ? 'black' : 'white';
-    const backgroundColor = ''
-
+    const backgroundColor = "";
 
     const scaledObject: any = {
       width,
@@ -302,79 +322,165 @@ const Collage = ({
   }, [collages]);
 
   const header = (tracks: ColorTrack[]) => (
-    <div className="flex flex-col w-full sm:w-[512px] justify-center items-center gap-2 relative mt-2">
-      <div className="flex flex-row">
-        <div className="sm:hidden">
-          {/* <IconButton onClick={() => shareImage()}>
+    <div className="flex flex-row w-full sm:w-[548px] justify-center items-center gap-2 relative mt-2 px-4">
+      <div
+        className="absolute top-0 left-0 flex flex-row"
+        style={{ padding: isMobile ? "inherit" : "" }}
+      >
+        <IconButton onClick={() => handleShuffle()}>
+          <FontAwesomeIcon icon={faShuffle} color={currentColor !== "white" ? "white" : "black"} />
+        </IconButton>
+        <div className={shuffled ? "visible" : "invisible"}>
+          <IconButton
+            onClick={() => {
+              setShuffled(false);
+              setRainbowCollageWithoutDupes(rainbowCollage);
+            }}
+            sx={{ width: "120%" }}
+          >
+            <FontAwesomeIcon icon={faXmark} color={currentColor !== "white" ? "white" : "black"} />
+          </IconButton>
+        </div>
+      </div>
+      <div className="flex flex-col">
+        <div className="flex flex-row">
+          <div className="sm:hidden">
+            {/* <IconButton onClick={() => shareImage()}>
             <IosShareIcon sx={{ color: "black" }} />
           </IconButton> */}
-          <button
-            className={`${currentColor !== "white" ? "border-white bg-white text-black mix-blend-lighten hover:bg-[rgba(255,255,255,.8)]" : "border-black bg-black text-white mix-blend-darken hover:bg-[rgba(0,0,0,.8)]"} h-10 border-2 font-bold rounded-full text-lg text-nowrap h-full self-center	hover:bg-[rgba(0,0,0,.1)] w-[145px]`}
-            onClick={() => {
-              shareImage();
-            }}
-          >
-            {isShareLoading ? <CircularProgress sx={{ color: "white" }} size={15} /> : "share"}
-          </button>
-        </div>
-        <div className="sm:block hidden">
-          {/* <IconButton onClick={() => handleDownload(isMosaic ? artRef : infoRef, true, false)}>
+            <button
+              className={`${currentColor !== "white" ? "border-white bg-white text-black mix-blend-lighten hover:bg-[rgba(255,255,255,.8)]" : "border-black bg-black text-white mix-blend-darken hover:bg-[rgba(0,0,0,.8)]"} h-10 border-2 font-bold rounded-full text-lg text-nowrap h-full self-center	hover:bg-[rgba(0,0,0,.1)] w-[145px]`}
+              onClick={() => {
+                shareImage();
+              }}
+            >
+              {isShareLoading ? <CircularProgress sx={{ color: "white" }} size={15} /> : "share"}
+            </button>
+          </div>
+          <div className="sm:block hidden">
+            {/* <IconButton onClick={() => handleDownload(isMosaic ? artRef : infoRef, true, false)}>
             <DownloadIcon sx={{ color: "black" }} />
           </IconButton> */}
-          <button
-            className={`${currentColor !== "white" ? "border-white bg-white text-black mix-blend-lighten hover:bg-[rgba(255,255,255,.8)]" : "border-black bg-black text-white mix-blend-darken hover:bg-[rgba(0,0,0,.8)]"} h-10 border-2  font-bold rounded-full text-lg text-nowrap h-full self-center w-[145px]`}
-            onClick={() => {
-              handleDownload(artRef, true, false);
-            }}
-          >
-            {isDownloadLoading ? (
-              <CircularProgress sx={{ color: "white" }} size={15} />
-            ) : (
-              "download"
-            )}
-          </button>
-        </div>
-        {/* {isMosaic && (
+            <button
+              className={`${currentColor !== "white" ? "border-white bg-white text-black mix-blend-lighten hover:bg-[rgba(255,255,255,.8)]" : "border-black bg-black text-white mix-blend-darken hover:bg-[rgba(0,0,0,.8)]"} h-10 border-2  font-bold rounded-full text-lg text-nowrap h-full self-center w-[145px]`}
+              onClick={() => {
+                handleDownload(artRef, true, false);
+              }}
+            >
+              {isDownloadLoading ? (
+                <CircularProgress sx={{ color: "white" }} size={15} />
+              ) : (
+                "download"
+              )}
+            </button>
+          </div>
+          {/* {isMosaic && (
           <CheckboxWithStyle
             color={currentColor}
             hideDuplicates={hideDuplicates}
             setHideDuplicates={setHideDuplicates}
           />
         )} */}
-      </div>
+        </div>
 
-      <button
-        className={`${currentColor !== "white" ? "text-white border-white" : "text-black border-black"} rounded-full text-lg text-nowrap h-full hover:bg-[rgba(0,0,0,.1)] w-[145px]`}
-        onClick={() => {
-          if (!isCreatePlaylistLoading) handleCreatePlaylist(tracks);
-        }}
-      >
-        {isCreatePlaylistLoading ? (
-          <CircularProgress sx={{ color: "white" }} size={15} />
-        ) : (
-          "create playlist"
-        )}
-      </button>
+        <button
+          className={`${currentColor !== "white" ? "text-white border-white" : "text-black border-black"} rounded-full text-lg text-nowrap h-full hover:bg-[rgba(0,0,0,.1)] w-[145px]`}
+          onClick={() => {
+            if (!isCreatePlaylistLoading) handleCreatePlaylist(tracks);
+          }}
+        >
+          {isCreatePlaylistLoading ? (
+            <CircularProgress sx={{ color: "white" }} size={15} />
+          ) : (
+            "create playlist"
+          )}
+        </button>
+      </div>
+      <div className=" absolute top-0 right-0" style={{ padding: isMobile ? "inherit" : "" }}>
+        <Tooltip
+          open={showColorTooltip}
+          onClose={(e: any) => {
+            if (!e?.relatedTarget) setShowColorTooltip(false);
+          }}
+          onTouchCancel={() => setShowColorTooltip(false)}
+          disableHoverListener
+          arrow
+          slotProps={{
+            popper: {
+              modifiers: [
+                {
+                  name: "offset",
+                  options: {
+                    offset: [0, isMobile ? 20 : 0],
+                  },
+                },
+              ],
+            },
+            tooltip: {
+              sx: {
+                maxWidth: isMobile ? "100%" : "42px",
+                maxHeight: "100%",
+                bgcolor: "rgba(0,0,0,0.75)",
+                "& .MuiTooltip-arrow": {
+                  color: "rgba(0,0,0,0.75)",
+                },
+              },
+            },
+          }}
+          enterTouchDelay={0}
+          leaveTouchDelay={4000}
+          placement={isMobile ? "bottom-end" : "right-start"}
+          title={
+            <div className={`flex ${isMobile ? "flex-row" : "flex-col"}`}>
+              <CirclePicker
+                color={"red"}
+                onChange={(color) => {
+                  setTimeout(() => setShowColorTooltip(false), 700);
+                  setCurrentColor(
+                    snapPoints.find((c) => c.hex === color.hex)?.color as Colors | "rainbow"
+                  );
+                }}
+                colors={["red", "orange", "yellow", "green", "blue", "violet", "black", "white"]}
+                width="100%"
+                circleSize={26}
+              />
+              <button
+                className={` rounded-full self-center w-[26px] h-[26px] ml-[14px] sm:mt-[14px] sm:ml-0 transition-transform transform hover:scale-[1.2] ${currentColor === "rainbow" && "shadow-[0_0_2px_2px_rgba(255,255,255,0.4)]"}`}
+                style={{
+                  background:
+                    "linear-gradient(45deg, rgba(255,0,0,1) 10%, rgba(255,165,0,1) 30%, rgba(255,255,0,1) 50%, rgba(0,128,0,1) 60%, rgba(0,0,255,1) 70%, rgba(75,0,130,1) 80%, rgba(238,130,238,1) 100%)",
+                }}
+                onClick={() => {
+                  setTimeout(() => setShowColorTooltip(false), 700);
+                  setCurrentColor("rainbow");
+                }}
+              />
+            </div>
+          }
+        >
+          <IconButton onClick={() => setShowColorTooltip(true)}>
+            <FontAwesomeIcon
+              icon={faPalette}
+              color={currentColor !== "white" ? "white" : "black"}
+            />
+          </IconButton>
+        </Tooltip>
+      </div>
     </div>
   );
 
   const logos = useCallback(
     (words: string) => {
-      const logosColor = currentColor === "white" ? "black" : "white";
+      const logosColor = "white";
 
       return (
         <div className={`pt-2 flex flex-row justify-between items-center logos`}>
           <div className="text-md" style={{ color: logosColor }}>
-            {
-              <p className="text-3xl">
-                my musaic
-              </p>
-            }
+            {<p className="text-3xl">my musaic</p>}
             {<p className="opacity-80">mymusicincolor.com</p>}
             <div className="mt-6">
-            <SpotifyLogo color={logosColor}/>
+              <SpotifyLogo color={logosColor} />
             </div>
-
           </div>
         </div>
       );
@@ -439,10 +545,12 @@ const Collage = ({
 
   const art = () => {
     return (
-      <div ref={artRef} className={`flex flex-col justify-center items-center w-full sm:w-[580px] px-4 aspect-[9/16]`}
+      <div
+        ref={artRef}
+        className={`flex flex-col justify-center items-center w-full sm:w-[580px] px-4`}
         style={{
-          background:
-                "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)",
+          background: "",
+          // "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)",
         }}
       >
         <div className="w-full bg-black px-4 py-4 rounded-lg shadow-lg bg-opacity-75">
@@ -477,80 +585,121 @@ const Collage = ({
   };
 
   return (
-    <div
-      className={`p-safe-t p-safe-r p-safe-b p-safe-l snap-start relative h-screen flex flex-col items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
-      key={color}
-      style={
-        currentColor === "rainbow"
-          ? {
-              background:
-                "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)",
-            }
-          : {}
-      }
-    >
-      <NavBar showLogout={true} />
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={3000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+    <div className="overflow-y-hidden">
+      <div
+        className={`p-safe-t p-safe-r p-safe-b p-safe-l snap-start relative h-screen flex flex-col items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
+        key={color}
+        style={
+          currentColor === "rainbow"
+            ? {
+                background:
+                  "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)",
+              }
+            : {}
+        }
       >
-        <Alert elevation={6} variant="filled" onClose={handleSnackbarClose} severity="success">
-          Playlist created successfully
-        </Alert>
-      </Snackbar>
-      <div className="flex w-full h-full justify-center items-center flex-col px-2 sm:px-0">
-        {/* <div className="text-black text-4xl">mymusicincolor</div> */}
-        <div className=" flex flex-row justify-between w-full sm:w-[512px] items-center relative h-[46px]">
-          <p
-            className={`${currentColor !== "white" ? "text-white border-white" : "text-black border-black"} text-3xl`}
-          >
-            my {isMosaic ? "musaic" : "faves"}
-          </p>
-
-          <div className="absolute left-1/2 transform -translate-x-1/2">
-          <IconButton
-            onClick={() => handleShuffle()}
-          >
-            <FontAwesomeIcon icon={faShuffle} size="lg" color={currentColor !== "white" ? 'white' : 'black'}/>
-          </IconButton>
-          </div>
-          <div className={shuffled ? "visible" : "hidden"}>
-          <IconButton
-            onClick={() => {
-              setShuffled(false)
-              setRainbowCollageWithoutDupes(rainbowCollage)
+        <NavBar showLogout={true} />
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={3000}
+          onClose={handleSnackbarClose}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
+          <Alert elevation={6} variant="filled" onClose={handleSnackbarClose} severity="success">
+            Playlist created successfully
+          </Alert>
+        </Snackbar>
+        <div className="flex w-full sm:w-[576px] h-full justify-center items-center flex-col">
+          {/* {isMosaic ? art() : info()} */}
+          <div
+            className={`flex flex-col justify-center items-center w-full px-4`}
+            style={{
+              background: "",
+              // "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)",
             }}
           >
-            <FontAwesomeIcon icon={faXmark} size="lg" color={currentColor !== "white" ? 'white' : 'black'}/>
-          </IconButton>
+            <div className="w-full bg-black p-4 rounded-lg shadow-lg bg-opacity-75">
+              <div className="flex flex-row flex-wrap" ref={playlistRef}>
+                {collageTracks.map((track) => {
+                  const image = track?.album?.images?.[1]?.url;
+                  const name = track?.name;
+                  const spotifyUrl = track?.external_urls?.spotify;
+                  return (
+                    <CustomTooltip track={track} key={track.id}>
+                      <div className="aspect-square" style={{ width: width, height: "auto" }}>
+                        <Image
+                          unoptimized
+                          alt={name}
+                          src={image}
+                          width={300}
+                          height={300}
+                          className="w-full h-full"
+                          crossOrigin="anonymous"
+                          placeholder="blur"
+                          blurDataURL={track.base64Url || ""}
+                        />
+                      </div>
+                    </CustomTooltip>
+                  );
+                })}
+              </div>
+              {logos("musaic")}
+            </div>
           </div>
-          
-
-
-          {/* <button
-            className={`${currentColor !== "white" ? "text-white border-white" : "text-black border-black"} border-2 rounded-full text-lg text-nowrap w-28 hover:bg-[rgba(0,0,0,.1)] `}
-            onClick={() => setIsMosaic((prevState) => !prevState)}
-          >
-            see {!isMosaic ? "musaic" : "faves"}
-          </button> */}
+          {header(collageTracks)}
         </div>
-        {isMosaic ? art() : info()}
-        {/* <CustomSlider value={pickerColor} onChange={handleSliderChange} /> */}
-        <div className="flex flex-row">
-        {/* <button
-            className={`text-black rounded-full text-sm text-center self-center w-[26px] h-[26px] mr-[14px] transition-transform transform hover:scale-[1.2] ${currentColor === "rainbow" && "shadow-[0_0_2px_2px_rgba(255,255,255,0.4)]"}`}
+      </div>
+      <div
+        className={`p-safe-t p-safe-r p-safe-b p-safe-l snap-start relative h-screen flex flex-col items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
+        style={
+          currentColor === "rainbow"
+            ? {
+                background:
+                  "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)",
+              }
+            : {}
+        }
+      >
+        <div className="flex w-full sm:w-[576px] h-full justify-center items-center flex-col">
+          {/* {isMosaic ? art() : info()} */}
+          <div
+            ref={artRef}
+            className={`flex flex-col justify-center items-center w-full px-4 aspect-[9/16]`}
             style={{
               background:
-                "linear-gradient(45deg, rgba(255,0,0,1) 10%, rgba(255,165,0,1) 30%, rgba(255,255,0,1) 50%, rgba(0,128,0,1) 60%, rgba(0,0,255,1) 70%, rgba(75,0,130,1) 80%, rgba(238,130,238,1) 100%)",
+                "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)",
             }}
-            onClick={() => setCurrentColor("rainbow")}
-          /> */}
-         
-          
+          >
+            <div className="w-full bg-black p-4 rounded-lg shadow-lg bg-opacity-75">
+              <div className="flex flex-row flex-wrap">
+                {collageTracks.map((track) => {
+                  const image = track?.album?.images?.[1]?.url;
+                  const name = track?.name;
+                  const spotifyUrl = track?.external_urls?.spotify;
+                  return (
+                    <CustomTooltip track={track} key={track.id}>
+                      <div className="aspect-square" style={{ width: width, height: "auto" }}>
+                        <Image
+                          unoptimized
+                          alt={name}
+                          src={image}
+                          width={300}
+                          height={300}
+                          className="w-full h-full"
+                          crossOrigin="anonymous"
+                          placeholder="blur"
+                          blurDataURL={track.base64Url || ""}
+                        />
+                      </div>
+                    </CustomTooltip>
+                  );
+                })}
+              </div>
+              {logos("musaic")}
+            </div>
+          </div>
+          {header(collageTracks)}
         </div>
-        {header(collageTracks)}
       </div>
     </div>
   );
