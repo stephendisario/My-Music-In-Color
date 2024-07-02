@@ -587,7 +587,7 @@ const Collage = ({
   return (
     <div className="overflow-y-hidden">
       <div
-        className={`p-safe-t p-safe-r p-safe-b p-safe-l snap-start relative h-screen flex flex-col items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
+        className={`p-safe-t p-safe-r p-safe-b p-safe-l snap-start relative h-[calc(100dvh)] flex flex-col items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
         key={color}
         style={
           currentColor === "rainbow"
