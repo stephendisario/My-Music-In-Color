@@ -299,16 +299,23 @@ const Collage = ({
           ],
         });
         setIsShareLoading(false);
+        setIsDownloadLoading(false)
+
       } else {
         setIsShareLoading(false);
+        setIsDownloadLoading(false)
+
         alert("Web Share API is not supported in your browser.");
       }
 
       setIsShareLoading(false);
+      setIsDownloadLoading(false)
+
 
       // Clean up the URL object after sharing
     } catch (error) {
       setIsShareLoading(false);
+      setIsDownloadLoading(false)
       console.error("Error sharing image:", error);
     }
   };
@@ -648,60 +655,63 @@ const Collage = ({
           {header(collageTracks)}
         </div>
       </div>
-      {isDownloadLoading ||
-        (isShareLoading && (
-          <div
-            className={` absolute left-0 right-0 mx-auto z-80 h-screen flex flex-col items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
-            style={
-              currentColor === "rainbow"
-                ? {
-                    background:
-                      "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)",
-                  }
-                : {}
-            }
-          >
-            <div className="flex w-full sm:w-[576px] h-full justify-center items-center flex-col">
-              {/* {isMosaic ? art() : info()} */}
-              <div
-                ref={artRef}
-                className={`flex flex-col justify-center items-center w-full px-4 aspect-[9/16] bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
-                style={{
+      {(isDownloadLoading || isShareLoading) && (
+        <div
+          className={` absolute left-0 right-0 mx-auto z-80 h-screen flex flex-col items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
+          style={
+            currentColor === "rainbow"
+              ? {
                   background:
-                    currentColor === "rainbow"
-                      ? "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)"
-                      : "",
-                }}
-              >
-                <div className="w-full bg-black p-4 rounded-lg shadow-lg bg-opacity-75">
-                  <div className="flex flex-row flex-wrap">
-                    {collageTracks.map((track) => {
-                      const image = track?.album?.images?.[1]?.url;
-                      const name = track?.name;
-                      const spotifyUrl = track?.external_urls?.spotify;
-                      return (
-                        <div className="aspect-square" style={{ width: width, height: "auto" }} key={track.id}>
-                          <Image
-                            unoptimized
-                            alt={name}
-                            src={image}
-                            width={300}
-                            height={300}
-                            className="w-full h-full"
-                            crossOrigin="anonymous"
-                            placeholder="blur"
-                            blurDataURL={track.base64Url || ""}
-                          />
-                        </div>
-                      );
-                    })}
-                  </div>
-                  {logos("musaic")}
+                    "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)",
+                }
+              : {}
+          }
+        >
+          <div className="flex w-full sm:w-[576px] h-full justify-center items-center flex-col">
+            {/* {isMosaic ? art() : info()} */}
+            <div
+              ref={artRef}
+              className={`flex flex-col justify-center items-center w-full px-4 aspect-[9/16] bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
+              style={{
+                background:
+                  currentColor === "rainbow"
+                    ? "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)"
+                    : "",
+              }}
+            >
+              <div className="w-full bg-black p-4 rounded-lg shadow-lg bg-opacity-75">
+                <div className="flex flex-row flex-wrap">
+                  {collageTracks.map((track) => {
+                    const image = track?.album?.images?.[1]?.url;
+                    const name = track?.name;
+                    const spotifyUrl = track?.external_urls?.spotify;
+                    return (
+                      <div
+                        className="aspect-square"
+                        style={{ width: width, height: "auto" }}
+                        key={track.id}
+                      >
+                        <Image
+                          unoptimized
+                          alt={name}
+                          src={image}
+                          width={300}
+                          height={300}
+                          className="w-full h-full"
+                          crossOrigin="anonymous"
+                          placeholder="blur"
+                          blurDataURL={track.base64Url || ""}
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
+                {logos("musaic")}
               </div>
             </div>
           </div>
-        ))}
+        </div>
+      )}
     </div>
   );
 };
