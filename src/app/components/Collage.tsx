@@ -315,7 +315,7 @@ const Collage = () => {
             popper: {
               modifiers: [
                 {
-                  name: 'offset',
+                  name: "offset",
                   options: {
                     offset: [0, isMobile ? 7 : 0],
                   },
@@ -387,7 +387,7 @@ const Collage = () => {
         </div>
       </div>
     );
-  }, [currentColor]);
+  }, []);
 
   return (
     <div className="relative">
@@ -452,7 +452,9 @@ const Collage = () => {
               {logos()}
             </div>
           </div>
-          {header(collages[`${currentColor}Displayed`].slice(0, collageParameters[currentColor].size))}
+          {header(
+            collages[`${currentColor}Displayed`].slice(0, collageParameters[currentColor].size)
+          )}
         </div>
       </div>
 
@@ -505,7 +507,6 @@ const Collage = () => {
           </div>
         </div>
       </div>
-      {isMobile && <p className="flex flex-row justify-center">peekaboo!</p>}
     </div>
   );
 };

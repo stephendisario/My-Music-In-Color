@@ -1,7 +1,12 @@
 "use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { addColor } from "../lib/colorthief";
-import { getParams, getRainbowCollage, getUniqueImages, removeDuplicatesFromCollage } from "../lib/helper";
+import {
+  getParams,
+  getRainbowCollage,
+  getUniqueImages,
+  removeDuplicatesFromCollage,
+} from "../lib/helper";
 import { getTopTracks, getUserProfile } from "../api/spotify";
 import { collageConfig } from "../lib/constants";
 
@@ -17,7 +22,7 @@ interface MyContextType {
   totalTracks: number;
   setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
   isMobile: boolean;
-  collageParameters: any
+  collageParameters: any;
 }
 
 const MyContext = createContext<MyContextType | undefined>(undefined);
@@ -42,16 +47,16 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [totalTracks, setTotalTracks] = useState<number>(0);
   const [collageParameters, setCollageParameters] = useState<{
-    red: {width: string, size: number},
-    orange: {width: string, size: number},
-    yellow: {width: string, size: number},
-    green: {width: string, size: number},
-    blue: {width: string, size: number},
-    violet: {width: string, size: number},
-    black: {width: string, size: number},
-    white: {width: string, size: number},
-    rainbow: {width: string, size: number},
-  }>()
+    red: { width: string; size: number };
+    orange: { width: string; size: number };
+    yellow: { width: string; size: number };
+    green: { width: string; size: number };
+    blue: { width: string; size: number };
+    violet: { width: string; size: number };
+    black: { width: string; size: number };
+    white: { width: string; size: number };
+    rainbow: { width: string; size: number };
+  }>();
 
   const [id, setId] = useState<string>("");
   const [name, setName] = useState<string>("");
@@ -129,11 +134,11 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }
       });
     });
 
-    let params = {} as any
+    let params = {} as any;
     (Object.keys(collageConfig) as Colors[]).forEach((color) => {
       const tracks = groups[color].slice(0, 64);
-      params[color] = getParams(tracks.length)
-      groups[`${color}Displayed`] = tracks
+      params[color] = getParams(tracks.length);
+      groups[`${color}Displayed`] = tracks;
     });
 
     const rainbow = getRainbowCollage(true, groups);
@@ -141,9 +146,9 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }
     groups["rainbow"] = rainbow;
     groups["rainbowDisplayed"] = rainbow;
 
-    params['rainbow'] = getParams(rainbow.length)
+    params["rainbow"] = getParams(rainbow.length);
 
-    setCollageParameters(params)
+    setCollageParameters(params);
 
     return groups;
   };

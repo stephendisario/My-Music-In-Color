@@ -166,5 +166,4 @@ export const getParams = (tracks: number) => {
   }
 
   return { width, size };
-}
-
+};

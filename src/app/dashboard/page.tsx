@@ -11,7 +11,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     setLoggedIn(true);
-  }, []);
+  }, [setLoggedIn]);
 
   const loadingPage = () => (
     <div
