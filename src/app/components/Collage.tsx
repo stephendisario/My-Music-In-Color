@@ -312,6 +312,16 @@ const Collage = () => {
                 },
               },
             },
+            popper: {
+              modifiers: [
+                {
+                  name: 'offset',
+                  options: {
+                    offset: [0, isMobile ? 14 : 0],
+                  },
+                },
+              ],
+            },
           }}
           enterTouchDelay={0}
           leaveTouchDelay={4000}
