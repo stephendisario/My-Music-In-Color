@@ -59,3 +59,11 @@ interface Artist {
 type UniqueImagesMap = { [key:string]: {
   hsl?: HSLColor, base64Url?: string 
 }}
+
+type Colors = 'red' | 'orange' | 'yellow' | 'green' | 'blue' | 'violet' | 'black' | 'white';
+
+type ColorsWithOrWithoutDupes = (Colors | "rainbow") | `${Colors | "rainbow"}Displayed`;
+
+type Collages = {
+  [key in ColorsWithOrWithoutDupes]: ColorTrack[];
+};

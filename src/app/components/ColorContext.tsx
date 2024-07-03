@@ -1,15 +1,11 @@
 "use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { addColor } from "../lib/colorthief";
-import { getBase64ColorImage, getUniqueImages, removeDuplicatesFromCollage } from "../lib/helper";
-import { Collages, Colors, collageConfig } from "../dashboard/Collages";
-import TermTabs from "./TermTabs";
+import { getRainbowCollage, getUniqueImages, removeDuplicatesFromCollage } from "../lib/helper";
 import { getTopTracks, getUserProfile } from "../api/spotify";
+import { collageConfig } from "../lib/constants";
 
 interface MyContextType {
-  tabValue: number;
-  setTabValue: React.Dispatch<React.SetStateAction<number>>;
-  sortedColorTracks: ColorTrack[];
   collages: Collages;
   setCollages: React.Dispatch<React.SetStateAction<Collages>>;
   loading: boolean;
@@ -40,11 +36,7 @@ interface MyContextProviderProps {
 export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }) => {
   const [tabValue, setTabValue] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
-  const [sortedColorTracks, setSortedColorTracks] = useState<ColorTrack[]>([]);
   const [collages, setCollages] = useState<Collages>({} as Collages);
-  const [long, setLong] = useState<Collages>({} as Collages);
-  const [medium, setMedium] = useState<Collages>({} as Collages);
-  const [short, setShort] = useState<Collages>({} as Collages);
   const [loadingColor, setLoadingColor] = useState<boolean>(true);
   const [loadingTracks, setLoadingTracks] = useState<boolean>(true);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
@@ -76,9 +68,7 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }
   const injectColor = async (tracks: Track[]) => {
     //TODO: Clean list of incomplete tracks
     const uniqueImagesMapEmpty = getUniqueImages(tracks);
-    console.log('empty', uniqueImagesMapEmpty)
     const uniqueImagesMapFilled = await addColor(uniqueImagesMapEmpty);
-    console.log('filled', uniqueImagesMapFilled)
 
     setLoadingColor(false);
 
@@ -90,17 +80,7 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }
       return { ...track, ...{ hsl: imgData.hsl, base64Url: imgData.base64Url } } as ColorTrack;
     });
 
-    const deepCopy: ColorTrack[] = JSON.parse(JSON.stringify(fillTracksWithColor));
-
-    const sorted = deepCopy.sort((a, b) => {
-      if (a.hsl === undefined) return 1;
-      if (b.hsl === undefined) return -1;
-      return a.hsl[0] - b.hsl[0];
-    });
-
     const groups = groupTracks(fillTracksWithColor);
-
-    console.log('groups', groups)
 
     setCollages(groups);
     setLoadingColor(false);
@@ -109,11 +89,13 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }
   const groupTracks = (colorTracks: ColorTrack[]) => {
     let groups = (Object.keys(collageConfig) as Colors[]).reduce((acc: Collages, color) => {
       acc[color] = [];
-      acc[`${color}WithoutDupes`] = [];
+      acc[`${color}Displayed`] = [];
       return acc;
     }, {} as Collages);
 
-    colorTracks.forEach((track) => {
+    const colorTracksCleaned = removeDuplicatesFromCollage(colorTracks);
+
+    colorTracksCleaned.forEach((track) => {
       if (!track.hsl) return;
       const hue = track.hsl[0];
       const saturation = track.hsl[1];
@@ -137,25 +119,30 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }
     });
 
     (Object.keys(collageConfig) as Colors[]).forEach((color) => {
-      groups[`${color}WithoutDupes`] = removeDuplicatesFromCollage(groups[color]);
+      groups[`${color}Displayed`] = groups[color].slice(0, 64);
     });
+
+    const rainbow = getRainbowCollage(true, groups);
+
+    groups["rainbow"] = rainbow;
+    groups["rainbowDisplayed"] = rainbow;
 
     return groups;
   };
 
   useEffect(() => {
-    const test = async () => {
+    const fetches = async () => {
       const user = await getUserProfile();
       setId(user?.id!);
       setName(user?.display_name!);
       const totalTracks: any = await getTopTracks("long_term", 1);
       setTotalTracks(totalTracks.total);
-      const poo: any = await getTopTracks("long_term");
-      if (poo) injectColor(poo.tracks);
+      const allTracks: any = await getTopTracks("long_term");
+      if (allTracks) injectColor(allTracks.tracks);
       setLoadingTracks(false);
-      console.log(poo);
+      console.log(allTracks);
     };
-    if (loggedIn) test();
+    if (loggedIn) fetches();
   }, [loggedIn]);
 
   useEffect(() => {
@@ -168,9 +155,6 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }
   return (
     <MyContext.Provider
       value={{
-        tabValue,
-        setTabValue,
-        sortedColorTracks,
         collages,
         setCollages,
         loading,

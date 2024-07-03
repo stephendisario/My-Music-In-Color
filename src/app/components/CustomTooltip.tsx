@@ -18,7 +18,6 @@ const CustomTooltip = ({
   const textColor = track?.hsl?.[2] && track?.hsl?.[2] > 50 ? "black" : "white";
   const spotifyURI = track.uri;
   const webURL = track?.external_urls?.spotify;
-  // const [open, setOpen] = useState(false);
 
   const handleLinkClick = (event: any) => {
     event.preventDefault();
@@ -29,9 +28,6 @@ const CustomTooltip = ({
 
   return (
     <Tooltip
-      // onTouchMoveCapture={(e) => setOpen(false)}
-      // onTouchStartCapture={() => setOpen(true)}
-      // open={open}
       enterTouchDelay={0}
       leaveTouchDelay={4000}
       PopperProps={{ disablePortal: true }}

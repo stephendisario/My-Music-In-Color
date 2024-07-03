@@ -1,4 +1,4 @@
-import { Collages, Colors, collageConfig } from "../dashboard/Collages";
+import { collageConfig } from "./constants";
 
 export const generateRandomString = (length: number) => {
   const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -114,7 +114,7 @@ export const getRainbowCollage = (isHide: boolean, collages: Collages) => {
   let rainbowArray: ColorTrack[] = [];
 
   (Object.keys(collageConfig) as Colors[]).forEach((color) => {
-    const tracks = isHide ? collages[`${color}WithoutDupes`] : collages[color];
+    const tracks = collages[color];
 
     if (color === "black" || color === "white") return;
     for (let i = 0; i < collageConfig[color].rainbowCount; i++) {

@@ -17,7 +17,11 @@ export const addColor = async (unqieImagesMap: UniqueImagesMap): Promise<UniqueI
     Object.keys(unqieImagesMap).map(async (url) => {
       return new Promise<void>((resolve) => {
         //if users local storage has the image color, use that
-        if (localUniqueImageMap && localUniqueImageMap[url]?.base64Url && localUniqueImageMap[url]?.hsl) {
+        if (
+          localUniqueImageMap &&
+          localUniqueImageMap[url]?.base64Url &&
+          localUniqueImageMap[url]?.hsl
+        ) {
           unqieImagesMap[url] = localUniqueImageMap[url];
           resolve();
         } else {
