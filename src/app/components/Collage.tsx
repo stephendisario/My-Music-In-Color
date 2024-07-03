@@ -455,7 +455,7 @@ const Collage = () => {
                       <CustomTooltip track={track} key={track.id}>
                         <div
                           className="aspect-square"
-                          style={{ width: collageParameters.width, height: "auto" }}
+                          style={{ width: '12.5%', height: "auto" }}
                         >
                           <Image
                             unoptimized
