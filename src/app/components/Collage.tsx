@@ -17,7 +17,7 @@ import { faPalette, faShuffle, faXmark } from "@fortawesome/free-solid-svg-icons
 import { collageConfig, gradients, snapPoints } from "../lib/constants";
 
 const Collage = () => {
-  const { collages, setCollages, id, isMobile } = useMyContext();
+  const { collages, setCollages, id, isMobile, collageParameters } = useMyContext();
   const [currentColor, setCurrentColor] = useState<Colors | "rainbow">("rainbow");
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
@@ -37,40 +37,6 @@ const Collage = () => {
       0
     );
   }, []);
-
-  const collageParameters = useMemo(() => {
-    let width;
-    let collageSize;
-    const tracks = collages[`${currentColor}Displayed`].length;
-
-    if (tracks >= 64) {
-      collageSize = 64;
-      width = "12.5%";
-    } else if (tracks >= 49) {
-      collageSize = 49;
-      width = "14.285%";
-    } else if (tracks >= 36) {
-      collageSize = 36;
-      width = "16.66%";
-    } else if (tracks >= 25) {
-      collageSize = 25;
-      width = "20%";
-    } else if (tracks >= 16) {
-      collageSize = 16;
-      width = "25%";
-    } else if (tracks >= 9) {
-      collageSize = 9;
-      width = "33.33%";
-    } else if (tracks >= 4) {
-      collageSize = 4;
-      width = "50%";
-    } else {
-      collageSize = 1;
-      width = "100%";
-    }
-
-    return { width, collageSize };
-  }, [currentColor]);
 
   const handleResetCollage = () => {
     setShuffled(false);
@@ -447,7 +413,7 @@ const Collage = () => {
             <div className="w-full bg-black p-4 rounded-lg shadow-lg bg-opacity-75">
               <div className="flex flex-row flex-wrap" ref={playlistRef}>
                 {collages[`${currentColor}Displayed`]
-                  .slice(0, collageParameters.collageSize)
+                  .slice(0, collageParameters[currentColor].size)
                   .map((track, index) => {
                     const image = track?.album?.images?.[1]?.url;
                     const name = track?.name;
@@ -455,7 +421,7 @@ const Collage = () => {
                       <CustomTooltip track={track} key={track.id + index.toString()}>
                         <div
                           className="aspect-square"
-                          style={{ width: currentColor === 'rainbow' ? '12.5%' : collageParameters.width, height: "auto" }}
+                          style={{ width: collageParameters[currentColor].width, height: "auto" }}
                         >
                           <Image
                             unoptimized
@@ -476,7 +442,7 @@ const Collage = () => {
               {logos()}
             </div>
           </div>
-          {header(collages[`${currentColor}Displayed`].slice(0, collageParameters.collageSize))}
+          {header(collages[`${currentColor}Displayed`].slice(0, collageParameters[currentColor].size))}
         </div>
       </div>
 
@@ -499,14 +465,14 @@ const Collage = () => {
             <div className="w-full bg-black p-4 rounded-lg bg-opacity-75">
               <div className="flex flex-row flex-wrap">
                 {collages[`${currentColor}Displayed`]
-                  .slice(0, collageParameters.collageSize)
+                  .slice(0, collageParameters[currentColor].size)
                   .map((track) => {
                     const image = track?.album?.images?.[1]?.url;
                     const name = track?.name;
                     return (
                       <div
                         className="aspect-square"
-                        style={{ width: collageParameters.width, height: "auto" }}
+                        style={{ width: collageParameters[currentColor].width, height: "auto" }}
                         key={track.id}
                       >
                         <Image
