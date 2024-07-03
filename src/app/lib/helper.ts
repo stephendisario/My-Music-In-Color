@@ -1,4 +1,4 @@
-import { Collages, Colors, collageConfig } from "../dashboard/Collages";
+import { collageConfig } from "./constants";
 
 export const generateRandomString = (length: number) => {
   const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -114,7 +114,7 @@ export const getRainbowCollage = (isHide: boolean, collages: Collages) => {
   let rainbowArray: ColorTrack[] = [];
 
   (Object.keys(collageConfig) as Colors[]).forEach((color) => {
-    const tracks = isHide ? collages[`${color}WithoutDupes`] : collages[color];
+    const tracks = collages[color];
 
     if (color === "black" || color === "white") return;
     for (let i = 0; i < collageConfig[color].rainbowCount; i++) {
@@ -133,4 +133,37 @@ export const getBase64ColorImage = (hsl: HSLColor) => {
   ctx!.fillStyle = `hsl(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)`;
   ctx!.fillRect(0, 0, 1, 1);
   return canvas.toDataURL();
+};
+
+export const getParams = (tracks: number) => {
+  let width;
+  let size;
+
+  if (tracks >= 64) {
+    size = 64;
+    width = "12.5%";
+  } else if (tracks >= 49) {
+    size = 49;
+    width = "14.285%";
+  } else if (tracks >= 36) {
+    size = 36;
+    width = "16.66%";
+  } else if (tracks >= 25) {
+    size = 25;
+    width = "20%";
+  } else if (tracks >= 16) {
+    size = 16;
+    width = "25%";
+  } else if (tracks >= 9) {
+    size = 9;
+    width = "33.33%";
+  } else if (tracks >= 4) {
+    size = 4;
+    width = "50%";
+  } else {
+    size = 1;
+    width = "100%";
+  }
+
+  return { width, size };
 };

@@ -80,6 +80,7 @@ export const addImageToPlaylist = async (playlistId: string, imgUrl: string) => 
       },
       body: imgUrl,
     });
+    console.log(response);
   } catch (error: any) {
     console.error("Error adding image to playlist:", error.message);
   }
@@ -205,7 +206,7 @@ export const fetchWithOffset = async <T>(
     return [...accumulator, ...currentResponse.items];
   }, []);
 
-  if(!iterations) console.log(allTopTracks, allTopTracks.length)
+  if (!iterations) console.log(allTopTracks, allTopTracks.length);
 
   return { tracks: allTopTracks, total: cap } as any;
 };

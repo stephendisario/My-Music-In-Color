@@ -1,26 +1,19 @@
 "use client";
-import React, { Suspense, useEffect, useState } from "react";
-import { getTopTracks, getUserProfile } from "../api/spotify";
-import ContentWrapper from "./ContentWrapper";
-import Welcome from "./Welcome";
+import React, { useEffect } from "react";
 import Collage from "../components/Collage";
-import { Collages, Colors, collageConfig } from "./Collages";
-import { getUniqueImages, removeDuplicatesFromCollage } from "../lib/helper";
-import { addColor } from "../lib/colorthief";
-import { MyContextProvider, useMyContext } from "../components/ColorContext";
+import { useMyContext } from "../components/ColorContext";
 import MovingText from "../components/MovingText";
 
 export const fetchCache = "force-cache";
 
 const Dashboard = () => {
-  const { collages, id, loading, loadingColor, loadingTracks, setLoggedIn, totalTracks } =
-    useMyContext();
+  const { loading, loadingColor, loadingTracks, setLoggedIn, totalTracks } = useMyContext();
 
   useEffect(() => {
     setLoggedIn(true);
-  }, []);
+  }, [setLoggedIn]);
 
-  const stuff = () => (
+  const loadingPage = () => (
     <div
       className={`relative h-screen flex flex-col items-center justify-center rainbow-background`}
     >
@@ -35,6 +28,6 @@ const Dashboard = () => {
     </div>
   );
 
-  return loading ? stuff() : <Collage color="red" index={0} collages={collages} id={id} />;
+  return loading ? loadingPage() : <Collage />;
 };
 export default Dashboard;
