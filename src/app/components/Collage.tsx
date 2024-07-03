@@ -448,14 +448,14 @@ const Collage = () => {
               <div className="flex flex-row flex-wrap" ref={playlistRef}>
                 {collages[`${currentColor}Displayed`]
                   .slice(0, collageParameters.collageSize)
-                  .map((track) => {
+                  .map((track, index) => {
                     const image = track?.album?.images?.[1]?.url;
                     const name = track?.name;
                     return (
-                      <CustomTooltip track={track} key={track.id}>
+                      <CustomTooltip track={track} key={track.id + index.toString()}>
                         <div
                           className="aspect-square"
-                          style={{ width: '12.5%', height: "auto" }}
+                          style={{ width: collageParameters.width, height: "auto" }}
                         >
                           <Image
                             unoptimized
