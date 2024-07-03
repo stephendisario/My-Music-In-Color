@@ -317,7 +317,7 @@ const Collage = () => {
                 {
                   name: 'offset',
                   options: {
-                    offset: [0, isMobile ? 14 : 0],
+                    offset: [0, isMobile ? 7 : 0],
                   },
                 },
               ],
@@ -505,6 +505,7 @@ const Collage = () => {
           </div>
         </div>
       </div>
+      {isMobile && <p className="flex flex-row justify-center">peekaboo!</p>}
     </div>
   );
 };
