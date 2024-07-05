@@ -327,7 +327,7 @@ const Collage = () => {
           placement={isMobile ? "top" : "right-start"}
           title={
             <div className={`flex gap-1 w-1/2 ml-[50%] pr-8 justify-end items-center hover:cursor-pointer ${isMobile ? "flex-row flex-wrap" : "flex-col"}`}>
-              {(['rainbow', 'yellow', 'violet', 'red', 'green', 'black', 'orange', 'blue', 'white'] as (Colors | 'rainbow')[]).map((color) => {
+              {(['red', 'orange', 'yellow', 'green', 'blue', 'violet', 'black', 'white', 'rainbow'] as (Colors | 'rainbow')[]).map((color) => {
                 if (!color.includes("Displayed"))
                   return (
                     <button
