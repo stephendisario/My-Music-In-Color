@@ -287,7 +287,7 @@ const Collage = () => {
             "create playlist"
           )}
         </button>
-        <div className="sm:hidden h-[10%]"></div>
+        {/* <div className="sm:hidden h-[10%]"></div> */}
       </div>
       <div
         className=" absolute top-0 right-0 flex flex-row items-start"
