@@ -18,8 +18,7 @@ import { collageConfig, gradients, snapPoints } from "../lib/constants";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
-import Fade from '@mui/material/Fade';
-
+import Fade from "@mui/material/Fade";
 
 const Collage = () => {
   const { collages, setCollages, id, isMobile, collageParameters } = useMyContext();
@@ -247,33 +246,33 @@ const Collage = () => {
           </p>
         )} */}
       </div>
-      <div className="flex flex-col grow sm:justify-center justify-end">
-          <div className="sm:hidden">
-            <button
-              className={`${currentColor !== "white" ? "border-white bg-white text-black mix-blend-lighten hover:bg-[rgba(255,255,255,.8)]" : "border-black bg-black text-white mix-blend-darken hover:bg-[rgba(0,0,0,.8)]"} h-10 border-2 font-bold rounded-full text-lg text-nowrap h-full self-center	hover:bg-[rgba(0,0,0,.1)] w-[145px]`}
-              onClick={() => {
-                setIsShareLoading(true);
-                shareImage();
-              }}
-            >
-              {isShareLoading ? <CircularProgress sx={{ color: "white" }} size={15} /> : "share"}
-            </button>
-          </div>
-          <div className="sm:block hidden">
-            <button
-              className={`${currentColor !== "white" ? "border-white bg-white text-black mix-blend-lighten hover:bg-[rgba(255,255,255,.8)]" : "border-black bg-black text-white mix-blend-darken hover:bg-[rgba(0,0,0,.8)]"} h-10 border-2  font-bold rounded-full text-lg text-nowrap h-full self-center w-[145px]`}
-              onClick={() => {
-                setIsDownloadLoading(true);
-                handleDownload(artRef, true, false);
-              }}
-            >
-              {isDownloadLoading ? (
-                <CircularProgress sx={{ color: "white" }} size={15} />
-              ) : (
-                "download"
-              )}
-            </button>
-          </div>
+      <div className="flex flex-col grow justify-center">
+        <div className="sm:hidden">
+          <button
+            className={`${currentColor !== "white" ? "border-white bg-white text-black mix-blend-lighten hover:bg-[rgba(255,255,255,.8)]" : "border-black bg-black text-white mix-blend-darken hover:bg-[rgba(0,0,0,.8)]"} h-10 border-2 font-bold rounded-full text-lg text-nowrap h-full self-center	hover:bg-[rgba(0,0,0,.1)] w-[145px]`}
+            onClick={() => {
+              setIsShareLoading(true);
+              shareImage();
+            }}
+          >
+            {isShareLoading ? <CircularProgress sx={{ color: "white" }} size={15} /> : "share"}
+          </button>
+        </div>
+        <div className="sm:block hidden">
+          <button
+            className={`${currentColor !== "white" ? "border-white bg-white text-black mix-blend-lighten hover:bg-[rgba(255,255,255,.8)]" : "border-black bg-black text-white mix-blend-darken hover:bg-[rgba(0,0,0,.8)]"} h-10 border-2  font-bold rounded-full text-lg text-nowrap h-full self-center w-[145px]`}
+            onClick={() => {
+              setIsDownloadLoading(true);
+              handleDownload(artRef, true, false);
+            }}
+          >
+            {isDownloadLoading ? (
+              <CircularProgress sx={{ color: "white" }} size={15} />
+            ) : (
+              "download"
+            )}
+          </button>
+        </div>
 
         <button
           className={`${currentColor !== "white" ? "text-white border-white" : "text-black border-black"} mt-1 rounded-full text-lg text-nowrap hover:bg-[rgba(0,0,0,.1)] w-[145px]`}
@@ -316,17 +315,24 @@ const Collage = () => {
               sx: {
                 [`&.${tooltipClasses.popper}[data-popper-placement*="top"] .${tooltipClasses.tooltip}`]:
                   {
-                    marginBottom: isMobile ? '4px' : '8px' ,
+                    marginBottom: isMobile ? "4px" : "8px",
                   },
               },
             },
           }}
           enterTouchDelay={0}
           leaveTouchDelay={20000}
-          placement={'top-end'}
+          placement={"top-end"}
           title={
-            <div className={`flex gap-2 ml-[50%] w-1/2 sm:pr-2 justify-end items-center hover:cursor-pointer flex-row flex-wrap`}>
-              {(Object.keys(collages).filter(c => !c.includes("Displayed")) as (Colors | 'rainbow')[]).map((color) => (
+            <div
+              className={`flex gap-2 ml-[50%] w-1/2 sm:pr-2 justify-end items-center hover:cursor-pointer flex-row flex-wrap`}
+            >
+              {(
+                Object.keys(collages).filter((c) => !c.includes("Displayed")) as (
+                  | Colors
+                  | "rainbow"
+                )[]
+              ).map((color) => (
                 <button
                   title={color}
                   key={color}
@@ -345,8 +351,7 @@ const Collage = () => {
                   }}
                   className={`h-8 w-8  ${color === currentColor && "shadow-white-glow"} rounded-full bg-gradient-to-br ${gradients[color] !== "rainbow" && gradients[color]}`}
                 ></button>
-                  )
-              )}
+              ))}
             </div>
           }
         >
