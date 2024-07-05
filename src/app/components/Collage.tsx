@@ -299,32 +299,33 @@ const Collage = () => {
               e?.relatedTarget?.title &&
               snapPoints.some((s) => s.color === e.relatedTarget.title)
             ) {
-            } else setShowColorTooltip(false);
+            } else setShowColorTooltip(true);
           }}
           disableHoverListener
           slotProps={{
             tooltip: {
               sx: {
+                paddingTop: 0,
                 paddingLeft: 0,
                 paddingRight: 0,
-                maxWidth: isMobile ? "300px" : "42px",
+                maxWidth: isMobile ? "100%" : "42px",
                 bgcolor: "rgba(0,0,0,0)",
               },
             },
             popper: {
               sx: {
-                [`&.${tooltipClasses.popper}[data-popper-placement*="left"] .${tooltipClasses.tooltip}`]:
+                [`&.${tooltipClasses.popper}[data-popper-placement*="bottom"] .${tooltipClasses.tooltip}`]:
                   {
-                    marginRight: "0px",
+                    marginTop: "0px",
                   },
               },
             },
           }}
           enterTouchDelay={0}
           leaveTouchDelay={20000}
-          placement={isMobile ? "left" : "right-start"}
+          placement={isMobile ? "bottom" : "right-start"}
           title={
-            <div className={`flex gap-1 hover:cursor-pointer ${isMobile ? "flex-row" : "flex-col"}`}>
+            <div className={`flex w-screen gap-1 justify-center hover:cursor-pointer ${isMobile ? "flex-row" : "flex-col"}`}>
               {(
                 ["rainbow"].concat(Object.keys(collages).filter((c) => c !== "rainbow")) as (
                   | Colors
