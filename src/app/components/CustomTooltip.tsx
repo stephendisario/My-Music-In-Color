@@ -16,8 +16,8 @@ const CustomTooltip = ({
 }) => {
   const { isMobile } = useMyContext();
 
-  const [open, setOpen] = useState<boolean>(false)
-  const [isMove, setIsMove] = useState<boolean>(false)
+  const [open, setOpen] = useState<boolean>(false);
+  const [isMove, setIsMove] = useState<boolean>(false);
 
   const textColor = track?.hsl?.[2] && track?.hsl?.[2] > 50 ? "black" : "white";
   const spotifyURI = track.uri;
@@ -31,31 +31,28 @@ const CustomTooltip = ({
   };
 
   const handleClose = (e: any) => {
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   const handleTouchEnd = () => {
-    if(open) {
-      setOpen(false)
-      return
+    if (open) {
+      setOpen(false);
+      return;
     }
-    if(!isMove) setOpen(true)
-    setIsMove(false)
-  }
+    if (!isMove) setOpen(true);
+    setIsMove(false);
+  };
 
   const handleTouchMove = () => {
-    setIsMove(true)
-  }
+    setIsMove(true);
+  };
 
   return (
     <Tooltip
-
-      
       open={isMobile ? open : undefined}
       onClose={isMobile ? handleClose : undefined}
       onTouchEndCapture={isMobile ? handleTouchEnd : undefined}
       onTouchMoveCapture={isMobile ? handleTouchMove : undefined}
-
       enterTouchDelay={0}
       leaveTouchDelay={4000}
       PopperProps={{ disablePortal: true }}

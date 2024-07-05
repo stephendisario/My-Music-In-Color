@@ -15,12 +15,9 @@ import { CirclePicker } from "react-color";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPalette, faShuffle, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { collageConfig, gradients, snapPoints } from "../lib/constants";
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
-
-
-
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 
 const Collage = () => {
   const { collages, setCollages, id, isMobile, collageParameters } = useMyContext();
@@ -30,7 +27,6 @@ const Collage = () => {
   const [shuffled, setShuffled] = useState<boolean>(false);
   const [showColorTooltip, setShowColorTooltip] = useState<boolean>(false);
   const [showColorPalette, setShowColorPalette] = useState<boolean>(false);
-
 
   const [isCreatePlaylistLoading, setIsCreatePlaylistLoading] = useState<boolean>(false);
   const [isDownloadLoading, setIsDownloadLoading] = useState<boolean>(false);
@@ -310,44 +306,53 @@ const Collage = () => {
           slotProps={{
             tooltip: {
               sx: {
-
                 paddingLeft: 0,
                 paddingRight: 0,
                 maxWidth: isMobile ? "300px" : "42px",
                 bgcolor: "rgba(0,0,0,0)",
-
               },
             },
             popper: {
               sx: {
                 [`&.${tooltipClasses.popper}[data-popper-placement*="left"] .${tooltipClasses.tooltip}`]:
                   {
-                    marginRight: '0px',
+                    marginRight: "0px",
                   },
               },
-            }
+            },
           }}
           enterTouchDelay={0}
           leaveTouchDelay={20000}
           placement={isMobile ? "left" : "right-start"}
           title={
             <div className={`flex gap-1 ${isMobile ? "flex-row" : "flex-col"}`}>
-
-            {(['rainbow'].concat(Object.keys(collages).filter(c => c !== 'rainbow')) as (Colors | 'rainbow')[] ).map(color => {
-              if(!color.includes("Displayed")) return (
-                <div onClick={() => {
-                  if (currentColor !== color) {
-                    handleResetCollage();
-                    setCurrentColor(color)
-                  }
-                  setShowColorTooltip(false)
-                }} style={{background: color === "rainbow"
-                ? "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)"
-                : "",}}
-                className={`h-7 w-7 ${color === currentColor && 'shadow-white-glow'} rounded bg-gradient-to-br ${gradients[color] !== "rainbow" && gradients[color]}`}></div>
-
-              )
-            })}
+              {(
+                ["rainbow"].concat(Object.keys(collages).filter((c) => c !== "rainbow")) as (
+                  | Colors
+                  | "rainbow"
+                )[]
+              ).map((color) => {
+                if (!color.includes("Displayed"))
+                  return (
+                    <div
+                      key={color}
+                      onClick={() => {
+                        if (currentColor !== color) {
+                          handleResetCollage();
+                          setCurrentColor(color);
+                        }
+                        setShowColorTooltip(false);
+                      }}
+                      style={{
+                        background:
+                          color === "rainbow"
+                            ? "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)"
+                            : "",
+                      }}
+                      className={`h-7 w-7 ${color === currentColor && "shadow-white-glow"} rounded bg-gradient-to-br ${gradients[color] !== "rainbow" && gradients[color]}`}
+                    ></div>
+                  );
+              })}
               {/* <CirclePicker
                 color={"red"}
                 onChange={(color, e) => {
@@ -456,7 +461,7 @@ const Collage = () => {
         <div className="flex w-full sm:h-lg:w-[576px] sm:h-md:w-[450px] h-full justify-center relative items-center flex-col sm:overflow-y-auto">
           <div className="flex grow"></div>
 
-          {!isMobile && 
+          {!isMobile && (
             <div className={`text-4xl  w-full px-4 mb-1`}>
               <p
                 className={`${currentColor === "white" ? "text-black" : "text-white"} flex items-start`}
@@ -464,7 +469,7 @@ const Collage = () => {
                 mymusicincolor
               </p>
             </div>
-          }
+          )}
           <div className={`flex flex-col justify-center items-center w-full px-4`}>
             <div className="w-full bg-black p-4 rounded-lg shadow-lg bg-opacity-75">
               <div className="flex flex-row flex-wrap" ref={playlistRef}>
