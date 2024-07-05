@@ -5,7 +5,7 @@ import Image from "next/image";
 import { shuffle } from "../lib/helper";
 import CustomTooltip from "../components/CustomTooltip";
 import { addImageToPlaylist, addTracksToPlaylist, createPlaylist } from "../api/spotify";
-import { Alert, Snackbar, Tooltip } from "@mui/material";
+import { Alert, Snackbar } from "@mui/material";
 import { toBlob, toJpeg } from "html-to-image";
 import SpotifyLogo from "./SpotifyLogo";
 import IconButton from "@mui/material/IconButton";
@@ -15,6 +15,10 @@ import { CirclePicker } from "react-color";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPalette, faShuffle, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { collageConfig, gradients, snapPoints } from "../lib/constants";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
+import Fade from "@mui/material/Fade";
 
 const Collage = () => {
   const { collages, setCollages, id, isMobile, collageParameters } = useMyContext();
@@ -23,6 +27,7 @@ const Collage = () => {
 
   const [shuffled, setShuffled] = useState<boolean>(false);
   const [showColorTooltip, setShowColorTooltip] = useState<boolean>(false);
+  const [showColorPalette, setShowColorPalette] = useState<boolean>(false);
 
   const [isCreatePlaylistLoading, setIsCreatePlaylistLoading] = useState<boolean>(false);
   const [isDownloadLoading, setIsDownloadLoading] = useState<boolean>(false);
@@ -212,7 +217,7 @@ const Collage = () => {
   };
 
   const header = (tracks: ColorTrack[]) => (
-    <div className="flex flex-row w-full sm:h-md:w-[422px] sm:h-lg:w-[548px] justify-center items-center gap-2 relative mt-2 px-4">
+    <div className="flex flex-col w-full grow sm:h-md:w-[422px] sm:h-lg:w-[548px] justify-center items-center gap-2 relative mt-2 px-4">
       <div
         className="absolute top-0 left-0 flex flex-col h-10"
         style={{ padding: isMobile ? "inherit" : "" }}
@@ -233,46 +238,44 @@ const Collage = () => {
             </IconButton>
           </div>
         </div>
-        {shuffled && (
+        {/* {shuffled && (
           <p
             className={`${currentColor === "white" ? "text-black" : "text-white"} pl-1 mt-1 text-lg`}
           >
             {currentColor !== "rainbow" ? collages[currentColor].length : total} tracks
           </p>
-        )}
+        )} */}
       </div>
-      <div className="flex flex-col">
-        <div className="flex flex-row">
-          <div className="sm:hidden">
-            <button
-              className={`${currentColor !== "white" ? "border-white bg-white text-black mix-blend-lighten hover:bg-[rgba(255,255,255,.8)]" : "border-black bg-black text-white mix-blend-darken hover:bg-[rgba(0,0,0,.8)]"} h-10 border-2 font-bold rounded-full text-lg text-nowrap h-full self-center	hover:bg-[rgba(0,0,0,.1)] w-[145px]`}
-              onClick={() => {
-                setIsShareLoading(true);
-                shareImage();
-              }}
-            >
-              {isShareLoading ? <CircularProgress sx={{ color: "white" }} size={15} /> : "share"}
-            </button>
-          </div>
-          <div className="sm:block hidden">
-            <button
-              className={`${currentColor !== "white" ? "border-white bg-white text-black mix-blend-lighten hover:bg-[rgba(255,255,255,.8)]" : "border-black bg-black text-white mix-blend-darken hover:bg-[rgba(0,0,0,.8)]"} h-10 border-2  font-bold rounded-full text-lg text-nowrap h-full self-center w-[145px]`}
-              onClick={() => {
-                setIsDownloadLoading(true);
-                handleDownload(artRef, true, false);
-              }}
-            >
-              {isDownloadLoading ? (
-                <CircularProgress sx={{ color: "white" }} size={15} />
-              ) : (
-                "download"
-              )}
-            </button>
-          </div>
+      <div className="flex flex-col grow justify-center">
+        <div className="sm:hidden">
+          <button
+            className={`${currentColor !== "white" ? "border-white bg-white text-black mix-blend-lighten hover:bg-[rgba(255,255,255,.8)]" : "border-black bg-black text-white mix-blend-darken hover:bg-[rgba(0,0,0,.8)]"} h-10 border-2 font-bold rounded-full text-lg text-nowrap h-full self-center	hover:bg-[rgba(0,0,0,.1)] w-[145px]`}
+            onClick={() => {
+              setIsShareLoading(true);
+              shareImage();
+            }}
+          >
+            {isShareLoading ? <CircularProgress sx={{ color: "white" }} size={15} /> : "share"}
+          </button>
+        </div>
+        <div className="sm:block hidden">
+          <button
+            className={`${currentColor !== "white" ? "border-white bg-white text-black mix-blend-lighten hover:bg-[rgba(255,255,255,.8)]" : "border-black bg-black text-white mix-blend-darken hover:bg-[rgba(0,0,0,.8)]"} h-10 border-2  font-bold rounded-full text-lg text-nowrap h-full self-center w-[145px]`}
+            onClick={() => {
+              setIsDownloadLoading(true);
+              handleDownload(artRef, true, false);
+            }}
+          >
+            {isDownloadLoading ? (
+              <CircularProgress sx={{ color: "white" }} size={15} />
+            ) : (
+              "download"
+            )}
+          </button>
         </div>
 
         <button
-          className={`${currentColor !== "white" ? "text-white border-white" : "text-black border-black"} mt-1 rounded-full text-lg text-nowrap h-full hover:bg-[rgba(0,0,0,.1)] w-[145px]`}
+          className={`${currentColor !== "white" ? "text-white border-white" : "text-black border-black"} mt-1 rounded-full text-lg text-nowrap hover:bg-[rgba(0,0,0,.1)] w-[145px]`}
           onClick={() => {
             if (!isCreatePlaylistLoading) handleCreatePlaylist(tracks);
           }}
@@ -283,12 +286,15 @@ const Collage = () => {
             "create playlist"
           )}
         </button>
+        {/* <div className="sm:hidden h-[10%]"></div> */}
       </div>
       <div
         className=" absolute top-0 right-0 flex flex-row items-start"
-        style={{ padding: isMobile ? "inherit" : "" }}
+        style={{ paddingRight: isMobile ? "inherit" : "" }}
       >
         <Tooltip
+          TransitionComponent={Fade}
+          TransitionProps={{ timeout: 400 }}
           open={showColorTooltip}
           onClose={(e: any) => {
             if (
@@ -298,65 +304,54 @@ const Collage = () => {
             ) {
             } else setShowColorTooltip(false);
           }}
-          onTouchCancel={() => setShowColorTooltip(false)}
           disableHoverListener
-          arrow
           slotProps={{
             tooltip: {
               sx: {
-                maxWidth: isMobile ? "100vw" : "42px",
-                marginLeft: "5px",
-                bgcolor: "rgba(0,0,0,0.75)",
-                "& .MuiTooltip-arrow": {
-                  color: "rgba(0,0,0,0.75)",
-                },
+                bgcolor: "rgba(0,0,0,0)",
               },
             },
             popper: {
-              modifiers: [
-                {
-                  name: "offset",
-                  options: {
-                    offset: [0, isMobile ? 7 : 0],
+              sx: {
+                [`&.${tooltipClasses.popper}[data-popper-placement*="top"] .${tooltipClasses.tooltip}`]:
+                  {
+                    marginBottom: isMobile ? "4px" : "8px",
                   },
-                },
-              ],
+              },
             },
           }}
           enterTouchDelay={0}
-          leaveTouchDelay={4000}
-          placement={isMobile ? "bottom-end" : "right-start"}
+          leaveTouchDelay={20000}
+          placement={"top-end"}
           title={
-            <div className={`flex ${isMobile ? "flex-row" : "flex-col"}`}>
-              <CirclePicker
-                color={"red"}
-                onChange={(color, e) => {
-                  const newColor = snapPoints.find((c) => c.hex === color.hex)?.color as
-                    | Colors
-                    | "rainbow";
-                  setTimeout(() => setShowColorTooltip(false), 0);
-                  if (currentColor === newColor) return;
-                  handleResetCollage();
-                  setCurrentColor(newColor);
-                }}
-                colors={["red", "orange", "yellow", "green", "blue", "violet", "black", "white"]}
-                width="100%"
-                circleSize={26}
-              />
-              <button
-                title="rainbow"
-                className={` rounded-full self-center w-[26px] h-[26px] ml-[14px] sm:mt-[14px] sm:ml-0 transition-transform transform hover:scale-[1.2] ${currentColor === "rainbow" && "shadow-[0_0_2px_2px_rgba(255,255,255,0.4)]"}`}
-                style={{
-                  background:
-                    "linear-gradient(45deg, rgba(255,0,0,1) 10%, rgba(255,165,0,1) 30%, rgba(255,255,0,1) 50%, rgba(0,128,0,1) 60%, rgba(0,0,255,1) 70%, rgba(75,0,130,1) 80%, rgba(238,130,238,1) 100%)",
-                }}
-                onClick={() => {
-                  setTimeout(() => setShowColorTooltip(false), 0);
-                  if (currentColor === "rainbow") return;
-                  handleResetCollage();
-                  setCurrentColor("rainbow");
-                }}
-              />
+            <div
+              className={`flex gap-2 ml-[50%] w-1/2 sm:pr-2 justify-end items-center hover:cursor-pointer flex-row flex-wrap`}
+            >
+              {(
+                Object.keys(collages).filter((c) => !c.includes("Displayed")) as (
+                  | Colors
+                  | "rainbow"
+                )[]
+              ).map((color) => (
+                <button
+                  title={color}
+                  key={color}
+                  onClick={() => {
+                    if (currentColor !== color) {
+                      handleResetCollage();
+                      setCurrentColor(color);
+                    }
+                    setShowColorTooltip(false);
+                  }}
+                  style={{
+                    background:
+                      color === "rainbow"
+                        ? "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)"
+                        : "",
+                  }}
+                  className={`h-8 w-8  ${color === currentColor && "shadow-white-glow"} rounded-full bg-gradient-to-br ${gradients[color] !== "rainbow" && gradients[color]}`}
+                ></button>
+              ))}
             </div>
           }
         >
@@ -390,9 +385,9 @@ const Collage = () => {
   }, []);
 
   return (
-    <div className="relative">
+    <div className="relative overflow-y-hidden">
       <div
-        className={`relative h-[calc(100dvh)] sm:h-screen flex flex-row justify-center items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]} z-30`}
+        className={`relative h-[calc(100dvh)] sm:h-screen flex flex-col justify-center items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]} z-30`}
         style={{
           background:
             currentColor === "rainbow"
@@ -411,14 +406,18 @@ const Collage = () => {
             Playlist created successfully
           </Alert>
         </Snackbar>
-        <div className="flex w-full mb-7 sm:mb-0 sm:h-lg:w-[576px] sm:h-md:w-[450px] h-full justify-center relative items-center flex-col sm:overflow-y-auto">
-          <div className={`text-4xl  w-full px-4 mb-1`}>
-            <p
-              className={`${currentColor === "white" ? "text-black" : "text-white"} flex items-start`}
-            >
-              mymusicincolor
-            </p>
-          </div>
+        <div className="flex w-full sm:h-lg:w-[576px] sm:h-md:w-[450px] h-full justify-center relative items-center flex-col sm:overflow-y-auto">
+          <div className="flex grow"></div>
+
+          {!isMobile && (
+            <div className={`text-4xl  w-full px-4 mb-1`}>
+              <p
+                className={`${currentColor === "white" ? "text-black" : "text-white"} flex items-start`}
+              >
+                mymusicincolor
+              </p>
+            </div>
+          )}
           <div className={`flex flex-col justify-center items-center w-full px-4`}>
             <div className="w-full bg-black p-4 rounded-lg shadow-lg bg-opacity-75">
               <div className="flex flex-row flex-wrap" ref={playlistRef}>
@@ -461,12 +460,12 @@ const Collage = () => {
       {/* BELOW IS USED FOR IMAGE DOWNLOAD */}
 
       <div
-        className={`absolute top-0 left-0 right-0 mx-auto z-80 h-screen flex flex-col items-center`}
+        className={`absolute top-0 left-0 right-0 mx-auto z-80 h-[calc(100dvh)] sm:h-screen flex flex-col items-center`}
       >
         <div className="flex w-full sm:w-[576px] h-full justify-center items-center flex-col">
           <div
             ref={artRef}
-            className={`aspect-[9/16] flex flex-col justify-center items-center w-full px-4 bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
+            className={` aspect-[9/16] flex flex-col justify-center items-center w-full px-4 bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
             style={{
               background:
                 currentColor === "rainbow"

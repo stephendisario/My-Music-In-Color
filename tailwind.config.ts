@@ -8,6 +8,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      boxShadow: {
+        'white-glow': '0 0 3px 3px rgba(255, 255, 255, 0.4)',
+      },
       screens: {
         'h-md': { 'raw': '(min-height: 100px)' },
         'h-lg': { 'raw': '(min-height: 825px)' },
