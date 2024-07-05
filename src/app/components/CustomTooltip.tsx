@@ -15,6 +15,10 @@ const CustomTooltip = ({
   children: React.ReactElement;
 }) => {
   const { isMobile } = useMyContext();
+
+  const [open, setOpen] = useState<boolean>(false)
+  const [isMove, setIsMove] = useState<boolean>(false)
+
   const textColor = track?.hsl?.[2] && track?.hsl?.[2] > 50 ? "black" : "white";
   const spotifyURI = track.uri;
   const webURL = track?.external_urls?.spotify;
@@ -26,8 +30,32 @@ const CustomTooltip = ({
     else window.open(webURL, "_blank", "noopener,noreferrer");
   };
 
+  const handleClose = (e: any) => {
+    setOpen(false)
+  }
+
+  const handleTouchEnd = () => {
+    if(open) {
+      setOpen(false)
+      return
+    }
+    if(!isMove) setOpen(true)
+    setIsMove(false)
+  }
+
+  const handleTouchMove = () => {
+    setIsMove(true)
+  }
+
   return (
     <Tooltip
+
+      
+      open={isMobile ? open : undefined}
+      onClose={isMobile ? handleClose : undefined}
+      onTouchEndCapture={isMobile ? handleTouchEnd : undefined}
+      onTouchMoveCapture={isMobile ? handleTouchMove : undefined}
+
       enterTouchDelay={0}
       leaveTouchDelay={4000}
       PopperProps={{ disablePortal: true }}

@@ -5,7 +5,7 @@ import Image from "next/image";
 import { shuffle } from "../lib/helper";
 import CustomTooltip from "../components/CustomTooltip";
 import { addImageToPlaylist, addTracksToPlaylist, createPlaylist } from "../api/spotify";
-import { Alert, Snackbar, Tooltip } from "@mui/material";
+import { Alert, Snackbar } from "@mui/material";
 import { toBlob, toJpeg } from "html-to-image";
 import SpotifyLogo from "./SpotifyLogo";
 import IconButton from "@mui/material/IconButton";
@@ -15,6 +15,12 @@ import { CirclePicker } from "react-color";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPalette, faShuffle, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { collageConfig, gradients, snapPoints } from "../lib/constants";
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+
+
+
 
 const Collage = () => {
   const { collages, setCollages, id, isMobile, collageParameters } = useMyContext();
@@ -23,6 +29,8 @@ const Collage = () => {
 
   const [shuffled, setShuffled] = useState<boolean>(false);
   const [showColorTooltip, setShowColorTooltip] = useState<boolean>(false);
+  const [showColorPalette, setShowColorPalette] = useState<boolean>(false);
+
 
   const [isCreatePlaylistLoading, setIsCreatePlaylistLoading] = useState<boolean>(false);
   const [isDownloadLoading, setIsDownloadLoading] = useState<boolean>(false);
@@ -212,7 +220,7 @@ const Collage = () => {
   };
 
   const header = (tracks: ColorTrack[]) => (
-    <div className="flex flex-row w-full sm:h-md:w-[422px] sm:h-lg:w-[548px] justify-center items-center gap-2 relative mt-2 px-4">
+    <div className="flex flex-row w-full grow sm:h-md:w-[422px] sm:h-lg:w-[548px] justify-center items-center gap-2 relative mt-2 px-4">
       <div
         className="absolute top-0 left-0 flex flex-col h-10"
         style={{ padding: isMobile ? "inherit" : "" }}
@@ -233,13 +241,13 @@ const Collage = () => {
             </IconButton>
           </div>
         </div>
-        {shuffled && (
+        {/* {shuffled && (
           <p
             className={`${currentColor === "white" ? "text-black" : "text-white"} pl-1 mt-1 text-lg`}
           >
             {currentColor !== "rainbow" ? collages[currentColor].length : total} tracks
           </p>
-        )}
+        )} */}
       </div>
       <div className="flex flex-col">
         <div className="flex flex-row">
@@ -286,7 +294,7 @@ const Collage = () => {
       </div>
       <div
         className=" absolute top-0 right-0 flex flex-row items-start"
-        style={{ padding: isMobile ? "inherit" : "" }}
+        style={{ paddingRight: isMobile ? "inherit" : "" }}
       >
         <Tooltip
           open={showColorTooltip}
@@ -298,37 +306,49 @@ const Collage = () => {
             ) {
             } else setShowColorTooltip(false);
           }}
-          onTouchCancel={() => setShowColorTooltip(false)}
           disableHoverListener
-          arrow
           slotProps={{
             tooltip: {
               sx: {
-                maxWidth: isMobile ? "100vw" : "42px",
-                marginLeft: "5px",
-                bgcolor: "rgba(0,0,0,0.75)",
-                "& .MuiTooltip-arrow": {
-                  color: "rgba(0,0,0,0.75)",
-                },
+
+                paddingLeft: 0,
+                paddingRight: 0,
+                maxWidth: isMobile ? "300px" : "42px",
+                bgcolor: "rgba(0,0,0,0)",
+
               },
             },
             popper: {
-              modifiers: [
-                {
-                  name: "offset",
-                  options: {
-                    offset: [0, isMobile ? 7 : 0],
+              sx: {
+                [`&.${tooltipClasses.popper}[data-popper-placement*="left"] .${tooltipClasses.tooltip}`]:
+                  {
+                    marginRight: '0px',
                   },
-                },
-              ],
-            },
+              },
+            }
           }}
           enterTouchDelay={0}
-          leaveTouchDelay={4000}
-          placement={isMobile ? "bottom-end" : "right-start"}
+          leaveTouchDelay={20000}
+          placement={isMobile ? "left" : "right-start"}
           title={
-            <div className={`flex ${isMobile ? "flex-row" : "flex-col"}`}>
-              <CirclePicker
+            <div className={`flex gap-1 ${isMobile ? "flex-row" : "flex-col"}`}>
+
+            {(['rainbow'].concat(Object.keys(collages).filter(c => c !== 'rainbow')) as (Colors | 'rainbow')[] ).map(color => {
+              if(!color.includes("Displayed")) return (
+                <div onClick={() => {
+                  if (currentColor !== color) {
+                    handleResetCollage();
+                    setCurrentColor(color)
+                  }
+                  setShowColorTooltip(false)
+                }} style={{background: color === "rainbow"
+                ? "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)"
+                : "",}}
+                className={`h-7 w-7 ${color === currentColor && 'shadow-white-glow'} rounded bg-gradient-to-br ${gradients[color] !== "rainbow" && gradients[color]}`}></div>
+
+              )
+            })}
+              {/* <CirclePicker
                 color={"red"}
                 onChange={(color, e) => {
                   const newColor = snapPoints.find((c) => c.hex === color.hex)?.color as
@@ -341,11 +361,11 @@ const Collage = () => {
                 }}
                 colors={["red", "orange", "yellow", "green", "blue", "violet", "black", "white"]}
                 width="100%"
-                circleSize={26}
+                circleSize={15}
               />
               <button
                 title="rainbow"
-                className={` rounded-full self-center w-[26px] h-[26px] ml-[14px] sm:mt-[14px] sm:ml-0 transition-transform transform hover:scale-[1.2] ${currentColor === "rainbow" && "shadow-[0_0_2px_2px_rgba(255,255,255,0.4)]"}`}
+                className={` rounded-full self-center w-[15px] h-[15px] ml-[14px] sm:mt-[14px] sm:ml-0 transition-transform transform hover:scale-[1.2] ${currentColor === "rainbow" && "shadow-[0_0_2px_2px_rgba(255,255,255,0.4)]"}`}
                 style={{
                   background:
                     "linear-gradient(45deg, rgba(255,0,0,1) 10%, rgba(255,165,0,1) 30%, rgba(255,255,0,1) 50%, rgba(0,128,0,1) 60%, rgba(0,0,255,1) 70%, rgba(75,0,130,1) 80%, rgba(238,130,238,1) 100%)",
@@ -356,7 +376,7 @@ const Collage = () => {
                   handleResetCollage();
                   setCurrentColor("rainbow");
                 }}
-              />
+              /> */}
             </div>
           }
         >
@@ -392,7 +412,7 @@ const Collage = () => {
   return (
     <div className="relative">
       <div
-        className={`relative h-[calc(100dvh)] sm:h-screen flex flex-row justify-center items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]} z-30`}
+        className={`relative h-[calc(100dvh)] sm:h-screen flex flex-col justify-center items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]} z-30`}
         style={{
           background:
             currentColor === "rainbow"
@@ -411,14 +431,40 @@ const Collage = () => {
             Playlist created successfully
           </Alert>
         </Snackbar>
-        <div className="flex w-full mb-7 sm:mb-0 sm:h-lg:w-[576px] sm:h-md:w-[450px] h-full justify-center relative items-center flex-col sm:overflow-y-auto">
-          <div className={`text-4xl  w-full px-4 mb-1`}>
-            <p
-              className={`${currentColor === "white" ? "text-black" : "text-white"} flex items-start`}
-            >
-              mymusicincolor
-            </p>
-          </div>
+        {/* <Dialog
+        open={showColorPalette}
+        onClose={() => setShowColorPalette(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        fullWidth
+        >
+          <DialogContent sx={{padding: '0px'}}>
+            <div className="bg-black rounded p-4">
+            {(Object.keys(collages) as (Colors | 'rainbow')[] ).map(color => {
+              if(!color.includes("Displayed")) return (
+                <div style={{background: color === "rainbow"
+                ? "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)"
+                : "",}}
+                className={`h-10 bg-gradient-to-r ${gradients[color] !== "rainbow" && gradients[color]}`}></div>
+
+              )
+            })}
+            </div>
+
+          </DialogContent>
+        </Dialog> */}
+        <div className="flex w-full sm:h-lg:w-[576px] sm:h-md:w-[450px] h-full justify-center relative items-center flex-col sm:overflow-y-auto">
+          <div className="flex grow"></div>
+
+          {!isMobile && 
+            <div className={`text-4xl  w-full px-4 mb-1`}>
+              <p
+                className={`${currentColor === "white" ? "text-black" : "text-white"} flex items-start`}
+              >
+                mymusicincolor
+              </p>
+            </div>
+          }
           <div className={`flex flex-col justify-center items-center w-full px-4`}>
             <div className="w-full bg-black p-4 rounded-lg shadow-lg bg-opacity-75">
               <div className="flex flex-row flex-wrap" ref={playlistRef}>
