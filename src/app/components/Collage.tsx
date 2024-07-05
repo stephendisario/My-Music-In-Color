@@ -406,28 +406,6 @@ const Collage = () => {
             Playlist created successfully
           </Alert>
         </Snackbar>
-        {/* <Dialog
-        open={showColorPalette}
-        onClose={() => setShowColorPalette(false)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        fullWidth
-        >
-          <DialogContent sx={{padding: '0px'}}>
-            <div className="bg-black rounded p-4">
-            {(Object.keys(collages) as (Colors | 'rainbow')[] ).map(color => {
-              if(!color.includes("Displayed")) return (
-                <div style={{background: color === "rainbow"
-                ? "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)"
-                : "",}}
-                className={`h-10 bg-gradient-to-r ${gradients[color] !== "rainbow" && gradients[color]}`}></div>
-
-              )
-            })}
-            </div>
-
-          </DialogContent>
-        </Dialog> */}
         <div className="flex w-full sm:h-lg:w-[576px] sm:h-md:w-[450px] h-full justify-center relative items-center flex-col sm:overflow-y-auto">
           <div className="flex grow"></div>
 
@@ -487,7 +465,7 @@ const Collage = () => {
         <div className="flex w-full sm:w-[576px] h-full justify-center items-center flex-col">
           <div
             ref={artRef}
-            className={`${isShareLoading || isDownloadLoading && 'aspect-[9/16]'} flex flex-col justify-center items-center w-full px-4 bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
+            className={`${isShareLoading || isDownloadLoading ? 'aspect-[9/16]' : ''} flex flex-col justify-center items-center w-full px-4 bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
             style={{
               background:
                 currentColor === "rainbow"
