@@ -385,7 +385,7 @@ const Collage = () => {
   }, []);
 
   return (
-    <div className="relative">
+    <div className="relative overflow-y-hidden">
       <div
         className={`relative h-[calc(100dvh)] sm:h-screen flex flex-col justify-center items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]} z-30`}
         style={{
@@ -465,7 +465,7 @@ const Collage = () => {
         <div className="flex w-full sm:w-[576px] h-full justify-center items-center flex-col">
           <div
             ref={artRef}
-            className={` aspect-[9/16] flex flex-col justify-start items-center w-full px-4 bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
+            className={` aspect-[9/16] flex flex-col justify-center items-center w-full px-4 bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
             style={{
               background:
                 currentColor === "rainbow"
