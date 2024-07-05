@@ -245,7 +245,7 @@ const Collage = () => {
           </p>
         )} */}
       </div>
-      <div className="flex flex-col">
+      <div className="flex flex-col mt-4">
         <div className="flex flex-row">
           <div className="sm:hidden">
             <button
@@ -325,7 +325,7 @@ const Collage = () => {
           leaveTouchDelay={20000}
           placement={isMobile ? "left" : "right-start"}
           title={
-            <div className={`flex gap-1 ${isMobile ? "flex-row" : "flex-col"}`}>
+            <div className={`flex gap-1 hover:cursor-pointer ${isMobile ? "flex-row" : "flex-col"}`}>
               {(
                 ["rainbow"].concat(Object.keys(collages).filter((c) => c !== "rainbow")) as (
                   | Colors
@@ -334,7 +334,8 @@ const Collage = () => {
               ).map((color) => {
                 if (!color.includes("Displayed"))
                   return (
-                    <div
+                    <button
+                      title={color}
                       key={color}
                       onClick={() => {
                         if (currentColor !== color) {
@@ -349,8 +350,8 @@ const Collage = () => {
                             ? "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)"
                             : "",
                       }}
-                      className={`h-7 w-7 ${color === currentColor && "shadow-white-glow"} rounded bg-gradient-to-br ${gradients[color] !== "rainbow" && gradients[color]}`}
-                    ></div>
+                      className={`h-7 w-7  ${color === currentColor && "shadow-white-glow"} rounded bg-gradient-to-br ${gradients[color] !== "rainbow" && gradients[color]}`}
+                    ></button>
                   );
               })}
               {/* <CirclePicker
