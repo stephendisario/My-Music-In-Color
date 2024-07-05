@@ -217,7 +217,7 @@ const Collage = () => {
   };
 
   const header = (tracks: ColorTrack[]) => (
-    <div className="flex flex-col w-full grow sm:h-md:w-[422px] sm:h-lg:w-[548px] justify-center items-center gap-2 relative mt-2 px-4">
+    <div className="flex flex-col w-full grow sm:h-md:w-[422px] sm:h-lg:w-[548px] justify-center items-center gap-2 relative mt-0 px-4">
       <div
         className="absolute top-0 left-0 flex flex-col h-10"
         style={{ padding: isMobile ? "inherit" : "" }}
@@ -275,7 +275,7 @@ const Collage = () => {
         </div>
 
         <button
-          className={`${currentColor !== "white" ? "text-white border-white" : "text-black border-black"} mt-1 rounded-full text-lg text-nowrap hover:bg-[rgba(0,0,0,.1)] w-[145px]`}
+          className={`${currentColor !== "white" ? "text-white border-white" : "text-black border-black"} mt-0 rounded-full text-lg text-nowrap hover:bg-[rgba(0,0,0,.1)] w-[145px]`}
           onClick={() => {
             if (!isCreatePlaylistLoading) handleCreatePlaylist(tracks);
           }}
