@@ -481,13 +481,13 @@ const Collage = () => {
 
       {/* BELOW IS USED FOR IMAGE DOWNLOAD */}
 
-      {/* <div
+      <div
         className={`absolute top-0 left-0 right-0 mx-auto z-80 h-[calc(100dvh)] sm:h-screen flex flex-col items-center`}
       >
         <div className="flex w-full sm:w-[576px] h-full justify-center items-center flex-col">
           <div
             ref={artRef}
-            className={`aspect-[9/16] flex flex-col justify-center items-center w-full px-4 bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
+            className={`${isShareLoading || isDownloadLoading && 'aspect-[9/16]'} flex flex-col justify-center items-center w-full px-4 bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]}`}
             style={{
               background:
                 currentColor === "rainbow"
@@ -527,7 +527,7 @@ const Collage = () => {
             </div>
           </div>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };
