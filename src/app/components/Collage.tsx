@@ -18,6 +18,8 @@ import { collageConfig, gradients, snapPoints } from "../lib/constants";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
+import Fade from '@mui/material/Fade';
+
 
 const Collage = () => {
   const { collages, setCollages, id, isMobile, collageParameters } = useMyContext();
@@ -292,6 +294,8 @@ const Collage = () => {
         style={{ paddingRight: isMobile ? "inherit" : "" }}
       >
         <Tooltip
+          TransitionComponent={Fade}
+          TransitionProps={{ timeout: 400 }}
           open={showColorTooltip}
           onClose={(e: any) => {
             if (
@@ -326,7 +330,7 @@ const Collage = () => {
           leaveTouchDelay={20000}
           placement={isMobile ? "top" : "right-start"}
           title={
-            <div className={`flex gap-1 w-1/2 ml-[50%] pr-8 justify-end items-center hover:cursor-pointer ${isMobile ? "flex-row flex-wrap" : "flex-col"}`}>
+            <div className={`flex gap-2 w-[50%] ml-[50%] px-8 justify-end items-center hover:cursor-pointer ${isMobile ? "flex-row flex-wrap" : "flex-col"}`}>
               {(['red', 'orange', 'yellow', 'green', 'blue', 'violet', 'black', 'white', 'rainbow'] as (Colors | 'rainbow')[]).map((color) => {
                 if (!color.includes("Displayed"))
                   return (
@@ -346,7 +350,7 @@ const Collage = () => {
                             ? "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)"
                             : "",
                       }}
-                      className={`h-7 w-12  ${color === currentColor && "shadow-white-glow"} rounded bg-gradient-to-br ${gradients[color] !== "rainbow" && gradients[color]}`}
+                      className={`h-7 w-7  ${color === currentColor && "shadow-white-glow"} rounded-full bg-gradient-to-br ${gradients[color] !== "rainbow" && gradients[color]}`}
                     ></button>
                   );
               })}
