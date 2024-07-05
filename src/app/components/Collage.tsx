@@ -319,9 +319,9 @@ const Collage = () => {
             },
             popper: {
               sx: {
-                [`&.${tooltipClasses.popper}[data-popper-placement*="bottom"] .${tooltipClasses.tooltip}`]:
+                [`&.${tooltipClasses.popper}[data-popper-placement*="top"] .${tooltipClasses.tooltip}`]:
                   {
-                    marginTop: "0px",
+                    marginBottom: "14px",
                   },
               },
             },
@@ -350,7 +350,7 @@ const Collage = () => {
                             ? "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)"
                             : "",
                       }}
-                      className={`h-7 w-7  ${color === currentColor && "shadow-white-glow"} rounded-full bg-gradient-to-br ${gradients[color] !== "rainbow" && gradients[color]}`}
+                      className={`h-8 w-8  ${color === currentColor && "shadow-white-glow"} rounded-full bg-gradient-to-br ${gradients[color] !== "rainbow" && gradients[color]}`}
                     ></button>
                   );
               })}
