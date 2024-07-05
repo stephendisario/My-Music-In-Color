@@ -308,6 +308,7 @@ const Collage = () => {
                 paddingTop: 0,
                 paddingLeft: 0,
                 paddingRight: 0,
+                paddingBottom: '0',
                 maxWidth: isMobile ? "100%" : "42px",
                 bgcolor: "rgba(0,0,0,0)",
               },
@@ -323,15 +324,10 @@ const Collage = () => {
           }}
           enterTouchDelay={0}
           leaveTouchDelay={20000}
-          placement={isMobile ? "bottom" : "right-start"}
+          placement={isMobile ? "top" : "right-start"}
           title={
-            <div className={`flex w-screen gap-1 justify-center hover:cursor-pointer ${isMobile ? "flex-row" : "flex-col"}`}>
-              {(
-                ["rainbow"].concat(Object.keys(collages).filter((c) => c !== "rainbow")) as (
-                  | Colors
-                  | "rainbow"
-                )[]
-              ).map((color) => {
+            <div className={`flex gap-1 w-1/2 ml-[50%] pr-8 justify-end items-center hover:cursor-pointer ${isMobile ? "flex-row flex-wrap" : "flex-col"}`}>
+              {(['rainbow', 'yellow', 'violet', 'red', 'green', 'black', 'orange', 'blue', 'white'] as (Colors | 'rainbow')[]).map((color) => {
                 if (!color.includes("Displayed"))
                   return (
                     <button
@@ -350,7 +346,7 @@ const Collage = () => {
                             ? "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)"
                             : "",
                       }}
-                      className={`h-7 w-7  ${color === currentColor && "shadow-white-glow"} rounded bg-gradient-to-br ${gradients[color] !== "rainbow" && gradients[color]}`}
+                      className={`h-7 w-12  ${color === currentColor && "shadow-white-glow"} rounded bg-gradient-to-br ${gradients[color] !== "rainbow" && gradients[color]}`}
                     ></button>
                   );
               })}

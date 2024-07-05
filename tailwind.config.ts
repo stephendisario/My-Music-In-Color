@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       boxShadow: {
-        'white-glow': '0 0 5px 5px rgba(255, 255, 255, 0.4)',
+        'white-glow': '0 0 3px 3px rgba(255, 255, 255, 0.4)',
       },
       screens: {
         'h-md': { 'raw': '(min-height: 100px)' },
