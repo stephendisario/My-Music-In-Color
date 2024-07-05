@@ -216,7 +216,7 @@ const Collage = () => {
   };
 
   const header = (tracks: ColorTrack[]) => (
-    <div className="flex flex-row w-full grow sm:h-md:w-[422px] sm:h-lg:w-[548px] justify-center items-center gap-2 relative mt-2 px-4">
+    <div className="flex flex-col w-full grow sm:h-md:w-[422px] sm:h-lg:w-[548px] justify-center items-center gap-2 relative mt-2 px-4">
       <div
         className="absolute top-0 left-0 flex flex-col h-10"
         style={{ padding: isMobile ? "inherit" : "" }}
@@ -245,8 +245,7 @@ const Collage = () => {
           </p>
         )} */}
       </div>
-      <div className="flex flex-col mt-4">
-        <div className="flex flex-row">
+      <div className="flex flex-col grow sm:justify-center justify-end">
           <div className="sm:hidden">
             <button
               className={`${currentColor !== "white" ? "border-white bg-white text-black mix-blend-lighten hover:bg-[rgba(255,255,255,.8)]" : "border-black bg-black text-white mix-blend-darken hover:bg-[rgba(0,0,0,.8)]"} h-10 border-2 font-bold rounded-full text-lg text-nowrap h-full self-center	hover:bg-[rgba(0,0,0,.1)] w-[145px]`}
@@ -273,10 +272,9 @@ const Collage = () => {
               )}
             </button>
           </div>
-        </div>
 
         <button
-          className={`${currentColor !== "white" ? "text-white border-white" : "text-black border-black"} mt-1 rounded-full text-lg text-nowrap h-full hover:bg-[rgba(0,0,0,.1)] w-[145px]`}
+          className={`${currentColor !== "white" ? "text-white border-white" : "text-black border-black"} mt-1 rounded-full text-lg text-nowrap hover:bg-[rgba(0,0,0,.1)] w-[145px]`}
           onClick={() => {
             if (!isCreatePlaylistLoading) handleCreatePlaylist(tracks);
           }}
