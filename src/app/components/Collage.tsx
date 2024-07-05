@@ -303,17 +303,12 @@ const Collage = () => {
               e?.relatedTarget?.title &&
               snapPoints.some((s) => s.color === e.relatedTarget.title)
             ) {
-            } else setShowColorTooltip(true);
+            } else setShowColorTooltip(false);
           }}
           disableHoverListener
           slotProps={{
             tooltip: {
               sx: {
-                paddingTop: 0,
-                paddingLeft: 0,
-                paddingRight: 0,
-                paddingBottom: '0',
-                maxWidth: isMobile ? "100%" : "42px",
                 bgcolor: "rgba(0,0,0,0)",
               },
             },
@@ -321,68 +316,37 @@ const Collage = () => {
               sx: {
                 [`&.${tooltipClasses.popper}[data-popper-placement*="top"] .${tooltipClasses.tooltip}`]:
                   {
-                    marginBottom: "14px",
+                    marginBottom: isMobile ? '4px' : '8px' ,
                   },
               },
             },
           }}
           enterTouchDelay={0}
           leaveTouchDelay={20000}
-          placement={isMobile ? "top" : "right-start"}
+          placement={'top-end'}
           title={
-            <div className={`flex gap-2 w-[50%] ml-[50%] px-8 justify-end items-center hover:cursor-pointer ${isMobile ? "flex-row flex-wrap" : "flex-col"}`}>
-              {(['red', 'orange', 'yellow', 'green', 'blue', 'violet', 'black', 'white', 'rainbow'] as (Colors | 'rainbow')[]).map((color) => {
-                if (!color.includes("Displayed"))
-                  return (
-                    <button
-                      title={color}
-                      key={color}
-                      onClick={() => {
-                        if (currentColor !== color) {
-                          handleResetCollage();
-                          setCurrentColor(color);
-                        }
-                        setShowColorTooltip(false);
-                      }}
-                      style={{
-                        background:
-                          color === "rainbow"
-                            ? "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)"
-                            : "",
-                      }}
-                      className={`h-8 w-8  ${color === currentColor && "shadow-white-glow"} rounded-full bg-gradient-to-br ${gradients[color] !== "rainbow" && gradients[color]}`}
-                    ></button>
-                  );
-              })}
-              {/* <CirclePicker
-                color={"red"}
-                onChange={(color, e) => {
-                  const newColor = snapPoints.find((c) => c.hex === color.hex)?.color as
-                    | Colors
-                    | "rainbow";
-                  setTimeout(() => setShowColorTooltip(false), 0);
-                  if (currentColor === newColor) return;
-                  handleResetCollage();
-                  setCurrentColor(newColor);
-                }}
-                colors={["red", "orange", "yellow", "green", "blue", "violet", "black", "white"]}
-                width="100%"
-                circleSize={15}
-              />
-              <button
-                title="rainbow"
-                className={` rounded-full self-center w-[15px] h-[15px] ml-[14px] sm:mt-[14px] sm:ml-0 transition-transform transform hover:scale-[1.2] ${currentColor === "rainbow" && "shadow-[0_0_2px_2px_rgba(255,255,255,0.4)]"}`}
-                style={{
-                  background:
-                    "linear-gradient(45deg, rgba(255,0,0,1) 10%, rgba(255,165,0,1) 30%, rgba(255,255,0,1) 50%, rgba(0,128,0,1) 60%, rgba(0,0,255,1) 70%, rgba(75,0,130,1) 80%, rgba(238,130,238,1) 100%)",
-                }}
-                onClick={() => {
-                  setTimeout(() => setShowColorTooltip(false), 0);
-                  if (currentColor === "rainbow") return;
-                  handleResetCollage();
-                  setCurrentColor("rainbow");
-                }}
-              /> */}
+            <div className={`flex gap-2 ml-[50%] w-1/2 sm:pr-2 justify-end items-center hover:cursor-pointer flex-row flex-wrap`}>
+              {(Object.keys(collages).filter(c => !c.includes("Displayed")) as (Colors | 'rainbow')[]).map((color) => (
+                <button
+                  title={color}
+                  key={color}
+                  onClick={() => {
+                    if (currentColor !== color) {
+                      handleResetCollage();
+                      setCurrentColor(color);
+                    }
+                    setShowColorTooltip(false);
+                  }}
+                  style={{
+                    background:
+                      color === "rainbow"
+                        ? "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)"
+                        : "",
+                  }}
+                  className={`h-8 w-8  ${color === currentColor && "shadow-white-glow"} rounded-full bg-gradient-to-br ${gradients[color] !== "rainbow" && gradients[color]}`}
+                ></button>
+                  )
+              )}
             </div>
           }
         >
@@ -513,7 +477,7 @@ const Collage = () => {
       {/* BELOW IS USED FOR IMAGE DOWNLOAD */}
 
       <div
-        className={`absolute top-0 left-0 right-0 mx-auto z-80 h-screen flex flex-col items-center`}
+        className={`absolute top-0 left-0 right-0 mx-auto z-80 h-[calc(100dvh)] sm:h-screen flex flex-col items-center`}
       >
         <div className="flex w-full sm:w-[576px] h-full justify-center items-center flex-col">
           <div
