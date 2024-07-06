@@ -1,11 +1,11 @@
 "use client";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Outfit } from "next/font/google";
 import "./globals.css";
 import Head from "next/head";
 import { MyContextProvider } from "./components/ColorContext";
 
-const inter = Inter({ subsets: ["latin"] });
+const outfit = Outfit({ subsets: ["latin"], variable: '--font-outfit' });
 
 // export const metadata: Metadata = {
 //   title: "My Music In Color",
@@ -24,7 +24,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#000000" />
         <title>My Music In Color</title>
       </head>
-      <body>
+      <body className={`${outfit.variable} font-sans`}>
         <MyContextProvider>{children}</MyContextProvider>
       </body>
     </html>

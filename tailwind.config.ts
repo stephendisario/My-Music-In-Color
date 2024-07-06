@@ -16,7 +16,7 @@ const config: Config = {
         'h-lg': { 'raw': '(min-height: 825px)' },
       },
       fontFamily: {
-        outfit: ['Outfit', 'sans-serif'],
+        sans: ['var(--font-outfit)'],
       },
       padding: {
         'safe-t': 'env(safe-area-inset-top)',

@@ -32,17 +32,17 @@ const NavBar = ({ showLogout, color = "white" }: { showLogout: boolean; color?: 
         }}
       >
         <Link href={"/dashboard"}>
-          <MenuItem onClick={handleClose} className="font-outfit">
+          <MenuItem onClick={handleClose} className="font-sans">
             musaics
           </MenuItem>
         </Link>
         <Link href={"/about"}>
-          <MenuItem onClick={handleClose} className="font-outfit">
+          <MenuItem onClick={handleClose} className="font-sans">
             about
           </MenuItem>
         </Link>
         <Link href={"/privacy-policy"}>
-          <MenuItem onClick={handleClose} className="font-outfit">
+          <MenuItem onClick={handleClose} className="font-sans">
             privacy policy
           </MenuItem>
         </Link>
@@ -51,7 +51,7 @@ const NavBar = ({ showLogout, color = "white" }: { showLogout: boolean; color?: 
             logout();
             handleClose();
           }}
-          className="font-outfit"
+          className="font-sans"
         >
           logout
         </MenuItem>
