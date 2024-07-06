@@ -18,7 +18,6 @@ import Fade from "@mui/material/Fade";
 import Alert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 
-
 const Collage = () => {
   const { collages, setCollages, id, isMobile, collageParameters, setLoading } = useMyContext();
   const [currentColor, setCurrentColor] = useState<Colors | "rainbow">("rainbow");
@@ -27,6 +26,9 @@ const Collage = () => {
   const [shuffled, setShuffled] = useState<boolean>(false);
   const [showColorTooltip, setShowColorTooltip] = useState<boolean>(false);
   const [showColorPalette, setShowColorPalette] = useState<boolean>(false);
+
+  const [alertMessage, setAlertMessage] = useState<string>("playlist created successfully");
+  const [alertSeverity, setAlertSeverity] = useState<"success" | "warning">("success");
 
   const [isCreatePlaylistLoading, setIsCreatePlaylistLoading] = useState<boolean>(false);
   const [isDownloadLoading, setIsDownloadLoading] = useState<boolean>(false);
@@ -91,6 +93,8 @@ const Collage = () => {
   };
 
   const handleCreatePlaylist = async (tracks: ColorTrack[]) => {
+    setAlertMessage("playlist created successfully");
+    setAlertSeverity("success");
     setIsCreatePlaylistLoading(true);
     const playlistId = await createPlaylist(currentColor, "my musaic", id);
     await addTracksToPlaylist(
@@ -100,7 +104,12 @@ const Collage = () => {
     let dataUrl: string = (await handleDownload(playlistRef, false, false)) as string;
     dataUrl = dataUrl?.split(",")[1];
 
-    await addImageToPlaylist(playlistId, dataUrl!);
+    const response = await addImageToPlaylist(playlistId, dataUrl!);
+
+    if (response !== 202) {
+      setAlertMessage("playlist image failed to save, please try again");
+      setAlertSeverity("warning");
+    }
 
     setIsCreatePlaylistLoading(false);
     setOpenSnackbar(true);
@@ -241,13 +250,6 @@ const Collage = () => {
             </IconButton>
           </div>
         </div>
-        {/* {shuffled && (
-          <p
-            className={`${currentColor === "white" ? "text-black" : "text-white"} pl-1 mt-1 text-lg`}
-          >
-            {currentColor !== "rainbow" ? collages[currentColor].length : total} tracks
-          </p>
-        )} */}
       </div>
       <div className="flex flex-col grow justify-center">
         <div className="sm:hidden">
@@ -255,7 +257,7 @@ const Collage = () => {
             className={`${currentColor !== "white" ? `border-white bg-white text-black mix-blend-lighten hover:bg-[rgba(255,255,255,.8)] ${isShareLoading && "bg-[rgba(255,255,255,.8)]"}` : `border-black bg-black text-white mix-blend-darken hover:bg-[rgba(0,0,0,.8)] ${isShareLoading && "bg-[rgba(0,0,0,.8)]"}`} h-10 border-2 font-bold rounded-full text-lg text-nowrap h-full self-center w-[145px]`}
             onClick={() => {
               setIsShareLoading(true);
-              shareImage();
+              if (!isShareLoading) shareImage();
             }}
           >
             {isShareLoading ? <CircularProgress sx={{ color: "white" }} size={15} /> : "share"}
@@ -266,7 +268,7 @@ const Collage = () => {
             className={`${currentColor !== "white" ? `border-white bg-white text-black mix-blend-lighten hover:bg-[rgba(255,255,255,.8)] ${isDownloadLoading && "bg-[rgba(255,255,255,.8)]"}` : `border-black bg-black text-white mix-blend-darken hover:bg-[rgba(0,0,0,.8)] ${isDownloadLoading && "bg-[rgba(0,0,0,.8)]"}`} h-10 border-2  font-bold rounded-full text-lg text-nowrap h-full self-center w-[145px]`}
             onClick={() => {
               setIsDownloadLoading(true);
-              handleDownload(artRef, true, false);
+              if (!isDownloadLoading) handleDownload(artRef, true, false);
             }}
           >
             {isDownloadLoading ? (
@@ -401,12 +403,17 @@ const Collage = () => {
         <NavBar showLogout={true} color={currentColor === "white" ? "black" : "white"} />
         <Snackbar
           open={openSnackbar}
-          autoHideDuration={3000}
+          autoHideDuration={5000}
           onClose={handleSnackbarClose}
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
-          <Alert elevation={6} variant="filled" onClose={handleSnackbarClose} severity="success">
-            Playlist created successfully
+          <Alert
+            elevation={6}
+            variant="filled"
+            onClose={handleSnackbarClose}
+            severity={alertSeverity}
+          >
+            {alertMessage}
           </Alert>
         </Snackbar>
         <div className="flex w-full sm:h-lg:w-[576px] sm:h-md:w-[450px] h-full justify-center relative items-center flex-col sm:overflow-y-auto">
