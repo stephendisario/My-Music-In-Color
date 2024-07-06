@@ -5,8 +5,6 @@ import { useMyContext } from "../components/ColorContext";
 import MovingText from "../components/MovingText";
 import LinearProgress, { linearProgressClasses } from "@mui/material/LinearProgress";
 
-export const fetchCache = "force-cache";
-
 const Dashboard = () => {
   const { loading, loadingColor, loadingTracks, setLoggedIn, totalTracks } = useMyContext();
   const [progress, setProgress] = useState<number>(0);
@@ -45,7 +43,9 @@ const Dashboard = () => {
   }, [totalTracks, loadingTracks, loadingColor]);
 
   const loadingPage = () => (
-    <div className={`relative h-[calc(100dvh)] sm:h-screen flex flex-col items-center rainbow-background`}>
+    <div
+      className={`relative h-[calc(100dvh)] sm:h-screen flex flex-col items-center rainbow-background`}
+    >
       <MovingText />
       <div className="sm:w-2/3 w-[80%]  h-full z-30 flex flex-col justify-center">
         <LinearProgress

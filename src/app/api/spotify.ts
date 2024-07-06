@@ -5,7 +5,7 @@ import { verifySession } from "../lib/dal";
 export const customFetch = async (url: string, options = {}) => {
   const fetchOptions: RequestInit = {
     ...options,
-    cache: "force-cache",
+    next: { revalidate: 86400 },
   };
 
   return fetch(url, fetchOptions);
@@ -15,7 +15,7 @@ export const createPlaylist = async (color: string, term: string, user_id: strin
   const session = await verifySession();
   const accessToken = session.payload;
   try {
-    const response = await customFetch(`${SPOTIFY_API_BASE_URL}/v1/users/${user_id}/playlists`, {
+    const response = await fetch(`${SPOTIFY_API_BASE_URL}/v1/users/${user_id}/playlists`, {
       method: "POST",
       headers: {
         Authorization: "Bearer " + accessToken,
@@ -205,8 +205,6 @@ export const fetchWithOffset = async <T>(
   const allTopTracks = responses.reduce((accumulator, currentResponse) => {
     return [...accumulator, ...currentResponse.items];
   }, []);
-
-  if (!iterations) console.log(allTopTracks, allTopTracks.length);
 
   return { tracks: allTopTracks, total: cap } as any;
 };

@@ -5,20 +5,19 @@ import Image from "next/image";
 import { shuffle } from "../lib/helper";
 import CustomTooltip from "../components/CustomTooltip";
 import { addImageToPlaylist, addTracksToPlaylist, createPlaylist } from "../api/spotify";
-import { Alert, Snackbar } from "@mui/material";
 import { toBlob, toJpeg } from "html-to-image";
 import SpotifyLogo from "./SpotifyLogo";
 import IconButton from "@mui/material/IconButton";
 import NavBar from "./NavBar";
 import CircularProgress from "@mui/material/CircularProgress";
-import { CirclePicker } from "react-color";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPalette, faShuffle, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { collageConfig, gradients, snapPoints } from "../lib/constants";
-import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import Fade from "@mui/material/Fade";
+import Alert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
+
 
 const Collage = () => {
   const { collages, setCollages, id, isMobile, collageParameters, setLoading } = useMyContext();
