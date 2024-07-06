@@ -23,7 +23,7 @@ export const createPlaylist = async (color: string, term: string, user_id: strin
       },
       body: JSON.stringify({
         name: `${term} - ${color}`,
-        description: "Playlist created via mymusicincolor.com",
+        description: "playlist created via mymusicincolor.com",
       }),
     });
 
@@ -71,19 +71,36 @@ export const addImageToPlaylist = async (playlistId: string, imgUrl: string) => 
   const session = await verifySession();
   const accessToken = session.payload;
 
-  try {
-    const response = await fetch(`${SPOTIFY_API_BASE_URL}/v1/playlists/${playlistId}/images`, {
-      method: "PUT",
-      headers: {
-        Authorization: "Bearer " + accessToken,
-        "Content-Type": "image/jpeg",
-      },
-      body: imgUrl,
-    });
-    console.log(response);
-  } catch (error: any) {
-    console.error("Error adding image to playlist:", error.message);
+  const retries = 3;
+  let response;
+
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      response = await fetch(`${SPOTIFY_API_BASE_URL}/v1/playlists/${playlistId}/images`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "image/jpeg",
+        },
+        body: imgUrl,
+      });
+
+      if (response.ok) {
+        console.log("Playlist cover image updated successfully");
+        return response.status;
+      } else {
+        console.error(`Attempt ${attempt} failed:`, response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error(`Attempt ${attempt} encountered an error:`, error);
+    }
+
+    // Exponential backoff
+    await new Promise((resolve) => setTimeout(resolve, 2 ** attempt * 1000));
   }
+
+  console.error("Failed to update playlist cover image after multiple attempts");
+  return response ? response?.status : 504;
 };
 
 export const getUserProfile = async () => {
