@@ -7,6 +7,9 @@ import { MyContextProvider } from "./components/ColorContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
+export const revalidate = 86400
+export const fetchCache = "force-cache";
+
 // export const metadata: Metadata = {
 //   title: "My Music In Color",
 //   // description: "Visualize ",
