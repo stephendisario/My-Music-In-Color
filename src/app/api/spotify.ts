@@ -71,7 +71,7 @@ export const addImageToPlaylist = async (playlistId: string, imgUrl: string) => 
   const session = await verifySession();
   const accessToken = session.payload;
 
-  const retries = 3;
+  const retries = 2;
   let response;
 
   for (let attempt = 1; attempt <= retries; attempt++) {
