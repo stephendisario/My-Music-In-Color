@@ -253,7 +253,7 @@ const Collage = () => {
       <div className="flex flex-col grow justify-center">
         <div className="sm:hidden">
           <button
-            className={`${currentColor !== "white" ? "border-white bg-white text-black mix-blend-lighten hover:bg-[rgba(255,255,255,.8)]" : "border-black bg-black text-white mix-blend-darken hover:bg-[rgba(0,0,0,.8)]"} h-10 border-2 font-bold rounded-full text-lg text-nowrap h-full self-center	hover:bg-[rgba(0,0,0,.1)] w-[145px]`}
+            className={`${currentColor !== "white" ? `border-white bg-white text-black mix-blend-lighten hover:bg-[rgba(255,255,255,.8)] ${isShareLoading && "bg-[rgba(255,255,255,.8)]"}` : `border-black bg-black text-white mix-blend-darken hover:bg-[rgba(0,0,0,.8)] ${isShareLoading && "bg-[rgba(0,0,0,.8)]"}`} h-10 border-2 font-bold rounded-full text-lg text-nowrap h-full self-center w-[145px]`}
             onClick={() => {
               setIsShareLoading(true);
               shareImage();
@@ -264,7 +264,7 @@ const Collage = () => {
         </div>
         <div className="sm:block hidden">
           <button
-            className={`${currentColor !== "white" ? "border-white bg-white text-black mix-blend-lighten hover:bg-[rgba(255,255,255,.8)]" : "border-black bg-black text-white mix-blend-darken hover:bg-[rgba(0,0,0,.8)]"} h-10 border-2  font-bold rounded-full text-lg text-nowrap h-full self-center w-[145px]`}
+            className={`${currentColor !== "white" ? `border-white bg-white text-black mix-blend-lighten hover:bg-[rgba(255,255,255,.8)] ${isDownloadLoading && "bg-[rgba(255,255,255,.8)]"}` : `border-black bg-black text-white mix-blend-darken hover:bg-[rgba(0,0,0,.8)] ${isDownloadLoading && "bg-[rgba(0,0,0,.8)]"}`} h-10 border-2  font-bold rounded-full text-lg text-nowrap h-full self-center w-[145px]`}
             onClick={() => {
               setIsDownloadLoading(true);
               handleDownload(artRef, true, false);
@@ -279,7 +279,7 @@ const Collage = () => {
         </div>
 
         <button
-          className={`${currentColor !== "white" ? "text-white border-white" : "text-black border-black"} mt-1 rounded-full text-lg text-nowrap hover:bg-[rgba(0,0,0,.1)] w-[145px]`}
+          className={`${currentColor !== "white" ? "text-white border-white" : "text-black border-black"} mt-1 rounded-full text-lg text-nowrap hover:bg-[rgba(0,0,0,.1)] ${isCreatePlaylistLoading && "bg-[rgba(0,0,0,.1)]"} w-[145px]`}
           onClick={() => {
             if (!isCreatePlaylistLoading) handleCreatePlaylist(tracks);
           }}

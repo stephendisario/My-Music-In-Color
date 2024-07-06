@@ -24,7 +24,11 @@ const Callback = () => {
     };
   }, [code, codeVerifier]);
 
-  return <div className="flex relative h-screen justify-center items-center">Loading...</div>;
+  return (
+    <div className="flex relative h-screen justify-center items-center rainbow-background">
+      Loading...
+    </div>
+  );
 };
 
 export default Callback;

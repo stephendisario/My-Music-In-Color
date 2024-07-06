@@ -5,7 +5,7 @@ import { useMyContext } from "../components/ColorContext";
 import MovingText from "../components/MovingText";
 import LinearProgress, { linearProgressClasses } from "@mui/material/LinearProgress";
 
-export const fetchCache = "no-store";
+export const fetchCache = "force-no-store";
 
 const Dashboard = () => {
   const { loading, loadingColor, loadingTracks, setLoggedIn, totalTracks } = useMyContext();
