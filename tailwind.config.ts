@@ -16,14 +16,7 @@ const config: Config = {
         'h-lg': { 'raw': '(min-height: 825px)' },
       },
       fontFamily: {
-        poppins: ['"Poppins"', 'sans-serif'],
-        nunito: ['Nunito', 'sans-serif'],
-        quicksand: ['Quicksand', 'sans-serif'],
-        cabin: ['Cabin', 'sans-serif'],
-        oxygen: ['Oxygen', 'sans-serif'],
-        ubuntu: ['Ubuntu', 'sans-serif'],
-        comfortaa: ['Comfortaa', 'sans-serif'],
-        roboto: ['"Libre Baskerville"', 'sans-serif'],
+        outfit: ['Outfit', 'sans-serif'],
       },
       padding: {
         'safe-t': 'env(safe-area-inset-top)',

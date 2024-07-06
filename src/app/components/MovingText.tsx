@@ -1,7 +1,7 @@
 import React from "react";
 import { useMyContext } from "./ColorContext";
 
-const MovingText = ({ isMusaic = false }: { isMusaic?: boolean }) => {
+const MovingText = () => {
   const { isMobile } = useMyContext();
   const text = "mymusicincolor";
   const repeatedText = Array(100)
