@@ -5,6 +5,8 @@ import { useMyContext } from "../components/ColorContext";
 import MovingText from "../components/MovingText";
 import LinearProgress, { linearProgressClasses } from "@mui/material/LinearProgress";
 
+export const maxDuration = 20;
+
 const Dashboard = () => {
   const { loading, loadingColor, loadingTracks, setLoggedIn, totalTracks } = useMyContext();
   const [progress, setProgress] = useState<number>(0);
