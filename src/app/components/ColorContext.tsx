@@ -168,13 +168,6 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }
     if (loggedIn) fetches();
   }, [loggedIn]);
 
-  useEffect(() => {
-    if (!loadingColor)
-      setTimeout(() => {
-        setLoading(false);
-      }, 1000);
-  }, [loadingColor]);
-
   return (
     <MyContext.Provider
       value={{

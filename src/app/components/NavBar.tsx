@@ -32,13 +32,13 @@ const NavBar = ({ showLogout, color = "white" }: { showLogout: boolean; color?: 
         }}
       >
         <Link href={"/dashboard"}>
-          <MenuItem onClick={handleClose}>Dashboard</MenuItem>
+          <MenuItem onClick={handleClose}>musaics</MenuItem>
         </Link>
         <Link href={"/about"}>
-          <MenuItem onClick={handleClose}>About</MenuItem>
+          <MenuItem onClick={handleClose}>about</MenuItem>
         </Link>
         <Link href={"/privacy-policy"}>
-          <MenuItem onClick={handleClose}>Privacy Policy</MenuItem>
+          <MenuItem onClick={handleClose}>privacy policy</MenuItem>
         </Link>
         <MenuItem
           onClick={() => {
@@ -46,7 +46,7 @@ const NavBar = ({ showLogout, color = "white" }: { showLogout: boolean; color?: 
             handleClose();
           }}
         >
-          Logout
+          logout
         </MenuItem>
       </Menu>
     </div>

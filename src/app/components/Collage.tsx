@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMyContext } from "../components/ColorContext";
 import Image from "next/image";
 import { shuffle } from "../lib/helper";
@@ -21,7 +21,7 @@ import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import Fade from "@mui/material/Fade";
 
 const Collage = () => {
-  const { collages, setCollages, id, isMobile, collageParameters } = useMyContext();
+  const { collages, setCollages, id, isMobile, collageParameters, setLoading } = useMyContext();
   const [currentColor, setCurrentColor] = useState<Colors | "rainbow">("rainbow");
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
@@ -35,6 +35,10 @@ const Collage = () => {
 
   const artRef = useRef<HTMLDivElement>(null);
   const playlistRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setLoading(false);
+  }, []);
 
   const total = useMemo(() => {
     return (Object.keys(collageConfig) as Colors[]).reduce(
