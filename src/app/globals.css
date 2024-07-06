@@ -99,13 +99,13 @@ body {
 }
 
 .mobile-move-text {
-  animation: moveRight1 45s linear infinite;
+  animation: moveRight1 110s linear infinite;
 }
 
 .mobile-move-text-2 {
-  animation: moveRight2 45s linear infinite;
+  animation: moveRight2 110s linear infinite;
 }
 
 .mobile-move-text-l {
-  animation: moveLeft1 45s linear infinite;
+  animation: moveLeft1 110s linear infinite;
 }
