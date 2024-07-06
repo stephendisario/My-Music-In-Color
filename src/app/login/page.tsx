@@ -23,7 +23,7 @@ const Login = () => {
       </div>
       <MovingText />
       <button
-        className="mt-[66%] sm:mt-[19%] opacity-80 text-white font-bold border-2 border-white rounded-full text-3xl text-nowrap self-center	hover:bg-[rgba(0,0,0,.1)] w-[150px] z-30"
+        className="opacity-80 text-white font-bold border-2 border-white rounded-full text-3xl text-nowrap self-center	hover:bg-[rgba(0,0,0,.1)] w-[150px] z-30"
         onClick={() => login(codeVerifier)}
       >
         log in

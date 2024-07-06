@@ -47,7 +47,7 @@ const Dashboard = () => {
   const loadingPage = () => (
     <div className={`relative h-screen flex flex-col items-center rainbow-background`}>
       <MovingText />
-      <div className="sm:w-2/3 w-[80%]  h-3/4 z-30 flex flex-col justify-end">
+      <div className="sm:w-2/3 w-[80%]  h-full z-30 flex flex-col justify-center">
         <LinearProgress
           variant="determinate"
           value={progress}
