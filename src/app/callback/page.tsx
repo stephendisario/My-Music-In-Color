@@ -25,7 +25,7 @@ const Callback = () => {
   }, [code, codeVerifier]);
 
   return (
-    <div className="flex relative h-screen justify-center items-center rainbow-background">
+    <div className="flex relative h-[calc(100dvh)] sm:h-screen justify-center items-center rainbow-background">
       Loading...
     </div>
   );
