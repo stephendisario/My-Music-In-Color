@@ -17,7 +17,7 @@ const Login = () => {
   }, [codeVerifier]);
 
   return (
-    <div className="flex relative h-screen justify-center items-center rainbow-background">
+    <div className="flex relative h-[calc(100dvh)] sm:h-screen justify-center items-center rainbow-background">
       <div className="absolute top-0 left-0 w-full h-full">
         <NavBar showLogout={false} />
       </div>
