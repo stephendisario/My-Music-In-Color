@@ -17,6 +17,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['var(--font-outfit)'],
+        serif: ['var(--font-lilita)']
       },
       padding: {
         'safe-t': 'env(safe-area-inset-top)',

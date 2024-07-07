@@ -1,11 +1,15 @@
 "use client";
 import type { Metadata } from "next";
-import { Outfit } from "next/font/google";
+import { Outfit, Lilita_One, Signika } from "next/font/google";
 import "./globals.css";
 import Head from "next/head";
 import { MyContextProvider } from "./components/ColorContext";
 
 const outfit = Outfit({ subsets: ["latin"], variable: '--font-outfit' });
+export const lilita_one = Lilita_One({ subsets: ["latin"], weight: "400" });
+export const signika = Signika({ subsets: ["latin"], weight: "400" });
+
+
 
 // export const metadata: Metadata = {
 //   title: "My Music In Color",

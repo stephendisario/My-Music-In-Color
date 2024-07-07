@@ -17,6 +17,7 @@ import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import Fade from "@mui/material/Fade";
 import Alert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
+import { lilita_one, signika } from "../layout";
 
 const Collage = () => {
   const { collages, setCollages, id, isMobile, collageParameters, setLoading } = useMyContext();
@@ -379,7 +380,7 @@ const Collage = () => {
     return (
       <div className={`pt-2 flex flex-row justify-between items-center logos`}>
         <div className="text-md" style={{ color: logosColor }}>
-          {<p className="text-3xl">my musaic</p>}
+          {<p className={`text-4xl ${signika.className}`}>my musaic</p>}
           {<p className="opacity-80">mymusicincolor.com</p>}
           <div className="mt-6">
             <SpotifyLogo color={logosColor} />
