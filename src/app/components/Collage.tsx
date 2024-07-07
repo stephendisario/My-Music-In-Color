@@ -380,7 +380,7 @@ const Collage = () => {
     return (
       <div className={`pt-2 flex flex-row justify-between items-center logos`}>
         <div className="text-md" style={{ color: logosColor }}>
-          {<p className={`text-4xl ${signika.className}`}>my musaic</p>}
+          {<p className={`text-4xl ml-[-1.5px] ${signika.className}`}>my musaic</p>}
           {<p className="opacity-80">mymusicincolor.com</p>}
           <div className="mt-6">
             <SpotifyLogo color={logosColor} />
