@@ -4,7 +4,7 @@ import Collage from "../components/Collage";
 import { useMyContext } from "../components/ColorContext";
 import MovingText from "../components/MovingText";
 import LinearProgress, { linearProgressClasses } from "@mui/material/LinearProgress";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 
 export const maxDuration = 20;
 
@@ -49,11 +49,13 @@ const Dashboard = () => {
     <div
       className={`relative h-[calc(100dvh)] sm:h-screen flex flex-col items-center rainbow-background`}
     >
-      <div className="absolute top-[25%] translate-y-[-50%] flex flex-col">
+      <div className="absolute top-[33%] translate-y-[-50%] flex flex-col">
         <p className="text-5xl sm:text-8xl">mymusicincolor</p>
-        <p className="text-lg sm:text-3xl opacity-90 mt-1">explore the colors of your music</p>
+        <p className="text-lg sm:text-3xl opacity-90 mt-1 text-center">
+          explore the colors of your music
+        </p>
       </div>
-      <div className="sm:w-[661px] w-[330px]  h-full z-30 flex flex-col justify-center items-center">
+      <div className="sm:w-[661px] w-[330px] absolute top-[66%] translate-y-[-50%] z-30 flex flex-col justify-center items-center">
         <LinearProgress
           variant="determinate"
           value={progress}
@@ -72,7 +74,7 @@ const Dashboard = () => {
           }}
         />
         <p className="text-xl sm:text-3xl h-20 py-2">{text}</p>
-        <CircularProgress color='inherit' size={30}/>
+        <CircularProgress color="inherit" size={30} />
       </div>
     </div>
   );

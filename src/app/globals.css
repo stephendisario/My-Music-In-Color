@@ -3,20 +3,21 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 26, 32, 44;
-  --background-end-rgb: 0, 0, 0;
+
+  --background-gradient: linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)
+
 }
 
+html:before{
+  content:"";
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  background: var(--background-gradient)
+}
 
 body {
   color: white;
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
 }
 
 @layer utilities {
@@ -57,55 +58,4 @@ body {
   0%{background-position:33% 0%}
   50%{background-position:68% 100%}
   100%{background-position:33% 0%}
-}
-
-@keyframes moveRight1 {
-  0% {
-    transform: translateX(-200%);
-  }
-  100% {
-    transform: translateX(0%);
-  }
-}
-
-@keyframes moveRight2 {
-  0% {
-    transform: translateX(-240%);
-  }
-  100% {
-    transform: translateX(-0%);
-  }
-}
-
-@keyframes moveLeft1 {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-240%);
-  }
-}
-
-.move-text {
-  animation: moveRight1 180s linear infinite;
-}
-
-.move-text-2 {
-  animation: moveRight2 180s linear infinite;
-}
-
-.move-text-l {
-  animation: moveLeft1 180s linear infinite;
-}
-
-.mobile-move-text {
-  animation: moveRight1 110s linear infinite;
-}
-
-.mobile-move-text-2 {
-  animation: moveRight2 110s linear infinite;
-}
-
-.mobile-move-text-l {
-  animation: moveLeft1 110s linear infinite;
 }

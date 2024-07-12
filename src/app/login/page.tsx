@@ -23,12 +23,14 @@ const Login = () => {
         <NavBar showLogout={false} />
       </div>
       {/* <MovingText /> */}
-      <div className="absolute top-[25%] translate-y-[-50%] flex flex-col">
+      <div className="absolute top-[33%] translate-y-[-50%] flex flex-col">
         <p className="text-5xl sm:text-8xl">mymusicincolor</p>
-        <p className="text-lg sm:text-3xl opacity-90 mt-1">explore the colors of your music</p>
+        <p className="text-lg sm:text-3xl opacity-90 mt-1 text-center">
+          explore the colors of your music
+        </p>
       </div>
       <button
-        className=" text-white border-2 border-white rounded-full text-3xl hover:bg-[rgba(0,0,0,.1)] z-30 py-3 px-4 sm:px-12"
+        className="absolute top-[66%] translate-y-[-50%] text-white border-2 border-white rounded-full text-3xl hover:bg-[rgba(0,0,0,.1)] z-30 py-3 px-4 sm:px-12"
         onClick={() => login(codeVerifier)}
       >
         log in with Spotify
