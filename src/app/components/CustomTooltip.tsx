@@ -85,6 +85,7 @@ const CustomTooltip = ({
         tooltip: {
           sx: {
             paddingX: "8px",
+            paddingTop: '4px',
             maxWidth: isMobile ? "100%" : "600px",
             bgcolor: toHslString(track?.hsl),
             color: textColor,
