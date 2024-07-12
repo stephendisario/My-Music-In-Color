@@ -12,11 +12,12 @@ import NavBar from "./NavBar";
 import CircularProgress from "@mui/material/CircularProgress";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPalette, faShuffle, faXmark } from "@fortawesome/free-solid-svg-icons";
-import { collageConfig, gradients, snapPoints } from "../lib/constants";
+import { collageConfig, gradients, gradientsRaw, snapPoints } from "../lib/constants";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import Fade from "@mui/material/Fade";
 import Alert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
+import { signika } from "../layout";
 
 const Collage = () => {
   const { collages, setCollages, id, isMobile, collageParameters, setLoading } = useMyContext();
@@ -379,7 +380,7 @@ const Collage = () => {
     return (
       <div className={`pt-2 flex flex-row justify-between items-center logos`}>
         <div className="text-md" style={{ color: logosColor }}>
-          {<p className="text-3xl">my musaic</p>}
+          {<p className={`text-4xl ml-[-1.5px] ${signika.className}`}>my musaic</p>}
           {<p className="opacity-80">mymusicincolor.com</p>}
           <div className="mt-6">
             <SpotifyLogo color={logosColor} />
@@ -418,16 +419,6 @@ const Collage = () => {
         </Snackbar>
         <div className="flex w-full sm:h-lg:w-[576px] sm:h-md:w-[450px] h-full justify-center relative items-center flex-col sm:overflow-y-auto">
           <div className="flex grow"></div>
-
-          {!isMobile && (
-            <div className={`text-4xl  w-full px-4 mb-1`}>
-              <p
-                className={`${currentColor === "white" ? "text-black" : "text-white"} flex items-start`}
-              >
-                mymusicincolor
-              </p>
-            </div>
-          )}
           <div className={`flex flex-col justify-center items-center w-full px-4`}>
             <div className="w-full bg-black p-4 rounded-lg shadow-lg bg-opacity-75">
               <div className="flex flex-row flex-wrap" ref={playlistRef}>

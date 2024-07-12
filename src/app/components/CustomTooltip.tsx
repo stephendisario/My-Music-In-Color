@@ -1,5 +1,5 @@
 "use client";
-import { Divider, Tooltip } from "@mui/material";
+import { Divider, Tooltip, tooltipClasses } from "@mui/material";
 import React, { useState } from "react";
 import { toHslString } from "../lib/helper";
 import black from "../../../public/Spotify_Icon_RGB_Black.png";
@@ -63,20 +63,20 @@ const CustomTooltip = ({
           onClick={handleLinkClick}
           onTouchEnd={handleLinkClick}
         >
-          <div className="flex flex-col gap-2">
-            <div>
-              <h1>{track?.name}</h1>
-              <Divider />
-              <h3>{track?.artists?.[0].name}</h3>
-            </div>
-            <div className="flex flex-row items-center justify-center gap-2">
-              <Image
-                unoptimized
-                src={textColor === "black" ? black : white}
-                alt="Spotify Icon"
-                width={20}
-              />
-              <p className="">play on spotify</p>
+          <div className="flex flex-row gap-4 font-sans">
+            <div className="flex flex-col">
+              <div className="flex flex-row items-center">
+                <p className="text-lg font-medium">{track?.name}</p>
+                <div className="ml-auto pl-4">
+                  <Image
+                    unoptimized
+                    src={textColor === "black" ? black : white}
+                    alt="Spotify Icon"
+                    width={20}
+                  />
+                </div>
+              </div>
+              <p className="opacity-80">{track?.artists?.[0].name}</p>
             </div>
           </div>
         </a>
@@ -84,12 +84,23 @@ const CustomTooltip = ({
       slotProps={{
         tooltip: {
           sx: {
+            paddingX: "8px",
+            paddingTop: '4px',
+            maxWidth: isMobile ? "100%" : "600px",
             bgcolor: toHslString(track?.hsl),
             color: textColor,
             fontSize: "16px",
             "& .MuiTooltip-arrow": {
               color: toHslString(track?.hsl),
             },
+          },
+        },
+        popper: {
+          sx: {
+            [`&.${tooltipClasses.popper}[data-popper-placement*="bottom"] .${tooltipClasses.tooltip}`]:
+              {
+                marginTop: "8px",
+              },
           },
         },
       }}

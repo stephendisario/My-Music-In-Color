@@ -88,3 +88,16 @@ export const gradients = {
   white: "from-[#f0f0f0] to-[#b0b0b0]",
   rainbow: "from-stone-500 to-stone-800",
 };
+
+export const gradientsRaw = {
+  red: "linear-gradient(to bottom, #ef4444, #b91c1c)",
+  orange: "linear-gradient(to bottom, #f97316, #cs410c)",
+  yellow: "linear-gradient(to bottom, #eab308, #ca8a04)",
+  green: "linear-gradient(to bottom, #22c55e, #166534)",
+  blue: "linear-gradient(to bottom, #3b82f6, #1e40af)",
+  violet: "linear-gradient(to bottom, #8b5cf6, #5b21b6)",
+  black: "linear-gradient(to bottom, #4b4b4b, #1a1a1a)",
+  white: "linear-gradient(to bottom, #f0f0f0, #b0b0b0)",
+  rainbow:
+    "linear-gradient(45deg, #f56565 10%, #ed8936 30%, #ecc94b 50%, #48bb78 60%, #4299e1 70%, #9f7aea 80%, rgba(238,130,238,1) 100%)",
+};
