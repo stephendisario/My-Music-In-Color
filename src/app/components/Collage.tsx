@@ -17,7 +17,7 @@ import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import Fade from "@mui/material/Fade";
 import Alert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
-import { lilita_one, signika } from "../layout";
+import { signika } from "../layout";
 
 const Collage = () => {
   const { collages, setCollages, id, isMobile, collageParameters, setLoading } = useMyContext();
@@ -346,10 +346,6 @@ const Collage = () => {
                     if (currentColor !== color) {
                       handleResetCollage();
                       setCurrentColor(color);
-                      document.documentElement.style.setProperty(
-                        "--background-gradient",
-                        gradientsRaw[color]
-                      );
                     }
                     setShowColorTooltip(false);
                   }}
@@ -384,7 +380,7 @@ const Collage = () => {
     return (
       <div className={`pt-2 flex flex-row justify-between items-center logos`}>
         <div className="text-md" style={{ color: logosColor }}>
-          {<p className={`text-4xl ml-[-1.5px] ${lilita_one.className}`}>my musaic</p>}
+          {<p className={`text-4xl ml-[-1.5px] ${signika.className}`}>my musaic</p>}
           {<p className="opacity-80">mymusicincolor.com</p>}
           <div className="mt-6">
             <SpotifyLogo color={logosColor} />

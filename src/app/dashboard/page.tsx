@@ -73,7 +73,7 @@ const Dashboard = () => {
             },
           }}
         />
-        <p className="text-xl sm:text-3xl h-20 py-2">{text}</p>
+        <p className="text-xl sm:text-3xl h-16 py-2">{text}</p>
         <CircularProgress color="inherit" size={30} />
       </div>
     </div>

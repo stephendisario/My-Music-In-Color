@@ -30,10 +30,15 @@ const NavBar = ({ showLogout, color = "white" }: { showLogout: boolean; color?: 
         MenuListProps={{
           "aria-labelledby": "basic-button",
         }}
+        sx={{
+          "& .MuiPaper-root": {
+            backgroundColor: "white", // Change this to your desired background color
+          },
+        }}
       >
         <Link href={"/dashboard"}>
           <MenuItem onClick={handleClose} className="font-sans">
-            musaics
+            <p>musaics</p>
           </MenuItem>
         </Link>
         <Link href={"/about"}>

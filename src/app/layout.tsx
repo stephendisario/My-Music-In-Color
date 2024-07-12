@@ -1,10 +1,9 @@
 "use client";
-import { Outfit, Lilita_One, Signika } from "next/font/google";
+import { Outfit, Signika } from "next/font/google";
 import "./globals.css";
 import { MyContextProvider } from "./components/ColorContext";
 
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
-export const lilita_one = Lilita_One({ subsets: ["latin"], weight: "400" });
 export const signika = Signika({ subsets: ["latin"], weight: "400" });
 
 export default function RootLayout({
