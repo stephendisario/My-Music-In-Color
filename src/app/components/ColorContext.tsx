@@ -21,6 +21,7 @@ interface MyContextType {
   name: string;
   totalTracks: number;
   setLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+  loggedIn: boolean;
   isMobile: boolean;
   collageParameters: any;
 }
@@ -66,7 +67,7 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }
   useEffect(() => {
     // Function to update the state based on window width
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
+      setIsMobile(window.innerWidth < 640);
     };
 
     // Call handleResize once to set the initial state
@@ -180,6 +181,7 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }
         loadingTracks,
         id,
         setLoggedIn,
+        loggedIn,
         name,
         totalTracks,
         isMobile,

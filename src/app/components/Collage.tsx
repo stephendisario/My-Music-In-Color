@@ -17,7 +17,6 @@ import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import Fade from "@mui/material/Fade";
 import Alert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
-import { signika } from "../layout";
 
 const Collage = () => {
   const { collages, setCollages, id, isMobile, collageParameters, setLoading } = useMyContext();
@@ -26,7 +25,6 @@ const Collage = () => {
 
   const [shuffled, setShuffled] = useState<boolean>(false);
   const [showColorTooltip, setShowColorTooltip] = useState<boolean>(false);
-  const [showColorPalette, setShowColorPalette] = useState<boolean>(false);
 
   const [alertMessage, setAlertMessage] = useState<string>("playlist created successfully");
   const [alertSeverity, setAlertSeverity] = useState<"success" | "warning">("success");
@@ -40,13 +38,6 @@ const Collage = () => {
 
   useEffect(() => {
     setLoading(false);
-  }, []);
-
-  const total = useMemo(() => {
-    return (Object.keys(collageConfig) as Colors[]).reduce(
-      (sum, color) => sum + collages[color].length,
-      0
-    );
   }, []);
 
   const handleResetCollage = () => {
@@ -238,6 +229,7 @@ const Collage = () => {
         <div className="flex flex-row items-start">
           <IconButton onClick={() => handleShuffle()} sx={{ marginTop: "-8px" }}>
             <FontAwesomeIcon
+              size="lg"
               icon={faShuffle}
               color={currentColor !== "white" ? "white" : "black"}
             />
@@ -245,6 +237,7 @@ const Collage = () => {
           <div className={`items-start flex flex-row ${shuffled ? "visible" : "invisible"}`}>
             <IconButton onClick={handleResetCollage} sx={{ width: "120%", marginTop: "-8px" }}>
               <FontAwesomeIcon
+                size="lg"
                 icon={faXmark}
                 color={currentColor !== "white" ? "white" : "black"}
               />
@@ -255,25 +248,39 @@ const Collage = () => {
       <div className="flex flex-col grow justify-center">
         <div className="sm:hidden">
           <button
-            className={`${currentColor !== "white" ? `border-white bg-white text-black mix-blend-lighten hover:bg-[rgba(255,255,255,.8)] ${isShareLoading && "bg-[rgba(255,255,255,.8)]"}` : `border-black bg-black text-white mix-blend-darken hover:bg-[rgba(0,0,0,.8)] ${isShareLoading && "bg-[rgba(0,0,0,.8)]"}`} h-10 border-2 rounded-full font-semibold text-lg text-nowrap h-full self-center w-[145px]`}
+            className={`${currentColor !== "white" ? ` bg-white text-black mix-blend-lighten active:bg-[rgba(255,255,255,.8)]` : ` bg-black text-white mix-blend-darken active:bg-[rgba(0,0,0,.8)]`} h-10 rounded-full font-semibold text-lg text-nowrap flex items-center justify-center w-[145px]`}
             onClick={() => {
               setIsShareLoading(true);
               if (!isShareLoading) shareImage();
             }}
           >
-            {isShareLoading ? <CircularProgress sx={{ color: "white" }} size={15} /> : "share"}
+            {isShareLoading ? (
+              <CircularProgress
+                sx={{
+                  color: currentColor !== "white" ? "black" : "white",
+                }}
+                size={25}
+              />
+            ) : (
+              "share"
+            )}
           </button>
         </div>
         <div className="sm:block hidden">
           <button
-            className={`${currentColor !== "white" ? `border-white bg-white text-black mix-blend-lighten hover:bg-[rgba(255,255,255,.8)] ${isDownloadLoading && "bg-[rgba(255,255,255,.8)]"}` : `border-black bg-black text-white mix-blend-darken hover:bg-[rgba(0,0,0,.8)] ${isDownloadLoading && "bg-[rgba(0,0,0,.8)]"}`} h-10 border-2 rounded-full font-semibold text-lg text-nowrap h-full self-center w-[145px]`}
+            className={`${currentColor !== "white" ? ` bg-white text-black mix-blend-lighten hover:bg-[rgba(255,255,255,.8)]` : ` bg-black text-white mix-blend-darken hover:bg-[rgba(0,0,0,.8)]`} h-10 rounded-full font-semibold text-lg text-nowrap flex items-center justify-center w-[145px]`}
             onClick={() => {
               setIsDownloadLoading(true);
               if (!isDownloadLoading) handleDownload(artRef, true, false);
             }}
           >
             {isDownloadLoading ? (
-              <CircularProgress sx={{ color: "white" }} size={15} />
+              <CircularProgress
+                sx={{
+                  color: currentColor !== "white" ? "black" : "white",
+                }}
+                size={25}
+              />
             ) : (
               "download"
             )}
@@ -281,13 +288,13 @@ const Collage = () => {
         </div>
 
         <button
-          className={`${currentColor !== "white" ? "text-white border-white" : "text-black border-black"} mt-1 rounded-full text-lg text-nowrap hover:bg-[rgba(0,0,0,.1)] ${isCreatePlaylistLoading && "bg-[rgba(0,0,0,.1)]"} w-[145px]`}
+          className={`${currentColor !== "white" ? "text-white" : "text-black"} mt-1 rounded-full text-lg text-nowrap hover:bg-[rgba(0,0,0,.1)] ${isCreatePlaylistLoading && "bg-[rgba(0,0,0,.1)]"} h-8 w-[145px] flex items-center justify-center`}
           onClick={() => {
             if (!isCreatePlaylistLoading) handleCreatePlaylist(tracks);
           }}
         >
           {isCreatePlaylistLoading ? (
-            <CircularProgress sx={{ color: "white" }} size={15} />
+            <CircularProgress sx={{ color: "white" }} size={20} />
           ) : (
             "create playlist"
           )}
@@ -321,7 +328,7 @@ const Collage = () => {
               sx: {
                 [`&.${tooltipClasses.popper}[data-popper-placement*="top"] .${tooltipClasses.tooltip}`]:
                   {
-                    marginBottom: isMobile ? "4px" : "8px",
+                    marginBottom: isMobile ? "8px" : "12px",
                   },
               },
             },
@@ -366,6 +373,7 @@ const Collage = () => {
             sx={{ marginTop: "-8px" }}
           >
             <FontAwesomeIcon
+              size="lg"
               icon={faPalette}
               color={currentColor !== "white" ? "white" : "black"}
             />
@@ -380,7 +388,7 @@ const Collage = () => {
     return (
       <div className={`pt-2 flex flex-row justify-between items-center logos`}>
         <div className="text-md" style={{ color: logosColor }}>
-          {<p className={`text-4xl ml-[-1.5px] ${signika.className}`}>my musaic</p>}
+          {<p className={`text-4xl ml-[-1.5px] font-sans font-bold`}>my musaic</p>}
           {<p className="opacity-80">mymusicincolor.com</p>}
           <div className="mt-6">
             <SpotifyLogo color={logosColor} />
@@ -401,7 +409,7 @@ const Collage = () => {
               : "",
         }}
       >
-        <NavBar showLogout={true} color={currentColor === "white" ? "black" : "white"} />
+        <NavBar color={currentColor === "white" ? "black" : "white"} />
         <Snackbar
           open={openSnackbar}
           autoHideDuration={5000}

@@ -28,7 +28,7 @@ const Callback = () => {
     return () => {
       localStorage.removeItem("codeVerifier");
     };
-  }, [code, codeVerifier]);
+  }, [code, codeVerifier, router]);
 
   return (
     <div className="flex relative h-[calc(100dvh)] sm:h-screen justify-center items-center rainbow-background">

@@ -63,19 +63,17 @@ const CustomTooltip = ({
           onClick={handleLinkClick}
           onTouchEnd={handleLinkClick}
         >
-          <div className="flex flex-row gap-4 font-sans">
-            <div className="flex flex-col">
-              <div className="flex flex-row items-center">
-                <p className="text-lg font-medium">{track?.name}</p>
-                <div className="ml-auto pl-4">
-                  <Image
-                    unoptimized
-                    src={textColor === "black" ? black : white}
-                    alt="Spotify Icon"
-                    width={20}
-                  />
-                </div>
-              </div>
+          <div className="flex flex-row gap-2 font sans items-center justify-end leading-tight">
+            <div className="min-w-[20px]">
+              <Image
+                unoptimized
+                src={textColor === "black" ? black : white}
+                alt="Spotify Icon"
+                width={20}
+              />
+            </div>
+            <div className="flex flex-col items-start">
+              <p className="text-lg font-medium">{track?.name}</p>
               <p className="opacity-80">{track?.artists?.[0].name}</p>
             </div>
           </div>
@@ -85,7 +83,7 @@ const CustomTooltip = ({
         tooltip: {
           sx: {
             paddingX: "8px",
-            paddingTop: '4px',
+            paddingTop: "4px",
             maxWidth: isMobile ? "100%" : "600px",
             bgcolor: toHslString(track?.hsl),
             color: textColor,

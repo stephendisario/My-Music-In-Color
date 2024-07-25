@@ -6,8 +6,10 @@ import MenuIcon from "@mui/icons-material/Menu";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import { useMyContext } from "./ColorContext";
 
-const NavBar = ({ showLogout, color = "white" }: { showLogout: boolean; color?: string }) => {
+const NavBar = ({ color = "white" }: { color?: string }) => {
+  const { loggedIn } = useMyContext();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -37,9 +39,11 @@ const NavBar = ({ showLogout, color = "white" }: { showLogout: boolean; color?: 
         }}
       >
         <Link href={"/dashboard"}>
-          <MenuItem onClick={handleClose} className="font-sans">
-            <p>musaics</p>
-          </MenuItem>
+          {loggedIn && (
+            <MenuItem onClick={handleClose} className="font-sans">
+              <p>musaic</p>
+            </MenuItem>
+          )}
         </Link>
         <Link href={"/about"}>
           <MenuItem onClick={handleClose} className="font-sans">
@@ -51,15 +55,23 @@ const NavBar = ({ showLogout, color = "white" }: { showLogout: boolean; color?: 
             privacy policy
           </MenuItem>
         </Link>
-        <MenuItem
-          onClick={() => {
-            logout();
-            handleClose();
-          }}
-          className="font-sans"
-        >
-          logout
-        </MenuItem>
+        {loggedIn ? (
+          <MenuItem
+            onClick={() => {
+              logout();
+              handleClose();
+            }}
+            className="font-sans"
+          >
+            logout
+          </MenuItem>
+        ) : (
+          <Link href={"/login"}>
+            <MenuItem onClick={handleClose} className="font-sans">
+              login
+            </MenuItem>
+          </Link>
+        )}
       </Menu>
     </div>
   );
