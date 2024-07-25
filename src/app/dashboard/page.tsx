@@ -19,13 +19,18 @@ const Dashboard = () => {
 
   const step = async () => {
     if (totalTracks && loadingTracks && loadingColor) {
+      let formattedNumber = totalTracks.toString();
+      if (totalTracks >= 1000) {
+        formattedNumber = formattedNumber[0] + "," + formattedNumber.substring(1);
+      }
+
       setProgress(20);
-      setText(`fetching your ${totalTracks} top tracks`);
+      setText(`fetching your ${formattedNumber} top tracks`);
       return;
     }
     if (!loadingTracks && loadingColor) {
       setProgress(50);
-      setText(`extracting dominant colors \n (hang tight, this takes a moment)`);
+      setText(`extracting dominant colors`);
     }
     if (!loadingColor) {
       setProgress(80);
@@ -52,7 +57,7 @@ const Dashboard = () => {
       <div className="absolute top-[33%] translate-y-[-50%] flex flex-col">
         <p className="text-5xl sm:text-8xl">mymusicincolor</p>
         <p className="text-lg sm:text-3xl opacity-90 mt-1 text-center">
-          explore the colors of your music
+          explore your colorful musaics
         </p>
       </div>
       <div className="sm:w-[661px] w-[330px] absolute top-[66%] translate-y-[-50%] z-30 flex flex-col justify-center items-center">
@@ -73,7 +78,11 @@ const Dashboard = () => {
             },
           }}
         />
-        <p className="text-xl sm:text-3xl h-16 py-2">{text}</p>
+        <p className="text-xl sm:text-3xl h-16 pt-2 pb-20 sm:pb-24">
+          {text}
+          <br />
+          {progress === 50 && "(hang tight, this takes a moment)"}
+        </p>
         <CircularProgress color="inherit" size={30} />
       </div>
     </div>

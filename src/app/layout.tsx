@@ -1,10 +1,9 @@
 "use client";
-import { Outfit, Signika } from "next/font/google";
+import { DynaPuff, Outfit } from "next/font/google";
 import "./globals.css";
 import { MyContextProvider } from "./components/ColorContext";
 
-const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
-export const signika = Signika({ subsets: ["latin"], weight: "400" });
+const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit", weight: "variable" });
 
 export default function RootLayout({
   children,

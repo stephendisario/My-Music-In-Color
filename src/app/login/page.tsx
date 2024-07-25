@@ -1,16 +1,17 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import { login } from "../actions/auth";
 import { generateRandomString } from "../lib/helper";
-import { Button } from "@mui/material";
 import NavBar from "../components/NavBar";
-import MovingText from "../components/MovingText";
-import SpotifyLogo from "../components/SpotifyLogo";
+import { useMyContext } from "../components/ColorContext";
 
 const Login = () => {
   const codeVerifier = generateRandomString(64);
 
+  const { setLoggedIn } = useMyContext();
+
   useEffect(() => {
+    setLoggedIn(false);
     localStorage.setItem("codeVerifier", codeVerifier);
     const test = localStorage.getItem("colorMap");
     const obj = test ? JSON.parse(test) : undefined;
@@ -20,17 +21,16 @@ const Login = () => {
   return (
     <div className="flex flex-col relative h-[calc(100dvh)] sm:h-screen justify-center items-center rainbow-background">
       <div className="absolute top-0 left-0 w-full h-full">
-        <NavBar showLogout={false} />
+        <NavBar />
       </div>
-      {/* <MovingText /> */}
       <div className="absolute top-[33%] translate-y-[-50%] flex flex-col">
         <p className="text-5xl sm:text-8xl">mymusicincolor</p>
         <p className="text-lg sm:text-3xl opacity-90 mt-1 text-center">
-          explore the colors of your music
+          explore your colorful musaics
         </p>
       </div>
       <button
-        className="absolute top-[66%] translate-y-[-50%] text-white border-2 border-white rounded-full text-3xl hover:bg-[rgba(0,0,0,.1)] z-30 py-3 px-4 sm:px-12"
+        className="absolute top-[66%] translate-y-[-50%] bg-white text-black mix-blend-lighten active:bg-[rgba(255,255,255,.8)] sm:hover:bg-[rgba(255,255,255,.8)] rounded-full text-3xl z-30 py-3 px-8 sm:px-12"
         onClick={() => login(codeVerifier)}
       >
         log in with Spotify

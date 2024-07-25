@@ -6,7 +6,7 @@ const About = () => {
   return (
     <div className="bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 text-white min-h-screen px-4 py-10">
       <div className="max-w-screen-md mx-auto bg-black bg-opacity-50 rounded-lg shadow-lg p-4 sm:p-6 md:p-8">
-        <NavBar showLogout={false} />
+        <NavBar />
         {/* <h1 className="text-2xl sm:text-4xl font-bold mb-4 sm:mb-6 text-center">
           About mymusicincolor
         </h1> */}

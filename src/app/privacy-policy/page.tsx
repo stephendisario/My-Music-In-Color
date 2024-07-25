@@ -6,7 +6,7 @@ const PrivacyPolicy = () => {
   return (
     <div className="bg-gradient-to-r from-purple-600 to-blue-500 text-white h-screen px-4 py-10">
       <div className="max-w-screen-md flex flex-col mx-auto bg-black bg-opacity-50 rounded-lg shadow-lg p-4 sm:p-6 md:p-8">
-        <NavBar showLogout={false} />
+        <NavBar />
         <h1 className="text-3xl sm:text-4xl font-semibold mb-4 sm:mb-6 text-center">
           Privacy Policy
         </h1>
