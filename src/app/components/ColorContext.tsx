@@ -168,11 +168,11 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }
         const totalTracks: any = await getTopTracks("long_term", 1);
         setTotalTracks(totalTracks.total);
         const allTracks: any = await getTopTracks("long_term");
+        setLoadingTracks(false);
         injectColor(allTracks.tracks);
       } catch {
         setFailed(true);
       }
-      setLoadingTracks(false);
     };
     if (loggedIn) fetches();
   }, [loggedIn]);
