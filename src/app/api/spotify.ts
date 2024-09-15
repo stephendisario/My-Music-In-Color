@@ -220,7 +220,8 @@ export const fetchWithOffset = async <T>(
   const responses = await Promise.all(promiseArray);
 
   const allTopTracks = responses.reduce((accumulator, currentResponse) => {
-    return [...accumulator, ...currentResponse.items];
+    if (currentResponse?.items) return [...accumulator, ...currentResponse?.items];
+    else return accumulator;
   }, []);
 
   return { tracks: allTopTracks, total: cap } as any;

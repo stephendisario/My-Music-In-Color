@@ -2,15 +2,17 @@
 import React, { useEffect, useState } from "react";
 import Collage from "../components/Collage";
 import { useMyContext } from "../components/ColorContext";
-import MovingText from "../components/MovingText";
 import LinearProgress, { linearProgressClasses } from "@mui/material/LinearProgress";
 import CircularProgress from "@mui/material/CircularProgress";
+import { logout } from "../actions/auth";
+import { Alert, Snackbar } from "@mui/material";
 
 export const maxDuration = 20;
 
 const Dashboard = () => {
-  const { loading, loadingColor, loadingTracks, setLoggedIn, totalTracks } = useMyContext();
+  const { loading, loadingColor, loadingTracks, setLoggedIn, totalTracks, failed } = useMyContext();
   const [progress, setProgress] = useState<number>(0);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
   const [text, setText] = useState<string>("sizing up your top tracks");
 
   useEffect(() => {
@@ -18,42 +20,62 @@ const Dashboard = () => {
   }, [setLoggedIn]);
 
   const step = async () => {
-    if (totalTracks && loadingTracks && loadingColor) {
-      let formattedNumber = totalTracks.toString();
-      if (totalTracks >= 1000) {
-        formattedNumber = formattedNumber[0] + "," + formattedNumber.substring(1);
-      }
+    if (failed) {
+      setOpenSnackbar(true);
+    } else {
+      if (totalTracks && loadingTracks && loadingColor) {
+        let formattedNumber = totalTracks.toString();
+        if (totalTracks >= 1000) {
+          formattedNumber = formattedNumber[0] + "," + formattedNumber.substring(1);
+        }
 
-      setProgress(20);
-      setText(`fetching your ${formattedNumber} top tracks`);
-      return;
-    }
-    if (!loadingTracks && loadingColor) {
-      setProgress(50);
-      setText(`extracting dominant colors`);
-    }
-    if (!loadingColor) {
-      setProgress(80);
-      setText("designing your musaics");
-      setTimeout(() => {
-        setProgress(90);
-        setText("wrapping up");
+        setProgress(20);
+        setText(`fetching your ${formattedNumber} top tracks`);
+        return;
+      }
+      if (!loadingTracks && loadingColor) {
+        setProgress(50);
+        setText(`extracting dominant colors`);
+      }
+      if (!loadingColor) {
+        setProgress(80);
+        setText("designing your musaics");
         setTimeout(() => {
-          setProgress(100);
-          setTimeout(() => setProgress(101), 500);
+          setProgress(90);
+          setText("wrapping up");
+          setTimeout(() => {
+            setProgress(100);
+            setTimeout(() => setProgress(101), 500);
+          }, 1000);
         }, 1000);
-      }, 1000);
+      }
     }
   };
 
   useEffect(() => {
     step();
-  }, [totalTracks, loadingTracks, loadingColor]);
+  }, [totalTracks, loadingTracks, loadingColor, failed]);
+
+  const handleSnackbarClose = () => {
+    setOpenSnackbar(false);
+    logout();
+  };
 
   const loadingPage = () => (
     <div
       className={`relative h-[calc(100dvh)] sm:h-screen flex flex-col items-center rainbow-background`}
     >
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={5000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert elevation={6} variant="filled" onClose={handleSnackbarClose} severity={"error"}>
+          Something went wrong, redirecting to login page. Please try again.
+        </Alert>
+      </Snackbar>
+
       <div className="absolute top-[33%] translate-y-[-50%] flex flex-col">
         <p className="text-5xl sm:text-8xl">mymusicincolor</p>
         <p className="text-lg sm:text-3xl opacity-90 mt-1 text-center">

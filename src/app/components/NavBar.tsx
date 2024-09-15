@@ -8,7 +8,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useMyContext } from "./ColorContext";
 
-const NavBar = ({ color = "white" }: { color?: string }) => {
+const NavBar = ({ color = "white", hidden = false }: { color?: string; hidden?: boolean }) => {
   const { loggedIn } = useMyContext();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -20,7 +20,9 @@ const NavBar = ({ color = "white" }: { color?: string }) => {
   };
 
   return (
-    <div className="absolute z-50 top-0 right-0">
+    <div
+      className={`transition-opacity duration-500 absolute top-0 right-0 ${hidden ? "ease-out opacity-0" : "ease-in opacity-100"}`}
+    >
       <IconButton onClick={(event) => handleClick(event)} className="">
         <MenuIcon sx={{ color: color }} />
       </IconButton>

@@ -55,7 +55,6 @@ const CustomTooltip = ({
       onTouchMoveCapture={isMobile ? handleTouchMove : undefined}
       enterTouchDelay={0}
       leaveTouchDelay={4000}
-      PopperProps={{ disablePortal: true }}
       arrow
       title={
         <a

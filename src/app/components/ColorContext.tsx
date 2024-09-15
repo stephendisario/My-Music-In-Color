@@ -24,6 +24,7 @@ interface MyContextType {
   loggedIn: boolean;
   isMobile: boolean;
   collageParameters: any;
+  failed: boolean;
 }
 
 const MyContext = createContext<MyContextType | undefined>(undefined);
@@ -45,6 +46,7 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }
   const [collages, setCollages] = useState<Collages>({} as Collages);
   const [loadingColor, setLoadingColor] = useState<boolean>(true);
   const [loadingTracks, setLoadingTracks] = useState<boolean>(true);
+  const [failed, setFailed] = useState<boolean>(false);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [totalTracks, setTotalTracks] = useState<number>(0);
   const [collageParameters, setCollageParameters] = useState<{
@@ -159,12 +161,15 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }
       const user = await getUserProfile();
       setId(user?.id!);
       setName(user?.display_name!);
-      const totalTracks: any = await getTopTracks("long_term", 1);
-      setTotalTracks(totalTracks.total);
-      const allTracks: any = await getTopTracks("long_term");
-      if (allTracks) injectColor(allTracks.tracks);
+      try {
+        const totalTracks: any = await getTopTracks("long_term", 1);
+        setTotalTracks(totalTracks.total);
+        const allTracks: any = await getTopTracks("long_term");
+        injectColor(allTracks.tracks);
+      } catch {
+        setFailed(true);
+      }
       setLoadingTracks(false);
-      console.log(allTracks);
     };
     if (loggedIn) fetches();
   }, [loggedIn]);
@@ -177,6 +182,7 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }
         setCollages,
         loading,
         setLoading,
+        failed,
         loadingColor,
         loadingTracks,
         id,

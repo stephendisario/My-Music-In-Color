@@ -11,7 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import NavBar from "./NavBar";
 import CircularProgress from "@mui/material/CircularProgress";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPalette, faShuffle, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faPalette, faShuffle, faXmark, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { collageConfig, gradients, gradientsRaw, snapPoints } from "../lib/constants";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import Fade from "@mui/material/Fade";
@@ -27,17 +27,46 @@ const Collage = () => {
   const [showColorTooltip, setShowColorTooltip] = useState<boolean>(false);
 
   const [alertMessage, setAlertMessage] = useState<string>("playlist created successfully");
-  const [alertSeverity, setAlertSeverity] = useState<"success" | "warning">("success");
+  const [alertSeverity, setAlertSeverity] = useState<"success" | "warning" | "info">("success");
 
   const [isCreatePlaylistLoading, setIsCreatePlaylistLoading] = useState<boolean>(false);
   const [isDownloadLoading, setIsDownloadLoading] = useState<boolean>(false);
   const [isShareLoading, setIsShareLoading] = useState<boolean>(false);
+
+  const [hidden, setHidden] = useState<boolean>(false);
+
+  const divRef = useRef<HTMLDivElement>(null); // Reference to the target div
 
   const artRef = useRef<HTMLDivElement>(null);
   const playlistRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setLoading(false);
+
+    if (isMobile) {
+      setAlertMessage("Touch the background to show/hide icons");
+      setAlertSeverity("info");
+      setOpenSnackbar(true);
+    }
+
+    const handleTouch = (event: Event) => {
+      const insideElement = divRef.current;
+
+      const portalRoot = document.querySelector(".base-Popper-root");
+
+      // Check if the event target is exactly the div itself, ignoring child elements
+      if (insideElement && event.target === insideElement && portalRoot === null) {
+        setHidden((prevState) => !prevState); // Clicked directly on the div (not on its children)
+      }
+    };
+
+    // Add touchstart listener to the document
+    document.addEventListener("touchstart", handleTouch);
+
+    // Cleanup function to remove the event listener when the component unmounts
+    return () => {
+      document.removeEventListener("touchstart", handleTouch);
+    };
   }, []);
 
   const handleResetCollage = () => {
@@ -221,7 +250,9 @@ const Collage = () => {
   };
 
   const header = (tracks: ColorTrack[]) => (
-    <div className="flex flex-col w-full grow sm:h-md:w-[422px] sm:h-lg:w-[548px] justify-center items-center gap-2 relative mt-2 px-4">
+    <div
+      className={` ${currentColor !== "white" ? "mix-blend-lighten" : "mix-blend-darken"} transition-opacity duration-500 flex flex-col w-full grow sm:h-md:w-[422px] sm:h-lg:w-[548px] justify-center items-center gap-2 relative mt-2 px-4 ${hidden ? "ease-out opacity-0" : "ease-in opacity-100"}`}
+    >
       <div
         className="absolute top-0 left-0 flex flex-col h-10"
         style={{ padding: isMobile ? "inherit" : "" }}
@@ -246,7 +277,7 @@ const Collage = () => {
         </div>
       </div>
       <div className="flex flex-col grow justify-center">
-        <div className="sm:hidden">
+        {/* <div className="sm:hidden">
           <button
             className={`${currentColor !== "white" ? ` bg-white text-black mix-blend-lighten active:bg-[rgba(255,255,255,.8)]` : ` bg-black text-white mix-blend-darken active:bg-[rgba(0,0,0,.8)]`} h-10 rounded-full font-semibold text-lg text-nowrap flex items-center justify-center w-[145px]`}
             onClick={() => {
@@ -285,16 +316,21 @@ const Collage = () => {
               "download"
             )}
           </button>
-        </div>
+        </div> */}
 
         <button
-          className={`${currentColor !== "white" ? "text-white" : "text-black"} mt-1 rounded-full text-lg text-nowrap hover:bg-[rgba(0,0,0,.1)] ${isCreatePlaylistLoading && "bg-[rgba(0,0,0,.1)]"} h-8 w-[145px] flex items-center justify-center`}
+          className={`${currentColor !== "white" ? ` bg-white text-black mix-blend-lighten active:bg-[rgba(255,255,255,.8)]` : ` bg-black text-white mix-blend-darken active:bg-[rgba(0,0,0,.8)]`} h-10 rounded-full font-semibold text-lg text-nowrap flex items-center justify-center w-[145px] z-50`}
           onClick={() => {
             if (!isCreatePlaylistLoading) handleCreatePlaylist(tracks);
           }}
         >
           {isCreatePlaylistLoading ? (
-            <CircularProgress sx={{ color: "white" }} size={20} />
+            <CircularProgress
+              sx={{
+                color: currentColor !== "white" ? "black" : "white",
+              }}
+              size={25}
+            />
           ) : (
             "create playlist"
           )}
@@ -401,6 +437,7 @@ const Collage = () => {
   return (
     <div className="relative overflow-y-hidden">
       <div
+        ref={divRef}
         className={`relative h-[calc(100dvh)] sm:h-screen flex flex-col justify-center items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]} z-30`}
         style={{
           background:
@@ -409,12 +446,12 @@ const Collage = () => {
               : "",
         }}
       >
-        <NavBar color={currentColor === "white" ? "black" : "white"} />
+        <NavBar color={currentColor === "white" ? "black" : "white"} hidden={hidden} />
         <Snackbar
           open={openSnackbar}
           autoHideDuration={5000}
           onClose={handleSnackbarClose}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          anchorOrigin={{ vertical: isMobile ? "bottom" : "top", horizontal: "center" }}
         >
           <Alert
             elevation={6}
@@ -425,7 +462,7 @@ const Collage = () => {
             {alertMessage}
           </Alert>
         </Snackbar>
-        <div className="flex w-full sm:h-lg:w-[576px] sm:h-md:w-[450px] h-full justify-center relative items-center flex-col sm:overflow-y-auto">
+        <div className="flex w-full sm:h-lg:w-[576px] sm:h-md:w-[450px] justify-center relative items-center flex-col sm:overflow-y-auto">
           <div className="flex grow"></div>
           <div className={`flex flex-col justify-center items-center w-full px-4`}>
             <div className="w-full bg-black p-4 rounded-lg shadow-lg bg-opacity-75">
@@ -463,12 +500,13 @@ const Collage = () => {
           {header(
             collages[`${currentColor}Displayed`].slice(0, collageParameters[currentColor].size)
           )}
+          {/* <div className={`flex grow ${!hidden && "hidden"}`}></div> */}
         </div>
       </div>
 
       {/* BELOW IS USED FOR IMAGE DOWNLOAD */}
 
-      <div
+      {/* <div
         className={`absolute top-0 left-0 right-0 mx-auto z-80 h-[calc(100dvh)] sm:h-screen flex flex-col items-center`}
       >
         <div className="flex w-full sm:w-[576px] h-full justify-center items-center flex-col">
@@ -514,7 +552,7 @@ const Collage = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
