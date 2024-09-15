@@ -27,7 +27,7 @@ const Collage = () => {
   const [showColorTooltip, setShowColorTooltip] = useState<boolean>(false);
 
   const [alertMessage, setAlertMessage] = useState<string>("playlist created successfully");
-  const [alertSeverity, setAlertSeverity] = useState<"success" | "warning">("success");
+  const [alertSeverity, setAlertSeverity] = useState<"success" | "warning" | "info">("success");
 
   const [isCreatePlaylistLoading, setIsCreatePlaylistLoading] = useState<boolean>(false);
   const [isDownloadLoading, setIsDownloadLoading] = useState<boolean>(false);
@@ -43,12 +43,20 @@ const Collage = () => {
   useEffect(() => {
     setLoading(false);
 
+    if (isMobile) {
+      setAlertMessage("Touch the background to show/hide icons");
+      setAlertSeverity("info");
+      setOpenSnackbar(true);
+    }
+
     const handleTouch = (event: Event) => {
       const insideElement = divRef.current;
-      
+
+      const portalRoot = document.querySelector(".base-Popper-root");
+
       // Check if the event target is exactly the div itself, ignoring child elements
-      if (insideElement && event.target === insideElement) {
-        setHidden(prevState => !prevState); // Clicked directly on the div (not on its children)
+      if (insideElement && event.target === insideElement && portalRoot === null) {
+        setHidden((prevState) => !prevState); // Clicked directly on the div (not on its children)
       }
     };
 
@@ -243,7 +251,7 @@ const Collage = () => {
 
   const header = (tracks: ColorTrack[]) => (
     <div
-      className={`flex flex-col w-full grow sm:h-md:w-[422px] sm:h-lg:w-[548px] justify-center items-center gap-2 relative mt-2 px-4 ${hidden && "invisible"}`}
+      className={` ${currentColor !== "white" ? "mix-blend-lighten" : "mix-blend-darken"} transition-opacity duration-500 flex flex-col w-full grow sm:h-md:w-[422px] sm:h-lg:w-[548px] justify-center items-center gap-2 relative mt-2 px-4 ${hidden ? "ease-out opacity-0" : "ease-in opacity-100"}`}
     >
       <div
         className="absolute top-0 left-0 flex flex-col h-10"
@@ -311,7 +319,7 @@ const Collage = () => {
         </div> */}
 
         <button
-          className={`${currentColor !== "white" ? ` bg-white text-black mix-blend-lighten active:bg-[rgba(255,255,255,.8)]` : ` bg-black text-white mix-blend-darken active:bg-[rgba(0,0,0,.8)]`} h-10 rounded-full font-semibold text-lg text-nowrap flex items-center justify-center w-[145px]`}
+          className={`${currentColor !== "white" ? ` bg-white text-black mix-blend-lighten active:bg-[rgba(255,255,255,.8)]` : ` bg-black text-white mix-blend-darken active:bg-[rgba(0,0,0,.8)]`} h-10 rounded-full font-semibold text-lg text-nowrap flex items-center justify-center w-[145px] z-50`}
           onClick={() => {
             if (!isCreatePlaylistLoading) handleCreatePlaylist(tracks);
           }}
@@ -426,22 +434,6 @@ const Collage = () => {
     );
   }, []);
 
-  function onClickOutside(ele: any, cb: any) {
-    // document.addEventListener('click', event => {
-    //   if (!ele.contains(event.target)) cb();
-    // },{once: true });
-    console.log("fire");
-
-    document.addEventListener(
-      "touchstart",
-      (event) => {
-        console.log("here", event);
-        if (!ele.contains(event.target)) cb();
-      },
-      { once: true }
-    );
-  }
-
   return (
     <div className="relative overflow-y-hidden">
       <div
@@ -459,7 +451,7 @@ const Collage = () => {
           open={openSnackbar}
           autoHideDuration={5000}
           onClose={handleSnackbarClose}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          anchorOrigin={{ vertical: isMobile ? "bottom" : "top", horizontal: "center" }}
         >
           <Alert
             elevation={6}
@@ -470,9 +462,7 @@ const Collage = () => {
             {alertMessage}
           </Alert>
         </Snackbar>
-        <div
-          className="flex w-full sm:h-lg:w-[576px] sm:h-md:w-[450px] justify-center relative items-center flex-col sm:overflow-y-auto"
-        >
+        <div className="flex w-full sm:h-lg:w-[576px] sm:h-md:w-[450px] justify-center relative items-center flex-col sm:overflow-y-auto">
           <div className="flex grow"></div>
           <div className={`flex flex-col justify-center items-center w-full px-4`}>
             <div className="w-full bg-black p-4 rounded-lg shadow-lg bg-opacity-75">

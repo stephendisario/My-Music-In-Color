@@ -20,7 +20,9 @@ const NavBar = ({ color = "white", hidden = false }: { color?: string; hidden?: 
   };
 
   return (
-    <div className={`absolute top-0 right-0 ${hidden && "hidden"}`}>
+    <div
+      className={`transition-opacity duration-500 absolute top-0 right-0 ${hidden ? "ease-out opacity-0" : "ease-in opacity-100"}`}
+    >
       <IconButton onClick={(event) => handleClick(event)} className="">
         <MenuIcon sx={{ color: color }} />
       </IconButton>
