@@ -13,7 +13,7 @@ const NavBar = ({ color = "white", hidden = false }: { color?: string; hidden?: 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
+    if(!hidden) setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
