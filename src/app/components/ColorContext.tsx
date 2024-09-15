@@ -25,6 +25,8 @@ interface MyContextType {
   isMobile: boolean;
   collageParameters: any;
   failed: boolean;
+  firstLoad: boolean;
+  setFirstLoad: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const MyContext = createContext<MyContextType | undefined>(undefined);
@@ -44,6 +46,7 @@ interface MyContextProviderProps {
 export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [collages, setCollages] = useState<Collages>({} as Collages);
+  const [firstLoad, setFirstLoad] = useState<boolean>(true)
   const [loadingColor, setLoadingColor] = useState<boolean>(true);
   const [loadingTracks, setLoadingTracks] = useState<boolean>(true);
   const [failed, setFailed] = useState<boolean>(false);
@@ -191,6 +194,8 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }
         name,
         totalTracks,
         isMobile,
+        firstLoad,
+        setFirstLoad
       }}
     >
       {children}

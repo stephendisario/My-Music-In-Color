@@ -19,7 +19,7 @@ import Alert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 
 const Collage = () => {
-  const { collages, setCollages, id, isMobile, collageParameters, setLoading } = useMyContext();
+  const { collages, setCollages, id, isMobile, collageParameters, setLoading, firstLoad, setFirstLoad } = useMyContext();
   const [currentColor, setCurrentColor] = useState<Colors | "rainbow">("rainbow");
   const [openSnackbar, setOpenSnackbar] = useState(false);
 
@@ -43,10 +43,11 @@ const Collage = () => {
   useEffect(() => {
     setLoading(false);
 
-    if (isMobile) {
+    if (isMobile && firstLoad) {
       setAlertMessage("Touch the background to show/hide icons");
       setAlertSeverity("info");
       setOpenSnackbar(true);
+      setFirstLoad(false)
     }
 
     const handleTouch = (event: Event) => {
