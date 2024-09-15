@@ -251,22 +251,18 @@ const Collage = () => {
 
   const header = (tracks: ColorTrack[]) => (
     <div
-      className={` ${currentColor !== "white" ? "mix-blend-lighten" : "mix-blend-darken"} transition-opacity duration-500 flex flex-col w-full grow sm:h-md:w-[422px] sm:h-lg:w-[548px] justify-center items-center gap-2 relative mt-2 px-4 ${hidden ? "ease-out opacity-0" : "ease-in opacity-100"}`}
+      className={` ${currentColor !== "white" ? "mix-blend-lighten" : "mix-blend-darken"} transition-opacity duration-500 flex flex-row w-full grow sm:h-md:w-[422px] sm:h-lg:w-[548px] justify-between items-center gap-2 relative mt-1 ${isMobile && 'px-4'}  ${hidden ? "ease-out opacity-0" : "ease-in opacity-100"}`}
     >
-      <div
-        className="absolute top-0 left-0 flex flex-col h-10"
-        style={{ padding: isMobile ? "inherit" : "" }}
-      >
-        <div className="flex flex-row items-start">
-          <IconButton onClick={() => handleShuffle()} sx={{ marginTop: "-8px" }}>
+        <div className="relative flex flex-row items-center justify-center">
+          <IconButton onClick={() => handleShuffle()}>
             <FontAwesomeIcon
               size="lg"
               icon={faShuffle}
               color={currentColor !== "white" ? "white" : "black"}
             />
           </IconButton>
-          <div className={`items-start flex flex-row ${shuffled ? "visible" : "invisible"}`}>
-            <IconButton onClick={handleResetCollage} sx={{ width: "120%", marginTop: "-8px" }}>
+          <div className={`absolute top-0 right-0 mr-[-40px] ${shuffled ? "visible" : "hidden"}`}>
+            <IconButton onClick={handleResetCollage} sx={{ width: "120%"}}>
               <FontAwesomeIcon
                 size="lg"
                 icon={faXmark}
@@ -275,8 +271,6 @@ const Collage = () => {
             </IconButton>
           </div>
         </div>
-      </div>
-      <div className="flex flex-col grow justify-center">
         {/* <div className="sm:hidden">
           <button
             className={`${currentColor !== "white" ? ` bg-white text-black mix-blend-lighten active:bg-[rgba(255,255,255,.8)]` : ` bg-black text-white mix-blend-darken active:bg-[rgba(0,0,0,.8)]`} h-10 rounded-full font-semibold text-lg text-nowrap flex items-center justify-center w-[145px]`}
@@ -336,11 +330,6 @@ const Collage = () => {
           )}
         </button>
         {/* <div className="sm:hidden h-[10%]"></div> */}
-      </div>
-      <div
-        className=" absolute top-0 right-0 flex flex-row items-start"
-        style={{ paddingRight: isMobile ? "inherit" : "" }}
-      >
         <Tooltip
           TransitionComponent={Fade}
           TransitionProps={{ timeout: 400 }}
@@ -406,7 +395,6 @@ const Collage = () => {
         >
           <IconButton
             onClick={() => setShowColorTooltip((prevState) => !prevState)}
-            sx={{ marginTop: "-8px" }}
           >
             <FontAwesomeIcon
               size="lg"
@@ -416,7 +404,6 @@ const Collage = () => {
           </IconButton>
         </Tooltip>
       </div>
-    </div>
   );
 
   const logos = useCallback(() => {
