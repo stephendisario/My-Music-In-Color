@@ -20,7 +20,7 @@ const NavBar = ({ color = "white", hidden = false }: { color?: string; hidden?: 
   };
 
   return (
-    <div className={`absolute z-50 top-0 right-0 ${hidden && "hidden"}`}>
+    <div className={`absolute top-0 right-0 ${hidden && "hidden"}`}>
       <IconButton onClick={(event) => handleClick(event)} className="">
         <MenuIcon sx={{ color: color }} />
       </IconButton>

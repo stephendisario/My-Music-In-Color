@@ -43,21 +43,21 @@ const Collage = () => {
   useEffect(() => {
     setLoading(false);
 
-    const handleTouchOutside = (event: TouchEvent) => {
-      // Check if the divRef exists and if the touch happened outside of it
-      if (divRef.current && !divRef.current.contains(event.target as Node)) {
-        // Touch happened outside, so handle accordingly
-        setHidden((prevState) => !prevState);
-        console.log("Touched outside the div");
+    const handleTouch = (event: Event) => {
+      const insideElement = divRef.current;
+      
+      // Check if the event target is exactly the div itself, ignoring child elements
+      if (insideElement && event.target === insideElement) {
+        setHidden(prevState => !prevState); // Clicked directly on the div (not on its children)
       }
     };
 
     // Add touchstart listener to the document
-    document.addEventListener("touchstart", handleTouchOutside);
+    document.addEventListener("touchstart", handleTouch);
 
     // Cleanup function to remove the event listener when the component unmounts
     return () => {
-      document.removeEventListener("touchstart", handleTouchOutside);
+      document.removeEventListener("touchstart", handleTouch);
     };
   }, []);
 
@@ -445,11 +445,7 @@ const Collage = () => {
   return (
     <div className="relative overflow-y-hidden">
       <div
-        // onTouchStart={(e) =>
-        //   onClickOutside(document.getElementById("inside"), () =>
-        //     setHidden((prevState) => !prevState)
-        //   )
-        // }
+        ref={divRef}
         className={`relative h-[calc(100dvh)] sm:h-screen flex flex-col justify-center items-center bg-gradient-to-b ${gradients[currentColor] !== "rainbow" && gradients[currentColor]} z-30`}
         style={{
           background:
@@ -475,7 +471,6 @@ const Collage = () => {
           </Alert>
         </Snackbar>
         <div
-          ref={divRef}
           className="flex w-full sm:h-lg:w-[576px] sm:h-md:w-[450px] justify-center relative items-center flex-col sm:overflow-y-auto"
         >
           <div className="flex grow"></div>
