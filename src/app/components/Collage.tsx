@@ -42,7 +42,7 @@ const Collage = () => {
   const [isDownloadLoading, setIsDownloadLoading] = useState<boolean>(false);
   const [isShareLoading, setIsShareLoading] = useState<boolean>(false);
 
-  const [hidden, setHidden] = useState<boolean>(!firstLoad ? false : true);
+  const [hidden, setHidden] = useState<boolean>(!firstLoad || !isMobile ? false : true);
   const [del, setDel] = useState<boolean>(false);
 
   const [tooltipDelay, setTooltipDelay] = useState<boolean>(false);
