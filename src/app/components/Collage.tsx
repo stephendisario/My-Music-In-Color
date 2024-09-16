@@ -248,7 +248,7 @@ const Collage = () => {
   const header = (tracks: ColorTrack[]) => (
     <div
       style={{ width: "calc(100% - 32px)" }}
-      className={` ${currentColor !== "white" ? "mix-blend-lighten" : "mix-blend-darken"} flex flex-row grow sm:h-md:w-[422px] sm:h-lg:w-[548px] justify-between items-center relative mt-1 transition-opacity duration-500 ${hidden ? "ease-out opacity-0" : "ease-in opacity-100"} ${del && "invisible"} border-2 border-white rounded-lg shadow-lg`}
+      className={` ${currentColor !== "white" ? "border-white mix-blend-lighten" : "border-black mix-blend-darken"} flex flex-row grow sm:h-md:w-[422px] sm:h-lg:w-[548px] justify-between items-center relative mt-1 transition-opacity duration-500 ${hidden ? "ease-out opacity-0" : "ease-in opacity-100"} ${del && "invisible"} border-2 rounded-lg shadow-lg`}
     >
       <div className="relative flex flex-row items-center justify-center">
         <IconButton onClick={() => handleShuffle()}>
@@ -462,9 +462,19 @@ const Collage = () => {
         </Snackbar>
         {isMobile && (
           <div
-            className={`transition-opacity duration-500 ${tooltipDelay ? "opacity-100 ease-in" : "opacity-0 ease-out"} ${!showFirstTooltip && "hidden"} absolute bottom-0 rounded bg-white text-black mix-blend-lighten text-lg m-4 p-4 flex justify-center text-center`}
+            className={`transition-opacity duration-500 ${tooltipDelay ? "opacity-100 ease-in" : "opacity-0 ease-out"} ${!showFirstTooltip && "hidden"} absolute bottom-0 rounded bg-white text-black mix-blend-lighten m-2 pl-2 flex`}
           >
-            tap the background to hide icons
+            <p className="align-middle	">
+              tap the background to hide icons
+              <IconButton
+                onClick={() => {
+                  setTooltipDelay(false);
+                  setTimeout(() => setShowFirstTooltip(false), 200);
+                }}
+              >
+                <FontAwesomeIcon size="sm" icon={faXmark} color="black" />
+              </IconButton>
+            </p>
           </div>
         )}
         <div className="flex w-full sm:h-lg:w-[576px] sm:h-md:w-[450px] justify-center relative items-center flex-col sm:overflow-y-auto">
