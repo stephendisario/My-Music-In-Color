@@ -46,7 +46,7 @@ interface MyContextProviderProps {
 export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [collages, setCollages] = useState<Collages>({} as Collages);
-  const [firstLoad, setFirstLoad] = useState<boolean>(true)
+  const [firstLoad, setFirstLoad] = useState<boolean>(true);
   const [loadingColor, setLoadingColor] = useState<boolean>(true);
   const [loadingTracks, setLoadingTracks] = useState<boolean>(true);
   const [failed, setFailed] = useState<boolean>(false);
@@ -195,7 +195,7 @@ export const MyContextProvider: React.FC<MyContextProviderProps> = ({ children }
         totalTracks,
         isMobile,
         firstLoad,
-        setFirstLoad
+        setFirstLoad,
       }}
     >
       {children}
