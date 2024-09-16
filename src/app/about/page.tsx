@@ -24,11 +24,6 @@ const About = () => {
 
         <section className="mb-4 sm:mb-8">
           <h3 className="text-3xl sm:text-4xl font-semibold mb-1 sm:mb-2 text-center">Features</h3>
-          <h2 className="text-xl sm:text-2xl font-semibold ">share</h2>
-          <p className="text-md sm:text-base leading-relaxed mb-2 sm:mb-4">
-            on mobile, use the share button to share or save your musaic. on desktop, use the
-            download button to save your musaic.
-          </p>
           <h2 className="text-xl sm:text-2xl font-semibold ">create</h2>
           <p className="text-md sm:text-base leading-relaxed mb-2 sm:mb-4">
             save a new playlist to your Spotify with the create playlist button. the playlist
@@ -51,6 +46,11 @@ const About = () => {
           <p className="text-md sm:text-base leading-relaxed mb-2 sm:mb-4">
             click or hover an album art to see the song title and artist. the popup is set to the
             dominant color of the album art. click the popup to play on spotify.{" "}
+          </p>
+          <h2 className="text-xl sm:text-2xl font-semibold ">hide</h2>
+          <p className="text-md sm:text-base leading-relaxed mb-2 sm:mb-4">
+            on mobile, users can tap the background to hide icons. Use this feature to enjoy a
+            simplified view.
           </p>
         </section>
 
