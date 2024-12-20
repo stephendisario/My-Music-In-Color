@@ -57,6 +57,11 @@ const NavBar = ({ color = "white", hidden = false }: { color?: string; hidden?: 
             privacy policy
           </MenuItem>
         </Link>
+        <Link href={"/end-user-agreement"}>
+          <MenuItem onClick={handleClose} className="font-sans">
+            end user agreement
+          </MenuItem>
+        </Link>
         {loggedIn ? (
           <MenuItem
             onClick={() => {
