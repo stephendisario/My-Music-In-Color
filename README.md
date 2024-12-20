@@ -1,6 +1,6 @@
 # MyMusicInColor - Explore your colorful musaics 🎶🌈
 
-Welcome to **MyMusicInColor**, an app that groups your top tracks from the past year by color and creates ~musaics~. This preview showcases the core features and visual elements of the app while awaiting Spotify's production approval. Feel free to explore the images and demo video below to get a sense of the app's functionality and design.
+Welcome to **MyMusicInColor**, an app that groups your top tracks from the past year by color and creates musaics. This preview showcases the core features and visual elements of the app while awaiting Spotify's production approval. Feel free to explore the images and demo video below to get a sense of the app's functionality and design.
 
 > **Note**: Since the app is still in development mode, it is not currently accessible to the public. Please stay tuned for updates!
 
