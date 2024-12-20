@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# MyMusicInColor - Explore your colorful musaics 🎶🌈
 
-## Getting Started
+Welcome to **MyMusicInColor**, an app that groups your top tracks from the past year by color and creates ~musaics~. This preview showcases the core features and visual elements of the app while awaiting Spotify's production approval. Feel free to explore the images and demo video below to get a sense of the app's functionality and design.
 
-First, run the development server:
+> **Note**: Since the app is still in development mode, it is not currently accessible to the public. Please stay tuned for updates!
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🎥 Demo Video
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Check out the demo video below to get an interactive preview of MyMusicInColor in action:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+![App Demo Video](./images/demo.mov)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## 🌟 App Features Overview
 
-## Learn More
+### 1. **Rainbow Musaic** - The Landing Page 🌈
 
-To learn more about Next.js, take a look at the following resources:
+After logging into the app, users are greeted with the **Rainbow Musaic**. This is where your top tracks from each color group are compiled into one 8x8 musaic. Below the musaic you will find controls for shuffling the musaic, switching colors, and playlist creation.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+![Rainbow Musaic](./images/rainbow-musaic.jpg)
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### 2. **Shuffle Button** - Create New Musaics 🔀
 
-## Deploy on Vercel
+The **Shuffle** button allows you to mix it up! shuffle any color group to see a new random set of tracks. To reset to the default top tracks, click the X icon.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+![Shuffle Button](./images/shuffle.jpg)
+
+---
+
+### 3. **Color Picker** - Customize Your Musaic 🎨
+
+Use the **Color Picker** to choose between nine musaic color options.
+
+![Color Picker](./images/color-picker.jpg)
+
+---
+
+### 4. **Playlist Creation** - Listen to Your Musaic 🎶🎧
+
+With the **Playlist Creation** feature, you can save the current Musaic as a custom playlist on Spotify. The playlist's image is a snapshot of the Musaic itself, and the songs in the playlist are the ones in the Musaic.
+
+![Playlist Creation](./images/playlist-creation.PNG)
+
+---
+
+### 5. **Album Art Tooltip** - Track Details 🎵
+
+Click on any album art to view more information in a **Album Art Tooltip**. This feature displays the song's title and artist, linking directly to Spotify for easy access.
+
+![Album Art Tooltip](./images/song-tooltip.jpg)
+
+---
+
+### 6. **Automatic Image Resizing** 🖼️
+
+**Automatic Image Resizing** allows the Musaic to adapt when there are fewer songs. The default musaic is 8x8 but if a color group has less than 64 songs, it will resize to the next biggest perfect square.
+
+![Image Resize](./images/image-resize.jpg)
+
+---
+
+### 7. **Hide Icons** - Clean View of the Musaic 🧹
+
+Sometimes, you may want to just enjoy the **Musaic** without any distractions. The **Hide Icons** feature removes all controls and buttons from the screen, and can be enabled by clicking anywhere on the background of the screen.
+
+![Hide Icons](./images/hide-icons.jpg)
+
+---
+
+## 🔗 Links
+
+- [GitHub Repository](https://github.com/stephendisario/My-Music-In-Color)
+- [MyMusicInColor Website](https://mymusicincolor.com) - *Note: The app is currently in development mode and not accessible to the public.*
+
+---
+
+## 📝 Conclusion
+
+Thank you for checking out **MyMusicInColor**! Stay tuned for updates and the official approval from Spotify.
+
+---
+
+**Built by Stephen**
