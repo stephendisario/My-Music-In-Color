@@ -4,6 +4,14 @@ Welcome to **MyMusicInColor**, an app that groups your top tracks from the past 
 
 > **Note**: Since the app is still in development mode, it is not currently accessible to the public. Please stay tuned for updates!
 
+## 🎥 App Demo Video
+
+Check out the demo video below to get an interactive preview of MyMusicInColor in action:
+
+<div style="text-align: center;">
+<a href="https://www.youtube.com/watch?v=1o6eHyCiqE4&ab_channel=StephenDisario"><img src="./images/demo-thumbnail.png" width="400" height/></a>
+</div>
+
 ## 🌟 App Features Overview
 
 ### 1. **Rainbow Musaic** - The Landing Page 🌈
