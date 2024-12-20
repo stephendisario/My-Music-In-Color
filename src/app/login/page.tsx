@@ -35,6 +35,16 @@ const Login = () => {
       >
         log in with Spotify
       </button>
+      <p className="absolute top-[72%] text-lg opacity-90 text-center">
+        by logging in, you agree to the <br />
+        <a href="/end-user-agreement" className="text-blue-300 hover:underline">
+          End User Agreement
+        </a>
+        &nbsp;and&nbsp;
+        <a href="/privacy-policy" className="text-blue-300 hover:underline">
+          Privacy Policy
+        </a>
+      </p>
     </div>
   );
 };

@@ -19,7 +19,7 @@ const CustomTooltip = ({
   const [open, setOpen] = useState<boolean>(false);
   const [isMove, setIsMove] = useState<boolean>(false);
 
-  const textColor = track?.hsl?.[2] && track?.hsl?.[2] > 50 ? "black" : "white";
+  const textColor = track?.hsl?.[2] && track?.hsl?.[2] > 45 ? "black" : "white";
   const spotifyURI = track.uri;
   const webURL = track?.external_urls?.spotify;
 

@@ -463,15 +463,14 @@ const Collage = () => {
         {isMobile && (
           <div
             className={`transition-opacity duration-500 ${tooltipDelay ? "opacity-100 ease-in" : "opacity-0 ease-out"} ${!showFirstTooltip && "hidden"} absolute bottom-0 rounded bg-white text-black mix-blend-lighten m-2 pl-2 flex`}
+            onClick={() => {
+              setTooltipDelay(false);
+              setTimeout(() => setShowFirstTooltip(false), 200);
+            }}
           >
-            <p className="align-middle	">
+            <p className="align-middle">
               tap the background to hide icons
-              <IconButton
-                onClick={() => {
-                  setTooltipDelay(false);
-                  setTimeout(() => setShowFirstTooltip(false), 200);
-                }}
-              >
+              <IconButton>
                 <FontAwesomeIcon size="sm" icon={faXmark} color="black" />
               </IconButton>
             </p>
