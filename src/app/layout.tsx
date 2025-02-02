@@ -1,7 +1,8 @@
 "use client";
-import { DynaPuff, Outfit } from "next/font/google";
+import { Outfit } from "next/font/google";
 import "./globals.css";
 import { MyContextProvider } from "./components/ColorContext";
+import { Analytics } from "@vercel/analytics/react"
 
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit", weight: "variable" });
 
@@ -17,7 +18,10 @@ export default function RootLayout({
         <title>My Music In Color</title>
       </head>
       <body className={`${outfit.variable} font-sans`}>
-        <MyContextProvider>{children}</MyContextProvider>
+        <MyContextProvider>
+          {children}
+        </MyContextProvider>
+        <Analytics />
       </body>
     </html>
   );
